@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaking, allenamento IELTS</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#E6E9EE">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Speaking">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  window.SDK_SOURCES = [
+    "https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js",
+    "https://unpkg.com/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js",
+    "https://aka.ms/csspeech/jsbrowserpackageraw"
+  ];
+  window.sdkState = "loading";
+  (function load(i) {
+    if (i >= SDK_SOURCES.length) { window.sdkState = "failed"; document.dispatchEvent(new Event("sdkchange")); return; }
+    var s = document.createElement("script");
+    s.src = SDK_SOURCES[i];
+    s.onload = function () {
+      if (typeof SpeechSDK !== "undefined") { window.sdkState = "ok"; document.dispatchEvent(new Event("sdkchange")); }
+      else load(i + 1);
+    };
+    s.onerror = function () { load(i + 1); };
+    document.head.appendChild(s);
+  })(0);
+</script>
+<style>
+  :root {
+    --fog: #E6E9EE;
+    --paper: #FBFCFD;
+    --ink: #18202E;
+    --slate: #5B6577;
+    --hair: #D3D8E0;
+    --cobalt: #2F4BD8;
+    --cobalt-press: #2239B0;
+    --cobalt-tint: #E7EBFC;
+    --live: #E5484D;
+    --good: #1E7F5A;
+    --mid: #B7791F;
+    --weak: #C23B4A;
+    --r-card: 14px;
+    --r-ctl: 10px;
+    --font: "Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--fog); color: var(--ink);
+    font: 400 17px/1.5 var(--font);
+    font-variant-numeric: tabular-nums;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 22px 96px; }
+
+  /* Header */
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 36px; }
+  .mark { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .mark span { display: block; font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--slate); margin-top: 4px; }
+  .tools { display: flex; gap: 6px; }
+
+  .ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; border: 0; border-radius: var(--r-ctl);
+    padding: 9px 12px; font-size: 15px; font-weight: 500; color: var(--ink); cursor: pointer;
+  }
+  .ghost:hover { background: rgba(24,32,46,.06); }
+  .ghost svg { width: 18px; height: 18px; flex: none; }
+
+  /* Parts */
+  .parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; background: #D9DDE4; border-radius: 12px; margin-bottom: 18px; }
+  .parts button {
+    border: 0; background: transparent; border-radius: 9px; padding: 9px 10px 8px; cursor: pointer; text-align: left;
+  }
+  .parts button b { display: block; font-size: 15px; font-weight: 600; }
+  .parts button small { display: block; font-size: 13px; color: var(--slate); }
+  .parts button[aria-pressed="true"] { background: var(--paper); box-shadow: 0 1px 2px rgba(24,32,46,.12); }
+  .parts button:disabled { cursor: default; }
+
+  /* Cue card */
+  .card {
+    background: var(--paper); border-radius: var(--r-card);
+    padding: 28px 30px 22px; position: relative;
+    box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.28);
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; color: var(--slate); font-size: 15px; }
+  .topic { font-weight: 600; color: var(--cobalt); }
+  .question { font-size: clamp(26px, 4.4vw, 36px); line-height: 1.18; letter-spacing: -0.02em; font-weight: 600; margin: 0; max-width: 28ch; text-wrap: balance; }
+  .bullets { margin: 18px 0 0; padding: 0; list-style: none; font-size: 18px; }
+  .bullets li { padding: 6px 0 6px 22px; position: relative; border-top: 1px solid var(--hair); }
+  .bullets li::before { content: ""; position: absolute; left: 4px; top: 17px; width: 7px; height: 7px; border-radius: 50%; background: var(--hair); }
+  .bullets .closing { padding-left: 0; font-weight: 500; }
+  .bullets .closing::before { display: none; }
+  .card-actions { display: flex; gap: 4px; margin: 20px -12px 0; flex-wrap: wrap; }
+
+  /* Recorder */
+  .recorder { padding: 26px 2px 0; }
+  .rec-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .rec-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    border: 0; border-radius: 999px; padding: 16px 26px 16px 20px; min-width: 210px;
+    background: var(--cobalt); color: #fff; font-size: 18px; font-weight: 600; cursor: pointer;
+    transition: background .15s;
+  }
+  .rec-btn:hover { background: var(--cobalt-press); }
+  .rec-btn:disabled { opacity: .55; cursor: default; }
+  .rec-btn .dot { width: 14px; height: 14px; border-radius: 50%; background: #fff; flex: none; }
+  .rec-btn.live { background: var(--ink); }
+  .rec-btn.live .dot { background: var(--live); animation: pulse 1.2s ease-in-out infinite; }
+  .rec-btn.wait .dot { background: transparent; border: 2px solid rgba(255,255,255,.7); border-top-color: transparent; animation: spin .8s linear infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,72,77,.55); } 50% { box-shadow: 0 0 0 7px rgba(229,72,77,0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .clock { flex: 1; min-width: 200px; }
+  .clock-time { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .clock-note { font-size: 14px; color: var(--slate); margin-top: 6px; }
+  .track { position: relative; height: 6px; background: #D3D8E0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .track .target { position: absolute; top: 0; bottom: 0; background: rgba(30,127,90,.22); }
+  .track .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--ink); border-radius: 3px; transition: width .25s linear; }
+  .track .fill.in { background: var(--good); }
+
+  .live-text { margin-top: 22px; font-size: 21px; line-height: 1.45; color: var(--slate); min-height: 1.45em; max-width: 60ch; }
+  .live-text.quiet:empty::before { content: none; }
+  .live-text:empty::before { content: attr(data-empty); color: #8A93A3; font-size: 16px; }
+
+  .alert { margin-top: 18px; padding: 14px 16px; border-radius: var(--r-ctl); background: #FBE9EB; color: #7A1E29; font-size: 15px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .alert button { border: 0; background: #fff; border-radius: 8px; padding: 7px 12px; font-size: 14px; font-weight: 600; cursor: pointer; color: #7A1E29; }
+
+  /* Results */
+  .results { margin-top: 20px; }
+  .results h2 { font-size: 15px; font-weight: 600; color: var(--slate); margin: 0 0 14px; }
+  .verdict { display: grid; grid-template-columns: auto 1fr; gap: 6px 26px; align-items: end; padding-bottom: 26px; border-bottom: 1px solid var(--hair); }
+  .big { font-size: 88px; line-height: .85; font-weight: 700; letter-spacing: -0.05em; grid-row: span 2; }
+  .big small { font-size: 22px; letter-spacing: 0; color: var(--slate); font-weight: 500; margin-left: 4px; }
+  .verdict-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .verdict-sub { color: var(--slate); font-size: 15px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding: 22px 0 26px; border-bottom: 1px solid var(--hair); }
+  .metric-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .metric-head b { font-size: 16px; font-weight: 600; }
+  .metric-head span { font-size: 22px; font-weight: 600; }
+  .metric .bar { height: 4px; background: var(--hair); border-radius: 2px; margin: 8px 0 8px; overflow: hidden; }
+  .metric .bar i { display: block; height: 100%; border-radius: 2px; }
+  .metric p { margin: 0; font-size: 14px; color: var(--slate); line-height: 1.4; }
+
+  .block { padding: 24px 0 4px; }
+  .transcript { font-size: 20px; line-height: 1.75; max-width: 62ch; margin: 0; }
+  .w { text-decoration-line: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: transparent; }
+  .w.mid { text-decoration-color: rgba(183,121,31,.75); }
+  .w.low { text-decoration-color: var(--weak); color: var(--weak); }
+  .legend { display: flex; gap: 18px; font-size: 14px; color: var(--slate); margin-top: 10px; }
+  .legend span::before { content: ""; display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+  .legend .l-mid::before { background: rgba(183,121,31,.75); }
+  .legend .l-low::before { background: var(--weak); }
+  .pace { font-size: 15px; color: var(--slate); margin-top: 14px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--hair); background: var(--paper); border-radius: 999px;
+    padding: 7px 14px 7px 10px; cursor: pointer; font-size: 16px;
+  }
+  .chip:hover { border-color: var(--cobalt); }
+  .chip svg { width: 16px; height: 16px; color: var(--cobalt); }
+  .chip em { font-style: normal; font-size: 13px; font-weight: 600; }
+  .chip small { color: var(--slate); font-size: 13px; }
+  .hint { font-size: 14px; color: var(--slate); margin: 10px 0 0; }
+
+  .next-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--hair); }
+  .primary {
+    border: 0; border-radius: var(--r-ctl); background: var(--cobalt); color: #fff;
+    padding: 12px 18px; font-size: 16px; font-weight: 600; cursor: pointer;
+  }
+  .primary:hover { background: var(--cobalt-press); }
+  .secondary {
+    border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--paper);
+    padding: 11px 16px; font-size: 16px; font-weight: 500; cursor: pointer;
+  }
+  .secondary:hover { border-color: var(--slate); }
+
+  /* Dialogs */
+  dialog {
+    border: 0; border-radius: 16px; padding: 0; width: min(520px, calc(100vw - 32px));
+    background: var(--paper); color: var(--ink);
+    box-shadow: 0 30px 80px -20px rgba(24,32,46,.45);
+  }
+  dialog::backdrop { background: rgba(24,32,46,.38); }
+  dialog[open] { animation: rise .18s ease-out; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+  .dlg { padding: 26px 26px 22px; }
+  .dlg h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; }
+  .dlg .lead { margin: 0 0 20px; color: var(--slate); font-size: 15px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .field .help { font-size: 13px; color: var(--slate); margin-top: 6px; }
+  .field input[type=text], .field input[type=password], .field select {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: #fff;
+  }
+  .field input:focus, .field select:focus { outline: 2px solid var(--cobalt); outline-offset: -1px; border-color: transparent; }
+  .keyrow { display: flex; gap: 8px; }
+  .keyrow input { flex: 1; min-width: 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--hair); }
+  .switch b { font-weight: 600; font-size: 15px; display: block; }
+  .switch span { font-size: 13px; color: var(--slate); }
+  .switch input { width: 42px; height: 24px; appearance: none; background: var(--hair); border-radius: 12px; position: relative; cursor: pointer; flex: none; transition: background .15s; }
+  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .switch input:checked { background: var(--cobalt); }
+  .switch input:checked::after { transform: translateX(18px); }
+  .sdk { font-size: 13px; color: var(--slate); display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .sdk i { width: 8px; height: 8px; border-radius: 50%; background: var(--mid); }
+  .sdk.ok i { background: var(--good); }
+  .sdk.failed i { background: var(--weak); }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+  .hist { list-style: none; margin: 0; padding: 0; max-height: 52vh; overflow: auto; }
+  .hist li { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-top: 1px solid var(--hair); }
+  .hist .q { font-weight: 500; font-size: 15px; }
+  .hist .when { font-size: 13px; color: var(--slate); }
+  .hist .s { grid-row: span 2; font-size: 22px; font-weight: 600; align-self: center; }
+  .avg { display: flex; gap: 28px; margin-bottom: 14px; }
+  .avg b { display: block; font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
+  .avg span { font-size: 13px; color: var(--slate); }
+  .empty { color: var(--slate); font-size: 15px; padding: 10px 0; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
+    background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px;
+    transition: .2s; pointer-events: none; max-width: calc(100vw - 32px);
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  .hidden { display: none !important; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 20px 16px 80px; }
+    .card { padding: 22px 20px 18px; }
+    .metrics { grid-template-columns: 1fr; gap: 18px; }
+    .big { font-size: 68px; }
+    .two { grid-template-columns: 1fr; }
+    .tools .ghost span { display: none; }
+    .rec-btn { width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">Speaking<span>Allenamento IELTS</span></div>
+    <div class="tools">
+      <button class="ghost hidden" id="install" type="button" aria-label="Installa l'app">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        <span>Installa</span>
+      </button>
+      <button class="ghost" id="openHistory" type="button" aria-label="Progressi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
+        <span>Progressi</span>
+      </button>
+      <button class="ghost" id="openSettings" type="button" aria-label="Impostazioni">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+        <span>Impostazioni</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="parts" role="group" aria-label="Parte dell'esame">
+    <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi, 20–30 s</small></button>
+    <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card, fino a 2 min</small></button>
+    <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione, 40–60 s</small></button>
+  </div>
+
+  <article class="card" aria-live="polite">
+    <div class="card-top"><span class="topic" id="topic"></span><span id="progress"></span></div>
+    <h1 class="question" id="question"></h1>
+    <ul class="bullets hidden" id="bullets"></ul>
+    <div class="card-actions">
+      <button class="ghost" id="listen" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>
+        Ascolta la domanda
+      </button>
+      <button class="ghost" id="nextQ" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        <span id="nextQLabel">Domanda successiva</span>
+      </button>
+      <button class="ghost" id="newTopic" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>
+        Cambia argomento
+      </button>
+    </div>
+  </article>
+
+  <section class="recorder">
+    <div class="rec-row">
+      <button class="rec-btn" id="rec" type="button"><i class="dot"></i><span id="recLabel">Inizia a parlare</span></button>
+      <div class="clock">
+        <div class="clock-time" id="clock">0:00</div>
+        <div class="track" aria-hidden="true"><i class="target" id="target"></i><i class="fill" id="fill"></i></div>
+        <div class="clock-note" id="clockNote"></div>
+      </div>
+    </div>
+    <p class="live-text" id="live" data-empty="Premi il pulsante o la barra spaziatrice e rispondi come all'esame."></p>
+    <div class="alert hidden" id="alert"><span id="alertText"></span><button type="button" id="alertFix" class="hidden">Apri impostazioni</button></div>
+  </section>
+
+  <section class="results hidden" id="results" aria-live="polite">
+    <div class="verdict">
+      <div class="big" id="rPron">0<small>/100</small></div>
+      <div class="verdict-title" id="rTitle"></div>
+      <div class="verdict-sub">Pronuncia complessiva secondo Azure. Non è una band IELTS, la band la stimo io quando mi incolli il risultato.</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-head"><b>Suoni</b><span id="rAcc">–</span></div><div class="bar"><i id="bAcc"></i></div><p>Quanto ogni suono si avvicina a quello di un madrelingua.</p></div>
+      <div class="metric"><div class="metric-head"><b>Scorrevolezza</b><span id="rFlu">–</span></div><div class="bar"><i id="bFlu"></i></div><p>Pause, esitazioni e continuità del discorso.</p></div>
+      <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p>Accenti delle parole, melodia della frase, enfasi.</p></div>
+    </div>
+
+    <div class="block">
+      <h2>Cosa ha capito Azure</h2>
+      <p class="transcript" id="transcript"></p>
+      <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
+      <p class="pace" id="pace"></p>
+      <p class="hint">Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
+    </div>
+
+    <div class="block" id="weakBlock">
+      <h2>Parole da ripassare</h2>
+      <div class="chips" id="chips"></div>
+      <p class="hint">Tocca una parola per sentirla pronunciata.</p>
+    </div>
+
+    <div class="next-row">
+      <button class="primary" id="copy" type="button">Copia per Claude</button>
+      <button class="secondary" id="retry" type="button">Riprova questa domanda</button>
+      <button class="secondary" id="resultNext" type="button">Domanda successiva</button>
+    </div>
+  </section>
+</div>
+
+<dialog id="settings">
+  <form class="dlg" method="dialog" id="settingsForm">
+    <h3>Impostazioni</h3>
+    <p class="lead" id="settingsLead">Collega la tua risorsa Azure Speech. I dati restano salvati solo in questo browser.</p>
+    <div class="field">
+      <label for="fKey">Chiave</label>
+      <div class="keyrow">
+        <input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Key 1 da Chiavi ed endpoint">
+        <button type="button" class="secondary" id="toggleKey">Mostra</button>
+      </div>
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="fRegion">Regione</label>
+        <input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth">
+        <div class="help">Come in Posizione/Area, ad esempio italynorth</div>
+      </div>
+      <div class="field">
+        <label for="fLang">Accento</label>
+        <select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select>
+        <div class="help">Voce delle domande e pronuncia di riferimento</div>
+      </div>
+    </div>
+    <label class="switch">
+      <div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div>
+      <input type="checkbox" id="fAuto">
+    </label>
+    <div class="sdk" id="sdk"><i></i><span id="sdkText"></span></div>
+    <div class="dlg-actions">
+      <button type="button" class="secondary" id="cancelSettings">Annulla</button>
+      <button type="submit" class="primary" id="saveSettings">Salva</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="history">
+  <div class="dlg">
+    <h3>Progressi</h3>
+    <p class="lead">Le tue ultime risposte registrate in questo browser.</p>
+    <div class="avg hidden" id="avg"></div>
+    <ul class="hist" id="histList"></ul>
+    <div class="dlg-actions">
+      <button type="button" class="secondary" id="clearHistory">Svuota</button>
+      <button type="button" class="primary" id="closeHistory">Chiudi</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- Domande ---------- */
+const P1 = [
+  { topic: "Studio e lavoro", qs: ["Do you work or are you a student?", "What made you choose your field of study?", "What part of your course do you enjoy the most?", "Would you like to keep studying after your degree? Why?"] },
+  { topic: "La tua città", qs: ["Where do you live at the moment?", "What do you like most about living there?", "Is there anything you would change about it?", "Do you think you will live there in the future?"] },
+  { topic: "Casa e origini", qs: ["Where are you from originally?", "What is your hometown famous for?", "What do you miss most about it when you are away?", "How has your hometown changed since you were a child?"] },
+  { topic: "Musica", qs: ["What kind of music do you usually listen to?", "Has your taste in music changed over the years?", "Do you prefer listening to music alone or with other people?", "Have you ever tried to make your own music?"] },
+  { topic: "Fotografia", qs: ["Do you like taking photos?", "What do you usually take photos of?", "Do you prefer photos taken with a phone or with a camera? Why?", "Do you ever print your photos?"] },
+  { topic: "Arte e design", qs: ["Do you enjoy art or design? Why?", "Is there a designer or artist you particularly admire?", "Did you do much art at school when you were younger?", "Do you think design affects people's everyday lives?"] },
+  { topic: "Tempo libero", qs: ["How do you usually spend your weekends?", "What do you do to relax after a busy day?", "Do you prefer spending free time indoors or outdoors?", "Is there a hobby you would like to start?"] },
+  { topic: "Telefono e tecnologia", qs: ["How much time do you spend on your phone every day?", "What do you mainly use your phone for?", "Have you ever tried to use your phone less?", "Could you live without a smartphone for a week?"] },
+  { topic: "Cibo e cucina", qs: ["How often do you cook at home?", "What is a dish you are good at making?", "Do you prefer eating at home or eating out?", "Is there a food from your region you would recommend to a visitor?"] },
+  { topic: "Viaggi e trasporti", qs: ["How do you usually get around the city?", "Do you prefer travelling by bus or by train?", "What was the last trip you took?", "Is there a country you would really like to visit?"] }
+];
+
+const P2 = [
+  { topic: "Creatività", prompt: "Describe a creative project you are proud of.", bullets: ["what the project was", "when and why you did it", "what was difficult about it"], closing: "and explain why you are proud of it.",
+    p3: ["Why do some people find it easier to be creative than others?", "Should schools spend more time teaching creative subjects?", "Can creativity be learned, or is it something you are born with?", "How has technology changed the way people create things?"] },
+  { topic: "Luoghi", prompt: "Describe a place you would like to live in the future.", bullets: ["where it is", "how you know about it", "what you could do there"], closing: "and explain why you would like to live there.",
+    p3: ["Why do many young people choose to move abroad?", "What makes a city a good place for students?", "Do you think people will live in smaller cities in the future?", "What are the disadvantages of living far from your family?"] },
+  { topic: "Persone", prompt: "Describe a person who has influenced your way of thinking.", bullets: ["who this person is", "how you met them", "what they taught you"], closing: "and explain how they changed your way of thinking.",
+    p3: ["Who has more influence on young people today, family or friends?", "Do you think famous people have a responsibility to be good role models?", "How do teachers influence the way students think?", "Is it good to change your opinions often?"] },
+  { topic: "Oggetti", prompt: "Describe an object that is important to you.", bullets: ["what it is", "how you got it", "how often you use it"], closing: "and explain why it is important to you.",
+    p3: ["Why do people keep objects that are no longer useful?", "Do people today own too many things?", "How has the design of everyday objects changed over time?", "Is it better to repair things or to buy new ones?"] },
+  { topic: "Viaggi", prompt: "Describe a trip that did not go as planned.", bullets: ["where you went", "who you were with", "what went wrong"], closing: "and explain how you felt about it.",
+    p3: ["Why do people enjoy travelling to new places?", "Is it better to plan a trip carefully or to be spontaneous?", "How has tourism changed the places people visit?", "Do you think people will travel less in the future because of climate change?"] },
+  { topic: "Scelte", prompt: "Describe a time you had to make a difficult decision.", bullets: ["what the decision was", "when you made it", "what options you had"], closing: "and explain how you felt after deciding.",
+    p3: ["At what age should young people make important decisions alone?", "Do people today have too many choices?", "Is it better to follow your passion or to choose a secure job?", "How do parents influence their children's decisions?"] },
+  { topic: "Musica", prompt: "Describe a piece of music that means something to you.", bullets: ["what it is", "when you first heard it", "when you listen to it"], closing: "and explain why it is meaningful to you.",
+    p3: ["Why is music important in so many cultures?", "Has streaming changed the way people value music?", "Should children be required to learn a musical instrument?", "Do you think live concerts will ever be replaced by technology?"] },
+  { topic: "Abilità", prompt: "Describe a skill you would like to learn.", bullets: ["what the skill is", "why you want to learn it", "how you would learn it"], closing: "and explain how it would help you.",
+    p3: ["Is it better to learn a skill from a teacher or from the internet?", "Which skills will be most important in the future?", "Why do adults sometimes find it hard to learn new things?", "Should employers pay for their workers to learn new skills?"] },
+  { topic: "Memoria", prompt: "Describe a historical place you have visited.", bullets: ["where it is", "when you went there", "what you learned there"], closing: "and explain how you felt during the visit.",
+    p3: ["Why is it important for young people to learn about history?", "Should historical sites be free to visit?", "How can museums make history more interesting for young people?", "Do you think we learn from the mistakes of the past?"] }
+];
+
+const TARGET = { 1: [20, 30, 45], 2: [90, 120, 120], 3: [40, 60, 80] }; // min, max, scala della barra
+
+/* ---------- Utilità ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2600);
+}
+const shuffle = n => Array.from({ length: n }, (_, i) => i).sort(() => Math.random() - .5);
+
+/* ---------- Impostazioni ---------- */
+function loadSettings() {
+  const s = store.get("ist_settings", null);
+  if (s) return s;
+  // migra dalle versioni precedenti
+  return { key: store.get("az_key", ""), region: store.get("az_region", ""), lang: store.get("az_lang", "en-GB"), autoRead: false };
+}
+let settings = loadSettings();
+const normRegion = r => (r || "").toLowerCase().replace(/[\s_-]+/g, "").replace(/^northitaly$/, "italynorth");
+const configured = () => settings.key && settings.region;
+
+function openSettings(first) {
+  $("fKey").value = settings.key || ""; $("fRegion").value = settings.region || "";
+  $("fLang").value = settings.lang || "en-GB"; $("fAuto").checked = !!settings.autoRead;
+  $("settingsLead").textContent = first
+    ? "Per iniziare collega la tua risorsa Azure Speech. Chiave e regione le trovi nel portale, alla voce Chiavi ed endpoint della risorsa."
+    : "Collega la tua risorsa Azure Speech. I dati restano salvati solo in questo browser.";
+  $("cancelSettings").classList.toggle("hidden", !!first && !configured());
+  $("settings").showModal();
+  if (!$("fKey").value) $("fKey").focus();
+}
+$("openSettings").onclick = () => openSettings(false);
+$("cancelSettings").onclick = () => $("settings").close();
+$("toggleKey").onclick = () => {
+  const f = $("fKey"); const show = f.type === "password";
+  f.type = show ? "text" : "password"; $("toggleKey").textContent = show ? "Nascondi" : "Mostra";
+};
+$("settingsForm").addEventListener("submit", e => {
+  const key = $("fKey").value.trim(), region = normRegion($("fRegion").value);
+  if (!key || !region) { e.preventDefault(); toast("Servono sia la chiave sia la regione"); return; }
+  settings = { key, region, lang: $("fLang").value, autoRead: $("fAuto").checked };
+  store.set("ist_settings", settings);
+  resetSynth(); hideAlert(); toast("Impostazioni salvate");
+});
+$("settings").addEventListener("cancel", e => { if (!configured()) e.preventDefault(); });
+
+function showSdk() {
+  const el = $("sdk"); el.className = "sdk " + window.sdkState;
+  $("sdkText").textContent = { loading: "Sto caricando il servizio vocale di Azure", ok: "Servizio vocale di Azure pronto", failed: "Servizio vocale non caricato. Usa Chrome o Edge e disattiva l'adblocker su questa pagina." }[window.sdkState];
+  if (window.sdkState === "failed") showAlert("Il servizio vocale di Azure non si è caricato. Usa Chrome o Edge sul PC e disattiva l'adblocker su questa pagina, poi ricarica.", false);
+}
+document.addEventListener("sdkchange", showSdk);
+
+/* ---------- Domanda corrente ---------- */
+let part = 1, p1Order = shuffle(P1.length), p2Order = shuffle(P2.length), p1i = 0, p2i = 0, qi = 0;
+let p3Source = null; // indice della cue card collegata
+const current = () => {
+  if (part === 1) { const t = P1[p1Order[p1i % P1.length]]; return { topic: t.topic, text: t.qs[qi], idx: qi, total: t.qs.length }; }
+  if (part === 2) { const c = P2[p2Order[p2i % P2.length]]; return { topic: c.topic, text: c.prompt, card: c, idx: 0, total: 1 }; }
+  const c = P2[p3Source ?? p2Order[p2i % P2.length]]; return { topic: c.topic, text: c.p3[qi], idx: qi, total: c.p3.length };
+};
+
+function showQuestion(autoRead = true) {
+  const q = current();
+  $("topic").textContent = q.topic;
+  $("progress").textContent = q.total > 1 ? `Domanda ${q.idx + 1} di ${q.total}` : "Cue card";
+  $("question").textContent = q.text;
+  const ul = $("bullets");
+  if (q.card) {
+    ul.innerHTML = `<li class="closing">You should say</li>` + q.card.bullets.map(b => `<li>${esc(b)}</li>`).join("") + `<li class="closing">${esc(q.card.closing)}</li>`;
+    ul.classList.remove("hidden");
+  } else ul.classList.add("hidden");
+  const last = q.idx + 1 >= q.total;
+  $("nextQLabel").textContent = part === 2 ? "Passa alla Part 3 su questo tema" : last ? "Nuovo argomento" : "Domanda successiva";
+  $("resultNext").textContent = $("nextQLabel").textContent;
+  setTarget(); resetClock();
+  $("live").textContent = "";
+  if (state === "idle") setState("idle");
+  if (autoRead && settings.autoRead && configured() && window.sdkState === "ok") speak(spoken(q));
+}
+const spoken = q => q.card ? `${q.card.prompt} You should say ${q.card.bullets.join(", ")}, ${q.card.closing}` : q.text;
+
+function setPart(p, keepTopic) {
+  if (busy()) return;
+  part = p; qi = 0;
+  if (p === 3 && !keepTopic) p3Source = p2Order[p2i % P2.length];
+  document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.part === p)));
+  hideResults(); showQuestion();
+}
+document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(+b.dataset.part));
+
+function nextQuestion() {
+  if (busy()) return;
+  const q = current();
+  if (part === 2) { p3Source = p2Order[p2i % P2.length]; return setPart(3, true); }
+  if (q.idx + 1 < q.total) qi++; else newTopic(true);
+  hideResults(); showQuestion();
+}
+function newTopic(silent) {
+  if (busy()) return;
+  qi = 0;
+  if (part === 1) p1i++;
+  else if (part === 2) p2i++;
+  else { const i = P2.findIndex((_, k) => k === p3Source); p3Source = (i + 1 + Math.floor(Math.random() * (P2.length - 1))) % P2.length; }
+  if (silent !== true) { hideResults(); showQuestion(); }
+}
+$("nextQ").onclick = nextQuestion;
+$("resultNext").onclick = nextQuestion;
+$("newTopic").onclick = () => newTopic();
+$("listen").onclick = () => speak(spoken(current()));
+
+/* ---------- Sintesi vocale ---------- */
+let synth = null;
+function resetSynth() { try { synth && synth.close(); } catch {} synth = null; }
+function speechConfig() {
+  const c = SpeechSDK.SpeechConfig.fromSubscription(settings.key, settings.region);
+  c.speechRecognitionLanguage = settings.lang;
+  return c;
+}
+function speak(text) {
+  if (!ensureReady()) return;
+  try {
+    if (!synth) {
+      const c = speechConfig();
+      c.speechSynthesisVoiceName = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
+      synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput());
+    }
+    synth.speakTextAsync(text, r => {
+      if (r.reason === SpeechSDK.ResultReason.Canceled) { resetSynth(); handleAzureError(SpeechSDK.CancellationDetails.fromResult(r).errorDetails); }
+    }, err => { resetSynth(); handleAzureError(String(err)); });
+  } catch (e) { handleAzureError(String(e)); }
+}
+
+/* ---------- Avvisi ---------- */
+function showAlert(msg, fix) { $("alertText").textContent = msg; $("alertFix").classList.toggle("hidden", !fix); $("alert").classList.remove("hidden"); }
+function hideAlert() { $("alert").classList.add("hidden"); }
+$("alertFix").onclick = () => openSettings(false);
+function handleAzureError(details = "") {
+  const d = details.toLowerCase();
+  if (d.includes("401") || d.includes("auth") || d.includes("subscription")) showAlert("Azure ha rifiutato la chiave. Controlla di aver copiato la Key 1 della risorsa giusta.", true);
+  else if (d.includes("1006") || d.includes("unable to contact") || d.includes("websocket") || d.includes("network")) showAlert(`Non riesco a collegarmi ad Azure nella regione "${settings.region}". Controlla che sia scritta come in Posizione/Area, ad esempio italynorth.`, true);
+  else if (d.includes("quota") || d.includes("429")) showAlert("Hai raggiunto il limite gratuito di Azure per questo periodo. Riprova più tardi.", false);
+  else showAlert("Azure ha restituito un errore. " + details, true);
+}
+function ensureReady() {
+  if (window.sdkState === "loading") { toast("Il servizio vocale si sta ancora caricando"); return false; }
+  if (window.sdkState === "failed") { showSdk(); return false; }
+  if (!configured()) { openSettings(true); return false; }
+  return true;
+}
+
+/* ---------- Timer e barra obiettivo ---------- */
+function setTarget() {
+  const [min, max, scale] = TARGET[part];
+  $("target").style.left = (min / scale * 100) + "%";
+  $("target").style.width = ((max - min) / scale * 100) + "%";
+  $("clockNote").textContent = part === 2 ? `Obiettivo da ${fmt(min)} a ${fmt(max)}, si ferma da sola a 2:00` : `Obiettivo da ${min} a ${max} secondi`;
+}
+function resetClock() { $("clock").textContent = "0:00"; $("fill").style.width = "0"; $("fill").classList.remove("in"); }
+function updateClock(t) {
+  const [min, max, scale] = TARGET[part];
+  $("clock").textContent = fmt(t);
+  $("fill").style.width = Math.min(100, t / scale * 100) + "%";
+  $("fill").classList.toggle("in", t >= min && t <= max + 5);
+}
+
+/* ---------- Registrazione ---------- */
+let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, partial = "";
+const busy = () => state !== "idle";
+function setState(s) {
+  state = s;
+  const btn = $("rec"), label = $("recLabel");
+  btn.classList.toggle("live", s === "listening");
+  btn.classList.toggle("wait", s === "connecting" || s === "processing");
+  btn.disabled = s === "connecting" || s === "processing";
+  label.textContent = { idle: part === 2 ? "Inizia la preparazione" : "Inizia a parlare", prep: "Inizia subito a parlare", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
+  document.querySelectorAll(".parts button, #nextQ, #newTopic").forEach(b => b.disabled = s !== "idle");
+}
+
+$("rec").onclick = () => {
+  if (state === "listening") return stop();
+  if (state === "prep") return start();
+  if (state !== "idle") return;
+  hideAlert();
+  if (!ensureReady()) return;
+  if (part === 2) return startPrep();
+  start();
+};
+
+function startPrep() {
+  hideResults();
+  let left = 60;
+  setState("prep");
+  $("clock").textContent = fmt(left);
+  $("clockNote").textContent = "Un minuto per prepararti, prendi appunti su carta";
+  $("fill").style.width = "0";
+  prepTimer = setInterval(() => {
+    left--; $("clock").textContent = fmt(left);
+    if (left <= 0) start();
+  }, 1000);
+}
+
+function start() {
+  clearInterval(prepTimer); prepTimer = null;
+  hideResults(); segments = []; partial = ""; $("live").textContent = "";
+  setTarget(); resetClock();
+  setState("connecting");
+  try {
+    const cfg = speechConfig();
+    const pa = new SpeechSDK.PronunciationAssessmentConfig("",
+      SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
+      SpeechSDK.PronunciationAssessmentGranularity.Phoneme, false);
+    pa.enableProsodyAssessment = true;
+    if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
+    recognizer = new SpeechSDK.SpeechRecognizer(cfg, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+    pa.applyTo(recognizer);
+  } catch (e) { setState("idle"); handleAzureError(String(e)); return; }
+
+  const finalText = () => segments.map(s => s.text).join(" ");
+  recognizer.recognizing = (s, e) => { partial = e.result.text; $("live").textContent = (finalText() + " " + partial).trim(); };
+  recognizer.recognized = (s, e) => {
+    if (e.result.reason !== SpeechSDK.ResultReason.RecognizedSpeech) return;
+    try {
+      const j = JSON.parse(e.result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult));
+      const nb = j.NBest && j.NBest[0];
+      if (nb && nb.Words && nb.Words.length) segments.push({ text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words });
+    } catch (err) { console.warn(err); }
+    partial = ""; $("live").textContent = finalText();
+  };
+  recognizer.canceled = (s, e) => {
+    if (e.reason === SpeechSDK.CancellationReason.Error) { cleanup(); handleAzureError(e.errorDetails); }
+  };
+
+  recognizer.startContinuousRecognitionAsync(() => {
+    setState("listening"); startAt = Date.now();
+    tick = setInterval(() => {
+      const t = (Date.now() - startAt) / 1000;
+      updateClock(t);
+      if (part === 2 && t >= 120) stop();
+    }, 200);
+  }, err => {
+    cleanup();
+    const msg = String(err).toLowerCase();
+    if (msg.includes("permission") || msg.includes("notallowed") || msg.includes("microphone")) showAlert("Il browser non ha accesso al microfono. Clicca sul lucchetto accanto all'indirizzo e consenti il microfono.", false);
+    else handleAzureError(String(err));
+  });
+}
+
+function cleanup() {
+  clearInterval(tick); clearInterval(prepTimer); prepTimer = null;
+  const r = recognizer; recognizer = null;
+  if (r) { try { r.close(); } catch {} }
+  setState("idle");
+}
+
+function stop() {
+  if (state !== "listening" || !recognizer) return;
+  clearInterval(tick);
+  const seconds = (Date.now() - startAt) / 1000;
+  setState("processing");
+  const r = recognizer;
+  r.stopContinuousRecognitionAsync(() => {
+    recognizer = null; try { r.close(); } catch {}
+    setState("idle");
+    render(seconds);
+  }, () => { cleanup(); });
+}
+
+/* ---------- Risultati ---------- */
+let last = null;
+const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
+const color = v => v == null ? "var(--hair)" : `var(--${band(v)})`;
+const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo"
+  : v >= 70 ? "Chiara, con qualche suono da sistemare"
+  : v >= 55 ? "Comprensibile, ma alcuni errori si notano"
+  : "Da lavorare, alcune parole rischiano di non essere capite";
+
+function hideResults() { $("results").classList.add("hidden"); $("live").classList.remove("quiet"); }
+
+function render(seconds) {
+  if (!segments.length) {
+    showAlert("Non ho ricevuto parole. Se hai parlato, controlla che il microfono giusto sia quello predefinito in Windows.", false);
+    return;
+  }
+  const words = segments.flatMap(s => s.words);
+  const n = words.length;
+  const avg = key => {
+    let tot = 0, w = 0;
+    segments.forEach(s => { if (typeof s.pa[key] === "number") { tot += s.pa[key] * s.words.length; w += s.words.length; } });
+    return w ? Math.round(tot / w) : null;
+  };
+  const sc = { pron: avg("PronScore"), acc: avg("AccuracyScore"), flu: avg("FluencyScore"), pro: avg("ProsodyScore") };
+  const wpm = Math.round(n / Math.max(seconds, 1) * 60);
+
+  $("rPron").innerHTML = `${sc.pron ?? "–"}<small>/100</small>`;
+  $("rPron").style.color = sc.pron == null ? "" : color(sc.pron);
+  $("rTitle").textContent = sc.pron == null ? "Punteggio non disponibile" : verdict(sc.pron);
+  [["Acc", sc.acc], ["Flu", sc.flu], ["Pro", sc.pro]].forEach(([k, v]) => {
+    $("r" + k).textContent = v ?? "–";
+    $("b" + k).style.width = (v ?? 0) + "%"; $("b" + k).style.background = color(v);
+  });
+
+  $("transcript").innerHTML = words.map(w => {
+    const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
+    const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
+    return `<span class="w${cls}" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+  }).join(" ");
+
+  const [min, max] = TARGET[part];
+  const lenNote = seconds < min ? "Risposta un po' corta, all'esame prova ad aggiungere un esempio o un motivo."
+    : seconds > max + 10 && part !== 2 ? "Risposta lunga, all'esame l'esaminatore potrebbe interromperti."
+    : "Lunghezza giusta per questa parte.";
+  const paceNote = wpm < 100 ? "ritmo lento" : wpm > 170 ? "ritmo molto veloce" : "ritmo naturale";
+  $("pace").textContent = `${n} parole in ${fmt(seconds)}, circa ${wpm} al minuto (${paceNote}). ${lenNote}`;
+
+  const seen = new Set();
+  const weak = words
+    .map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
+      phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" ") }))
+    .filter(w => w.acc < 80)
+    .sort((a, b) => a.acc - b.acc)
+    .filter(w => { const k = w.word.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
+    .slice(0, 12);
+  $("weakBlock").classList.toggle("hidden", !weak.length);
+  $("chips").innerHTML = weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>
+      ${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
+
+  const q = current();
+  last = { part, topic: q.topic, question: q.card ? spoken(q) : q.text, text: segments.map(s => s.text).join(" "), sc, wpm, seconds, weak };
+  const h = store.get("ist_history", []);
+  h.unshift({ at: Date.now(), part, q: q.text, pron: sc.pron, flu: sc.flu, acc: sc.acc });
+  store.set("ist_history", h.slice(0, 60));
+
+  $("live").textContent = ""; $("live").classList.add("quiet");
+  $("results").classList.remove("hidden");
+  $("results").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+
+$("retry").onclick = () => { hideResults(); resetClock(); $("live").textContent = ""; window.scrollTo({ top: 0 }); };
+
+$("copy").onclick = async () => {
+  if (!last) return;
+  const weakTxt = last.weak.length ? last.weak.map(w => `${w.word} (${w.acc}${w.phon ? ", suoni deboli /" + w.phon + "/" : ""})`).join("; ") : "nessuna";
+  const txt =
+`Sto preparando lo Speaking IELTS. Ecco una mia risposta registrata e valutata da Azure.
+
+Part ${last.part}, argomento ${last.topic}
+Domanda
+${last.question}
+
+Trascrizione
+${last.text}
+
+Punteggi Azure su 100
+Pronuncia complessiva ${last.sc.pron ?? "n.d."}, suoni ${last.sc.acc ?? "n.d."}, scorrevolezza ${last.sc.flu ?? "n.d."}, ritmo e intonazione ${last.sc.pro ?? "n.d."}
+Durata ${fmt(last.seconds)}, circa ${last.wpm} parole al minuto
+Parole critiche ${weakTxt}
+
+Valutami secondo i quattro criteri IELTS (Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, Pronunciation) con una band stimata per ciascuno. Tieni conto che la trascrizione può contenere errori di riconoscimento. Poi dammi le 3 cose più utili da migliorare e una versione migliorata della mia risposta, mantenendo le mie idee.`;
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const t = document.createElement("textarea"); t.value = txt; document.body.append(t); t.select(); document.execCommand("copy"); t.remove(); }
+  toast("Copiato, ora incollalo nella chat con Claude");
+};
+
+/* ---------- Progressi ---------- */
+function openHistory() {
+  const h = store.get("ist_history", []);
+  const list = $("histList");
+  if (!h.length) { list.innerHTML = `<li class="empty">Ancora nessuna risposta. Registrane una e la trovi qui.</li>`; $("avg").classList.add("hidden"); }
+  else {
+    const recent = h.slice(0, 10).filter(x => x.pron != null);
+    const mean = k => { const v = recent.filter(x => x[k] != null); return v.length ? Math.round(v.reduce((a, x) => a + x[k], 0) / v.length) : "–"; };
+    $("avg").innerHTML = `<div><b>${mean("pron")}</b><span>Pronuncia, media ultime 10</span></div><div><b>${mean("flu")}</b><span>Scorrevolezza</span></div><div><b>${h.length}</b><span>Risposte totali</span></div>`;
+    $("avg").classList.remove("hidden");
+    list.innerHTML = h.map(x => {
+      const d = new Date(x.at || Date.now());
+      return `<li><span class="q">${esc(x.q)}</span><span class="s" style="color:${color(x.pron)}">${x.pron ?? "–"}</span><span class="when">Part ${x.part}, ${d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })} alle ${d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span></li>`;
+    }).join("");
+  }
+  $("history").showModal();
+}
+$("openHistory").onclick = openHistory;
+$("closeHistory").onclick = () => $("history").close();
+$("clearHistory").onclick = () => { if (confirm("Vuoi cancellare tutto lo storico?")) { store.set("ist_history", []); openHistory(); } };
+
+/* ---------- Tastiera ---------- */
+document.addEventListener("keydown", e => {
+  if (e.code !== "Space" || e.repeat) return;
+  if (document.querySelector("dialog[open]")) return;
+  const t = e.target;
+  if (t.closest && t.closest("input, textarea, select, button")) return;
+  e.preventDefault(); $("rec").click();
+});
+
+/* ---------- App installabile ---------- */
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("install").classList.remove("hidden"); });
+$("install").onclick = async () => {
+  if (!installEvt) return;
+  installEvt.prompt();
+  const { outcome } = await installEvt.userChoice;
+  installEvt = null; $("install").classList.add("hidden");
+  if (outcome === "accepted") toast("App installata");
+};
+window.addEventListener("appinstalled", () => $("install").classList.add("hidden"));
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if (matchMedia("(pointer: coarse)").matches) $("live").dataset.empty = "Tocca il pulsante e rispondi come all'esame.";
+
+/* ---------- Avvio ---------- */
+setState("idle");
+showQuestion(false);
+showSdk();
+if (!configured()) openSettings(true);
+</script>
+</body>
+</html>
