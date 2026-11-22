@@ -14,6 +14,18 @@ Una risorsa **Azure Speech** tua. La chiave resta salvata solo nel tuo browser e
 4. Nella risorsa apri **Chiavi ed endpoint** e copia la Key 1 e la regione, scritta come in Posizione/Area (ad esempio `italynorth`).
 5. Apri l'app, vai in Impostazioni e incolla chiave e regione.
 
+## Band IELTS automatica, facoltativa
+
+Con una risorsa **Azure OpenAI** l'app stima da sola la band IELTS sui quattro criteri, con correzioni e una versione migliorata della risposta. Senza questa parte puoi usare il tasto Copia per Claude e incollare il risultato in una chat.
+
+1. Nel portale cerca **Azure OpenAI**, crea la risorsa nello stesso gruppo con piano Standard. Si paga a consumo dai crediti e ogni valutazione costa pochissimo.
+2. Dalla risorsa apri il portale Foundry, vai su Distribuzioni e distribuisci un modello piccolo, ad esempio `gpt-5-mini` o `gpt-4.1-mini`, con tipo Global Standard.
+3. In Chiavi ed endpoint copia endpoint e Key 1, poi inseriscili nelle Impostazioni dell'app insieme al nome della distribuzione.
+
+## Esame completo
+
+La modalità Esame completo simula lo Speaking vero, con 4 domande di Part 1, una cue card di Part 2 con un minuto di preparazione e 4 domande di Part 3 sullo stesso tema. La valutazione arriva alla fine, sull'insieme delle risposte, come all'esame.
+
 ## Sul telefono
 
 Apri la pagina in Chrome e tocca **Installa** in alto, oppure dal menu scegli "Installa app" o "Aggiungi a schermata Home". Al primo uso consenti l'accesso al microfono.

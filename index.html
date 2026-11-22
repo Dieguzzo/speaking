@@ -51,48 +51,35 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; background: var(--fog); color: var(--ink);
-    font: 400 17px/1.5 var(--font);
-    font-variant-numeric: tabular-nums;
-  }
+  body { margin: 0; background: var(--fog); color: var(--ink); font: 400 17px/1.5 var(--font); font-variant-numeric: tabular-nums; }
   button, input, select { font: inherit; color: inherit; }
   :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
-
   .wrap { max-width: 760px; margin: 0 auto; padding: 28px 22px 96px; }
 
-  /* Header */
   header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 36px; }
   .mark { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
   .mark span { display: block; font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--slate); margin-top: 4px; }
   .tools { display: flex; gap: 6px; }
-
-  .ghost {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: transparent; border: 0; border-radius: var(--r-ctl);
-    padding: 9px 12px; font-size: 15px; font-weight: 500; color: var(--ink); cursor: pointer;
-  }
+  .ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 0; border-radius: var(--r-ctl); padding: 9px 12px; font-size: 15px; font-weight: 500; color: var(--ink); cursor: pointer; }
   .ghost:hover { background: rgba(24,32,46,.06); }
   .ghost svg { width: 18px; height: 18px; flex: none; }
+  .ghost:disabled { opacity: .4; cursor: default; }
 
-  /* Parts */
-  .parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; background: #D9DDE4; border-radius: 12px; margin-bottom: 18px; }
-  .parts button {
-    border: 0; background: transparent; border-radius: 9px; padding: 9px 10px 8px; cursor: pointer; text-align: left;
-  }
+  .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: #D9DDE4; border-radius: 12px; margin-bottom: 18px; }
+  .parts button { border: 0; background: transparent; border-radius: 9px; padding: 9px 10px 8px; cursor: pointer; text-align: left; }
   .parts button b { display: block; font-size: 15px; font-weight: 600; }
   .parts button small { display: block; font-size: 13px; color: var(--slate); }
   .parts button[aria-pressed="true"] { background: var(--paper); box-shadow: 0 1px 2px rgba(24,32,46,.12); }
+  .parts button.mockbtn b { color: var(--cobalt); }
   .parts button:disabled { cursor: default; }
 
-  /* Cue card */
-  .card {
-    background: var(--paper); border-radius: var(--r-card);
-    padding: 28px 30px 22px; position: relative;
-    box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.28);
-  }
+  .card { background: var(--paper); border-radius: var(--r-card); padding: 28px 30px 22px; position: relative; box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.28); }
   .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; color: var(--slate); font-size: 15px; }
   .topic { font-weight: 600; color: var(--cobalt); }
+  .steps { display: flex; gap: 3px; margin: -8px 0 18px; }
+  .steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--hair); }
+  .steps i.done { background: var(--cobalt); }
+  .steps i.now { background: var(--ink); }
   .question { font-size: clamp(26px, 4.4vw, 36px); line-height: 1.18; letter-spacing: -0.02em; font-weight: 600; margin: 0; max-width: 28ch; text-wrap: balance; }
   .bullets { margin: 18px 0 0; padding: 0; list-style: none; font-size: 18px; }
   .bullets li { padding: 6px 0 6px 22px; position: relative; border-top: 1px solid var(--hair); }
@@ -101,15 +88,9 @@
   .bullets .closing::before { display: none; }
   .card-actions { display: flex; gap: 4px; margin: 20px -12px 0; flex-wrap: wrap; }
 
-  /* Recorder */
   .recorder { padding: 26px 2px 0; }
   .rec-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-  .rec-btn {
-    display: inline-flex; align-items: center; gap: 12px;
-    border: 0; border-radius: 999px; padding: 16px 26px 16px 20px; min-width: 210px;
-    background: var(--cobalt); color: #fff; font-size: 18px; font-weight: 600; cursor: pointer;
-    transition: background .15s;
-  }
+  .rec-btn { display: inline-flex; align-items: center; gap: 12px; border: 0; border-radius: 999px; padding: 16px 26px 16px 20px; min-width: 210px; background: var(--cobalt); color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; transition: background .15s; }
   .rec-btn:hover { background: var(--cobalt-press); }
   .rec-btn:disabled { opacity: .55; cursor: default; }
   .rec-btn .dot { width: 14px; height: 14px; border-radius: 50%; background: #fff; flex: none; }
@@ -118,7 +99,6 @@
   .rec-btn.wait .dot { background: transparent; border: 2px solid rgba(255,255,255,.7); border-top-color: transparent; animation: spin .8s linear infinite; }
   @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,72,77,.55); } 50% { box-shadow: 0 0 0 7px rgba(229,72,77,0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .clock { flex: 1; min-width: 200px; }
   .clock-time { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
   .clock-note { font-size: 14px; color: var(--slate); margin-top: 6px; }
@@ -126,33 +106,63 @@
   .track .target { position: absolute; top: 0; bottom: 0; background: rgba(30,127,90,.22); }
   .track .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--ink); border-radius: 3px; transition: width .25s linear; }
   .track .fill.in { background: var(--good); }
-
   .live-text { margin-top: 22px; font-size: 21px; line-height: 1.45; color: var(--slate); min-height: 1.45em; max-width: 60ch; }
   .live-text.quiet:empty::before { content: none; }
   .live-text:empty::before { content: attr(data-empty); color: #8A93A3; font-size: 16px; }
-
   .alert { margin-top: 18px; padding: 14px 16px; border-radius: var(--r-ctl); background: #FBE9EB; color: #7A1E29; font-size: 15px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   .alert button { border: 0; background: #fff; border-radius: 8px; padding: 7px 12px; font-size: 14px; font-weight: 600; cursor: pointer; color: #7A1E29; }
 
-  /* Results */
   .results { margin-top: 20px; }
   .results h2 { font-size: 15px; font-weight: 600; color: var(--slate); margin: 0 0 14px; }
+  .warn { padding: 12px 16px; border-radius: var(--r-ctl); background: #FBF1DE; color: #6B4510; font-size: 15px; margin-bottom: 22px; }
+
+  .ai { background: var(--paper); border-radius: var(--r-card); padding: 24px 26px; margin-bottom: 30px; box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.22); }
+  .ai-head { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+  .band-big { font-size: 76px; line-height: .85; font-weight: 700; letter-spacing: -0.04em; color: var(--cobalt); }
+  .band-big small { display: block; font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--slate); margin-top: 10px; }
+  .crit { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; flex: 1; min-width: 280px; }
+  .crit div b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
+  .crit div span { font-size: 13px; color: var(--slate); line-height: 1.3; display: block; }
+  .ai-body { padding-top: 18px; }
+  .ai-body p { margin: 0 0 14px; max-width: 64ch; }
+  .ai-body h3 { font-size: 15px; font-weight: 600; margin: 18px 0 8px; }
+  .ai-body ol { margin: 0; padding-left: 22px; max-width: 64ch; }
+  .ai-body li { margin-bottom: 8px; }
+  .fix { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 18px; padding: 10px 0; border-top: 1px solid var(--hair); font-size: 16px; }
+  .fix s { color: var(--weak); text-decoration-thickness: 1px; }
+  .fix ins { text-decoration: none; color: var(--good); font-weight: 500; }
+  .fix small { grid-column: 1 / -1; color: var(--slate); font-size: 14px; }
+  details.better { margin-top: 16px; border-top: 1px solid var(--hair); padding-top: 12px; }
+  details.better summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  details.better p { margin-top: 10px; font-size: 17px; line-height: 1.6; }
+  .conf { font-size: 13px; color: var(--slate); margin: 16px 0 0 !important; }
+  .ai-loading { display: flex; align-items: center; gap: 12px; color: var(--slate); }
+  .ai-loading i { width: 16px; height: 16px; border: 2px solid var(--cobalt); border-top-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
+  .ai-promo { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; color: var(--slate); font-size: 15px; }
+
   .verdict { display: grid; grid-template-columns: auto 1fr; gap: 6px 26px; align-items: end; padding-bottom: 26px; border-bottom: 1px solid var(--hair); }
   .big { font-size: 88px; line-height: .85; font-weight: 700; letter-spacing: -0.05em; grid-row: span 2; }
   .big small { font-size: 22px; letter-spacing: 0; color: var(--slate); font-weight: 500; margin-left: 4px; }
   .verdict-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
   .verdict-sub { color: var(--slate); font-size: 15px; }
-
   .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding: 22px 0 26px; border-bottom: 1px solid var(--hair); }
   .metric-head { display: flex; justify-content: space-between; align-items: baseline; }
   .metric-head b { font-size: 16px; font-weight: 600; }
   .metric-head span { font-size: 22px; font-weight: 600; }
-  .metric .bar { height: 4px; background: var(--hair); border-radius: 2px; margin: 8px 0 8px; overflow: hidden; }
+  .metric .bar { height: 4px; background: var(--hair); border-radius: 2px; margin: 8px 0; overflow: hidden; }
   .metric .bar i { display: block; height: 100%; border-radius: 2px; }
   .metric p { margin: 0; font-size: 14px; color: var(--slate); line-height: 1.4; }
 
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 22px 0 24px; border-bottom: 1px solid var(--hair); margin: 0; }
+  .stats dt { font-size: 13px; color: var(--slate); }
+  .stats dd { margin: 2px 0 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .stats dd small { display: block; font-size: 13px; font-weight: 400; color: var(--slate); letter-spacing: 0; }
+
   .block { padding: 24px 0 4px; }
   .transcript { font-size: 20px; line-height: 1.75; max-width: 62ch; margin: 0; }
+  .tq { font-size: 14px; color: var(--slate); margin: 18px 0 2px; font-weight: 500; }
+  .tq:first-child { margin-top: 0; }
+  .ta { font-size: 18px; line-height: 1.7; margin: 0; max-width: 62ch; }
   .w { text-decoration-line: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: transparent; }
   .w.mid { text-decoration-color: rgba(183,121,31,.75); }
   .w.low { text-decoration-color: var(--weak); color: var(--weak); }
@@ -160,55 +170,39 @@
   .legend span::before { content: ""; display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
   .legend .l-mid::before { background: rgba(183,121,31,.75); }
   .legend .l-low::before { background: var(--weak); }
-  .pace { font-size: 15px; color: var(--slate); margin-top: 14px; }
-
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid var(--hair); background: var(--paper); border-radius: 999px;
-    padding: 7px 14px 7px 10px; cursor: pointer; font-size: 16px;
-  }
+  .chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--hair); background: var(--paper); border-radius: 999px; padding: 7px 14px 7px 10px; cursor: pointer; font-size: 16px; }
   .chip:hover { border-color: var(--cobalt); }
   .chip svg { width: 16px; height: 16px; color: var(--cobalt); }
   .chip em { font-style: normal; font-size: 13px; font-weight: 600; }
   .chip small { color: var(--slate); font-size: 13px; }
   .hint { font-size: 14px; color: var(--slate); margin: 10px 0 0; }
-
   .next-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--hair); }
-  .primary {
-    border: 0; border-radius: var(--r-ctl); background: var(--cobalt); color: #fff;
-    padding: 12px 18px; font-size: 16px; font-weight: 600; cursor: pointer;
-  }
+  .primary { border: 0; border-radius: var(--r-ctl); background: var(--cobalt); color: #fff; padding: 12px 18px; font-size: 16px; font-weight: 600; cursor: pointer; }
   .primary:hover { background: var(--cobalt-press); }
-  .secondary {
-    border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--paper);
-    padding: 11px 16px; font-size: 16px; font-weight: 500; cursor: pointer;
-  }
+  .secondary { border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--paper); padding: 11px 16px; font-size: 16px; font-weight: 500; cursor: pointer; }
   .secondary:hover { border-color: var(--slate); }
 
-  /* Dialogs */
-  dialog {
-    border: 0; border-radius: 16px; padding: 0; width: min(520px, calc(100vw - 32px));
-    background: var(--paper); color: var(--ink);
-    box-shadow: 0 30px 80px -20px rgba(24,32,46,.45);
-  }
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 30px 80px -20px rgba(24,32,46,.45); }
   dialog::backdrop { background: rgba(24,32,46,.38); }
   dialog[open] { animation: rise .18s ease-out; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
   .dlg { padding: 26px 26px 22px; }
   .dlg h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; }
   .dlg .lead { margin: 0 0 20px; color: var(--slate); font-size: 15px; }
+  fieldset { border: 0; padding: 0; margin: 0 0 6px; }
+  legend { font-size: 17px; font-weight: 600; padding: 0; margin-bottom: 4px; }
+  .legend-sub { font-size: 14px; color: var(--slate); margin: 0 0 14px; }
+  .sep { border-top: 1px solid var(--hair); margin: 18px 0; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
   .field .help { font-size: 13px; color: var(--slate); margin-top: 6px; }
-  .field input[type=text], .field input[type=password], .field select {
-    width: 100%; padding: 11px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: #fff;
-  }
+  .field input[type=text], .field input[type=password], .field select { width: 100%; padding: 11px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: #fff; font-size: 16px; }
   .field input:focus, .field select:focus { outline: 2px solid var(--cobalt); outline-offset: -1px; border-color: transparent; }
   .keyrow { display: flex; gap: 8px; }
   .keyrow input { flex: 1; min-width: 0; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .switch { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--hair); }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 4px 0 14px; }
   .switch b { font-weight: 600; font-size: 15px; display: block; }
   .switch span { font-size: 13px; color: var(--slate); }
   .switch input { width: 42px; height: 24px; appearance: none; background: var(--hair); border-radius: 12px; position: relative; cursor: pointer; flex: none; transition: background .15s; }
@@ -216,43 +210,58 @@
   .switch input:checked { background: var(--cobalt); }
   .switch input:checked::after { transform: translateX(18px); }
   .sdk { font-size: 13px; color: var(--slate); display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-  .sdk i { width: 8px; height: 8px; border-radius: 50%; background: var(--mid); }
+  .sdk i { width: 8px; height: 8px; border-radius: 50%; background: var(--mid); flex: none; }
   .sdk.ok i { background: var(--good); }
   .sdk.failed i { background: var(--weak); }
-  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; position: sticky; bottom: -22px; background: var(--paper); padding: 12px 0 2px; }
 
   .hist { list-style: none; margin: 0; padding: 0; max-height: 52vh; overflow: auto; }
   .hist li { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-top: 1px solid var(--hair); }
   .hist .q { font-weight: 500; font-size: 15px; }
   .hist .when { font-size: 13px; color: var(--slate); }
-  .hist .s { grid-row: span 2; font-size: 22px; font-weight: 600; align-self: center; }
-  .avg { display: flex; gap: 28px; margin-bottom: 14px; }
+  .hist .s { grid-row: span 2; font-size: 22px; font-weight: 600; align-self: center; text-align: right; }
+  .hist .s small { display: block; font-size: 12px; font-weight: 500; color: var(--slate); }
+  .avg { display: flex; gap: 28px; margin-bottom: 14px; flex-wrap: wrap; }
   .avg b { display: block; font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
   .avg span { font-size: 13px; color: var(--slate); }
   .empty { color: var(--slate); font-size: 15px; padding: 10px 0; }
-
-  .toast {
-    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
-    background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px;
-    transition: .2s; pointer-events: none; max-width: calc(100vw - 32px);
-  }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px; transition: .2s; pointer-events: none; max-width: calc(100vw - 32px); }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
-
+  .guide { width: min(640px, calc(100vw - 32px)); }
+  .guide .lead { font-size: 16px; }
+  .guide h4 { font-size: 17px; margin: 22px 0 10px; }
+  .guide ol { list-style: none; counter-reset: g; margin: 0; padding: 0; }
+  .guide ol > li { counter-increment: g; position: relative; padding: 0 0 18px 44px; }
+  .guide ol > li::before { content: counter(g); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--cobalt-tint); color: var(--cobalt); font-weight: 700; font-size: 15px; display: grid; place-items: center; }
+  .guide ol > li b { display: block; font-size: 16px; margin-bottom: 2px; }
+  .guide ol > li p { margin: 0; font-size: 15px; color: #39414F; line-height: 1.5; }
+  .guide a { color: var(--cobalt); font-weight: 500; }
+  .guide .tip { margin-top: 6px; font-size: 14px; color: var(--slate); }
+  .guide code { font-size: 14px; background: #EEF1F5; padding: 1px 5px; border-radius: 4px; }
+  .guide details { border-top: 1px solid var(--hair); padding-top: 14px; margin-top: 6px; }
+  .guide summary { cursor: pointer; font-weight: 600; font-size: 17px; }
+  .guide summary small { display: block; font-weight: 400; font-size: 14px; color: var(--slate); margin-top: 2px; }
+  .guide details ol { margin-top: 16px; }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--cobalt); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .hidden { display: none !important; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
   @media (max-width: 600px) {
     .wrap { padding: 20px 16px 80px; }
+    .parts { grid-template-columns: 1fr 1fr; }
     .card { padding: 22px 20px 18px; }
     .metrics { grid-template-columns: 1fr; gap: 18px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .crit { grid-template-columns: 1fr 1fr; }
     .big { font-size: 68px; }
     .two { grid-template-columns: 1fr; }
     .tools .ghost span { display: none; }
     .rec-btn { width: 100%; justify-content: center; }
+    .fix { grid-template-columns: 1fr; }
+    .verdict { grid-template-columns: 1fr; gap: 10px; }
+    .big { grid-row: auto; }
+    .ai { padding: 20px 18px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -263,6 +272,10 @@
       <button class="ghost hidden" id="install" type="button" aria-label="Installa l'app">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
         <span>Installa</span>
+      </button>
+      <button class="ghost" id="openGuide" type="button" aria-label="Guida">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>
+        <span>Guida</span>
       </button>
       <button class="ghost" id="openHistory" type="button" aria-label="Progressi">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
@@ -275,14 +288,16 @@
     </div>
   </header>
 
-  <div class="parts" role="group" aria-label="Parte dell'esame">
-    <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi, 20–30 s</small></button>
-    <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card, fino a 2 min</small></button>
-    <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione, 40–60 s</small></button>
+  <div class="parts" role="group" aria-label="Modalità">
+    <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi</small></button>
+    <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card</small></button>
+    <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione</small></button>
+    <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Esame completo</b><small>Circa 12 minuti</small></button>
   </div>
 
   <article class="card" aria-live="polite">
     <div class="card-top"><span class="topic" id="topic"></span><span id="progress"></span></div>
+    <div class="steps hidden" id="steps"></div>
     <h1 class="question" id="question"></h1>
     <ul class="bullets hidden" id="bullets"></ul>
     <div class="card-actions">
@@ -297,6 +312,10 @@
       <button class="ghost" id="newTopic" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>
         Cambia argomento
+      </button>
+      <button class="ghost hidden" id="exitMock" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        Esci dall'esame
       </button>
     </div>
   </article>
@@ -315,10 +334,14 @@
   </section>
 
   <section class="results hidden" id="results" aria-live="polite">
+    <div class="warn hidden" id="warn"></div>
+
+    <div class="ai" id="ai"></div>
+
     <div class="verdict">
       <div class="big" id="rPron">0<small>/100</small></div>
       <div class="verdict-title" id="rTitle"></div>
-      <div class="verdict-sub">Pronuncia complessiva secondo Azure. Non è una band IELTS, la band la stimo io quando mi incolli il risultato.</div>
+      <div class="verdict-sub">Pronuncia complessiva secondo Azure, da 0 a 100. Non è una band IELTS.</div>
     </div>
 
     <div class="metrics">
@@ -327,11 +350,12 @@
       <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p>Accenti delle parole, melodia della frase, enfasi.</p></div>
     </div>
 
+    <dl class="stats" id="stats"></dl>
+
     <div class="block">
       <h2>Cosa ha capito Azure</h2>
-      <p class="transcript" id="transcript"></p>
+      <div id="transcript"></div>
       <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
-      <p class="pace" id="pace"></p>
       <p class="hint">Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
     </div>
 
@@ -341,47 +365,114 @@
       <p class="hint">Tocca una parola per sentirla pronunciata.</p>
     </div>
 
-    <div class="next-row">
-      <button class="primary" id="copy" type="button">Copia per Claude</button>
-      <button class="secondary" id="retry" type="button">Riprova questa domanda</button>
-      <button class="secondary" id="resultNext" type="button">Domanda successiva</button>
-    </div>
+    <div class="next-row" id="nextRow"></div>
   </section>
 </div>
 
 <dialog id="settings">
   <form class="dlg" method="dialog" id="settingsForm">
     <h3>Impostazioni</h3>
-    <p class="lead" id="settingsLead">Collega la tua risorsa Azure Speech. I dati restano salvati solo in questo browser.</p>
-    <div class="field">
-      <label for="fKey">Chiave</label>
-      <div class="keyrow">
-        <input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Key 1 da Chiavi ed endpoint">
-        <button type="button" class="secondary" id="toggleKey">Mostra</button>
-      </div>
-    </div>
-    <div class="two">
+    <p class="lead"><span id="settingsLead">I dati restano salvati solo in questo browser.</span> <button type="button" class="linkbtn" id="guideFromSettings">Non hai le chiavi? Leggi la guida</button></p>
+
+    <fieldset>
+      <legend>Voce e pronuncia</legend>
+      <p class="legend-sub">La tua risorsa Azure Speech, da Chiavi ed endpoint.</p>
       <div class="field">
-        <label for="fRegion">Regione</label>
-        <input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth">
-        <div class="help">Come in Posizione/Area, ad esempio italynorth</div>
+        <label for="fKey">Chiave</label>
+        <div class="keyrow">
+          <input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Key 1">
+          <button type="button" class="secondary" data-toggle="fKey">Mostra</button>
+        </div>
+      </div>
+      <div class="two">
+        <div class="field">
+          <label for="fRegion">Regione</label>
+          <input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth">
+          <div class="help">Come in Posizione/Area</div>
+        </div>
+        <div class="field">
+          <label for="fLang">Accento</label>
+          <select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select>
+          <div class="help">Voce e pronuncia di riferimento</div>
+        </div>
+      </div>
+      <label class="switch">
+        <div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div>
+        <input type="checkbox" id="fAuto">
+      </label>
+      <div class="sdk" id="sdk"><i></i><span id="sdkText"></span></div>
+    </fieldset>
+
+    <div class="sep"></div>
+
+    <fieldset>
+      <legend>Band IELTS automatica</legend>
+      <p class="legend-sub">Facoltativa. Con una risorsa Azure OpenAI l'app stima la band da sola, senza copiare niente. Lascia vuoto per usare solo Copia per Claude.</p>
+      <div class="field">
+        <label for="fAiEndpoint">Endpoint</label>
+        <input id="fAiEndpoint" type="text" autocomplete="off" spellcheck="false" placeholder="https://nome-risorsa.openai.azure.com">
       </div>
       <div class="field">
-        <label for="fLang">Accento</label>
-        <select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select>
-        <div class="help">Voce delle domande e pronuncia di riferimento</div>
+        <label for="fAiKey">Chiave</label>
+        <div class="keyrow">
+          <input id="fAiKey" type="password" autocomplete="off" spellcheck="false">
+          <button type="button" class="secondary" data-toggle="fAiKey">Mostra</button>
+        </div>
       </div>
-    </div>
-    <label class="switch">
-      <div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div>
-      <input type="checkbox" id="fAuto">
-    </label>
-    <div class="sdk" id="sdk"><i></i><span id="sdkText"></span></div>
+      <div class="field">
+        <label for="fAiDep">Nome del deployment</label>
+        <input id="fAiDep" type="text" autocomplete="off" spellcheck="false" placeholder="gpt-5-mini">
+        <div class="help">Il nome che hai dato al modello quando l'hai distribuito</div>
+      </div>
+    </fieldset>
+
     <div class="dlg-actions">
       <button type="button" class="secondary" id="cancelSettings">Annulla</button>
-      <button type="submit" class="primary" id="saveSettings">Salva</button>
+      <button type="submit" class="primary">Salva</button>
     </div>
   </form>
+</dialog>
+
+<dialog id="guide" class="guide">
+  <div class="dlg">
+    <h3>Come iniziare</h3>
+    <p class="lead">L'app usa Azure, il cloud di Microsoft, per ascoltarti e valutare la pronuncia. Ti serve una chiave tua, gratuita per gli studenti universitari. Ci vogliono circa 10 minuti, e lo fai una volta sola.</p>
+
+    <h4>Voce e pronuncia, obbligatorio</h4>
+    <ol>
+      <li><b>Crea un account Azure</b>
+        <p>Se sei studente universitario usa <a href="https://azure.microsoft.com/free/students" target="_blank" rel="noopener">Azure for Students</a> con la mail dell'università. Non serve la carta di credito e ricevi crediti gratuiti. Se la mail dell'università non funziona, puoi creare un account Azure gratuito normale.</p></li>
+      <li><b>Crea la risorsa Speech</b>
+        <p>Apri il <a href="https://portal.azure.com" target="_blank" rel="noopener">portale Azure</a>, cerca <code>Speech</code> nella barra in alto e scegli Speech dal Marketplace, pubblicato da Microsoft (in italiano può chiamarsi Voce). Evita Microsoft Foundry, che non ha il piano gratuito. Premi Crea e compila così.</p>
+        <p class="tip">Gruppo di risorse, creane uno nuovo, ad esempio <code>ielts</code>. Area, Italy North o un'altra in Europa. Nome, uno qualsiasi. Piano tariffario, <b style="display:inline">Free F0</b>, che include 5 ore di audio gratis al mese.</p></li>
+      <li><b>Se compare un errore di policy sulla regione</b>
+        <p>Con l'abbonamento studenti alcune regioni sono bloccate. Rifai la creazione scegliendo Italy North, Sweden Central, France Central o Germany West Central.</p></li>
+      <li><b>Copia chiave e regione</b>
+        <p>Quando la risorsa è pronta premi Vai alla risorsa e apri Chiavi ed endpoint. Copia la Key 1 e la regione indicata in Posizione/Area, scritta tutta attaccata, ad esempio <code>italynorth</code>. Tieni la chiave per te, funziona come una password.</p></li>
+      <li><b>Incollale nell'app</b>
+        <p>Apri Impostazioni, incolla chiave e regione e salva. Alla prima registrazione consenti l'accesso al microfono.</p></li>
+    </ol>
+
+    <details>
+      <summary>Band IELTS automatica, facoltativo<small>Per vedere la band direttamente nell'app senza copiare niente</small></summary>
+      <ol>
+        <li><b>Crea una risorsa Azure OpenAI</b>
+          <p>Nel portale cerca <code>Azure OpenAI</code> e premi Crea. Usa lo stesso gruppo di risorse, una regione europea consentita (se una è bloccata provane un'altra) e il piano Standard. Si paga a consumo dai crediti, e ogni valutazione costa pochissimo.</p></li>
+        <li><b>Distribuisci un modello</b>
+          <p>Dalla risorsa apri il portale Foundry, vai su Distribuzioni e premi Distribuisci modello. Scegli un modello piccolo ed economico, ad esempio <code>gpt-5-mini</code> o <code>gpt-4.1-mini</code>, con tipo Global Standard. Annota il nome che dai alla distribuzione.</p></li>
+        <li><b>Copia endpoint e chiave</b>
+          <p>Torna alla risorsa nel portale Azure e apri Chiavi ed endpoint. Copia l'endpoint (inizia con https) e la Key 1.</p></li>
+        <li><b>Incollali nell'app</b>
+          <p>In Impostazioni, sezione Band IELTS automatica, inserisci endpoint, chiave e nome della distribuzione. Dalla risposta successiva la band compare da sola.</p></li>
+      </ol>
+      <p class="tip">Se il tuo abbonamento non permette Azure OpenAI, puoi sempre usare Copia per Claude e incollare il risultato in una chat. I nomi dei menu nel portale a volte cambiano leggermente.</p>
+    </details>
+
+    <div class="dlg-actions">
+      <button type="button" class="secondary" id="closeGuide">Chiudi</button>
+      <button type="button" class="primary" id="guideToSettings">Apri le impostazioni</button>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="history">
@@ -400,6 +491,7 @@
 <div class="toast" id="toast" role="status"></div>
 
 <script>
+{
 /* ---------- Domande ---------- */
 const P1 = [
   { topic: "Studio e lavoro", qs: ["Do you work or are you a student?", "What made you choose your field of study?", "What part of your course do you enjoy the most?", "Would you like to keep studying after your degree? Why?"] },
@@ -413,7 +505,6 @@ const P1 = [
   { topic: "Cibo e cucina", qs: ["How often do you cook at home?", "What is a dish you are good at making?", "Do you prefer eating at home or eating out?", "Is there a food from your region you would recommend to a visitor?"] },
   { topic: "Viaggi e trasporti", qs: ["How do you usually get around the city?", "Do you prefer travelling by bus or by train?", "What was the last trip you took?", "Is there a country you would really like to visit?"] }
 ];
-
 const P2 = [
   { topic: "Creatività", prompt: "Describe a creative project you are proud of.", bullets: ["what the project was", "when and why you did it", "what was difficult about it"], closing: "and explain why you are proud of it.",
     p3: ["Why do some people find it easier to be creative than others?", "Should schools spend more time teaching creative subjects?", "Can creativity be learned, or is it something you are born with?", "How has technology changed the way people create things?"] },
@@ -434,79 +525,114 @@ const P2 = [
   { topic: "Memoria", prompt: "Describe a historical place you have visited.", bullets: ["where it is", "when you went there", "what you learned there"], closing: "and explain how you felt during the visit.",
     p3: ["Why is it important for young people to learn about history?", "Should historical sites be free to visit?", "How can museums make history more interesting for young people?", "Do you think we learn from the mistakes of the past?"] }
 ];
+const TARGET = { 1: [20, 30, 45], 2: [90, 120, 120], 3: [40, 60, 80] };
+const TICK = 1e7; // Azure misura il tempo in unità da 100 nanosecondi
 
-const TARGET = { 1: [20, 30, 45], 2: [90, 120, 120], 3: [40, 60, 80] }; // min, max, scala della barra
+/* Riassunto dei descrittori IELTS Speaking, riformulato */
+const RUBRIC = `IELTS Speaking band descriptors (summary)
+Fluency and Coherence. 9 fluent, only rare hesitation linked to content, fully coherent. 8 fluent, occasional repetition or self-correction, develops topics coherently. 7 speaks at length without noticeable effort, some hesitation or repetition, uses a range of connectives flexibly. 6 willing to speak at length but loses coherence at times, some hesitation and repetition, connectives not always appropriate. 5 keeps going but relies on repetition, self-correction or slow speech, overuses some connectives. 4 noticeable pauses, slow, frequent repetition, simple linking only.
+Lexical Resource. 9 full flexibility and precision, natural idiomatic language. 8 wide resource used readily and flexibly, skilful use of less common and idiomatic items with occasional inaccuracies. 7 flexible across topics, some less common and idiomatic vocabulary, some inappropriate choices. 6 wide enough to discuss topics at length, meaning clear despite inappropriacies, generally paraphrases successfully. 5 manages familiar and unfamiliar topics with limited flexibility, attempts paraphrase with mixed success. 4 basic vocabulary, frequent inappropriacies.
+Grammatical Range and Accuracy. 9 full range used naturally and accurately. 8 wide range used flexibly, most sentences error free. 7 range of complex structures with some flexibility, frequent error-free sentences, some errors persist. 6 mix of simple and complex structures with limited flexibility, frequent errors in complex structures that rarely impede communication. 5 basic forms reasonably accurate, limited complex structures that usually contain errors. 4 basic sentence forms, frequent errors.
+Pronunciation. 9 full range of features, effortless to understand. 8 wide range of features used flexibly, easy to understand, L1 accent has minimal effect. 7 all positive features of band 6 and some of band 8. 6 range of features with mixed control, generally understood, some mispronunciation reduces clarity at times. 5 all features of band 4 and some of band 6. 4 limited range, frequent mispronunciations cause some difficulty.`;
 
 /* ---------- Utilità ---------- */
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
-function toast(msg) {
-  const t = $("toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2600);
-}
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2600); }
 const shuffle = n => Array.from({ length: n }, (_, i) => i).sort(() => Math.random() - .5);
+const rnd = n => Math.floor(Math.random() * n);
+const roundBand = x => Math.round(x * 2) / 2;
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ---------- Impostazioni ---------- */
 function loadSettings() {
   const s = store.get("ist_settings", null);
   if (s) return s;
-  // migra dalle versioni precedenti
   return { key: store.get("az_key", ""), region: store.get("az_region", ""), lang: store.get("az_lang", "en-GB"), autoRead: false };
 }
 let settings = loadSettings();
 const normRegion = r => (r || "").toLowerCase().replace(/[\s_-]+/g, "").replace(/^northitaly$/, "italynorth");
-const configured = () => settings.key && settings.region;
+const configured = () => !!(settings.key && settings.region);
+const aiConfigured = () => !!(settings.aiEndpoint && settings.aiKey && settings.aiDeployment);
 
 function openSettings(first) {
   $("fKey").value = settings.key || ""; $("fRegion").value = settings.region || "";
   $("fLang").value = settings.lang || "en-GB"; $("fAuto").checked = !!settings.autoRead;
+  $("fAiEndpoint").value = settings.aiEndpoint || ""; $("fAiKey").value = settings.aiKey || ""; $("fAiDep").value = settings.aiDeployment || "";
   $("settingsLead").textContent = first
     ? "Per iniziare collega la tua risorsa Azure Speech. Chiave e regione le trovi nel portale, alla voce Chiavi ed endpoint della risorsa."
-    : "Collega la tua risorsa Azure Speech. I dati restano salvati solo in questo browser.";
+    : "I dati restano salvati solo in questo browser.";
   $("cancelSettings").classList.toggle("hidden", !!first && !configured());
   $("settings").showModal();
   if (!$("fKey").value) $("fKey").focus();
 }
 $("openSettings").onclick = () => openSettings(false);
+function openGuide() { $("guide").showModal(); }
+$("openGuide").onclick = openGuide;
+$("closeGuide").onclick = () => { $("guide").close(); if (!configured()) openSettings(true); };
+$("guideToSettings").onclick = () => { $("guide").close(); openSettings(!configured()); };
+$("guideFromSettings").onclick = () => { $("settings").close(); openGuide(); };
 $("cancelSettings").onclick = () => $("settings").close();
-$("toggleKey").onclick = () => {
-  const f = $("fKey"); const show = f.type === "password";
-  f.type = show ? "text" : "password"; $("toggleKey").textContent = show ? "Nascondi" : "Mostra";
-};
+document.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => {
+  const f = $(b.dataset.toggle); const show = f.type === "password";
+  f.type = show ? "text" : "password"; b.textContent = show ? "Nascondi" : "Mostra";
+});
+function parseAi(endpoint, dep) {
+  endpoint = (endpoint || "").trim(); dep = (dep || "").trim();
+  if (!endpoint) return { endpoint: "", dep };
+  const m = endpoint.match(/\/deployments\/([^/?#]+)/);
+  if (m && !dep) dep = decodeURIComponent(m[1]);
+  try { endpoint = new URL(endpoint).origin; } catch { endpoint = endpoint.replace(/\/+$/, ""); }
+  return { endpoint, dep };
+}
 $("settingsForm").addEventListener("submit", e => {
   const key = $("fKey").value.trim(), region = normRegion($("fRegion").value);
-  if (!key || !region) { e.preventDefault(); toast("Servono sia la chiave sia la regione"); return; }
-  settings = { key, region, lang: $("fLang").value, autoRead: $("fAuto").checked };
+  if (!key || !region) { e.preventDefault(); toast("Servono sia la chiave sia la regione di Azure Speech"); return; }
+  const ai = parseAi($("fAiEndpoint").value, $("fAiDep").value), aiKey = $("fAiKey").value.trim();
+  const filled = [ai.endpoint, aiKey, ai.dep].filter(Boolean).length;
+  if (filled > 0 && filled < 3) { e.preventDefault(); toast("Per la band automatica servono endpoint, chiave e nome del deployment"); return; }
+  settings = { key, region, lang: $("fLang").value, autoRead: $("fAuto").checked, aiEndpoint: ai.endpoint, aiKey, aiDeployment: ai.dep };
   store.set("ist_settings", settings);
   resetSynth(); hideAlert(); toast("Impostazioni salvate");
+  if (lastRun && !$("results").classList.contains("hidden")) renderAi();
 });
 $("settings").addEventListener("cancel", e => { if (!configured()) e.preventDefault(); });
 
 function showSdk() {
-  const el = $("sdk"); el.className = "sdk " + window.sdkState;
+  $("sdk").className = "sdk " + window.sdkState;
   $("sdkText").textContent = { loading: "Sto caricando il servizio vocale di Azure", ok: "Servizio vocale di Azure pronto", failed: "Servizio vocale non caricato. Usa Chrome o Edge e disattiva l'adblocker su questa pagina." }[window.sdkState];
-  if (window.sdkState === "failed") showAlert("Il servizio vocale di Azure non si è caricato. Usa Chrome o Edge sul PC e disattiva l'adblocker su questa pagina, poi ricarica.", false);
+  if (window.sdkState === "failed") showAlert("Il servizio vocale di Azure non si è caricato. Usa Chrome o Edge e disattiva l'adblocker su questa pagina, poi ricarica.", false);
 }
 document.addEventListener("sdkchange", showSdk);
 
-/* ---------- Domanda corrente ---------- */
-let part = 1, p1Order = shuffle(P1.length), p2Order = shuffle(P2.length), p1i = 0, p2i = 0, qi = 0;
-let p3Source = null; // indice della cue card collegata
-const current = () => {
-  if (part === 1) { const t = P1[p1Order[p1i % P1.length]]; return { topic: t.topic, text: t.qs[qi], idx: qi, total: t.qs.length }; }
-  if (part === 2) { const c = P2[p2Order[p2i % P2.length]]; return { topic: c.topic, text: c.prompt, card: c, idx: 0, total: 1 }; }
-  const c = P2[p3Source ?? p2Order[p2i % P2.length]]; return { topic: c.topic, text: c.p3[qi], idx: qi, total: c.p3.length };
-};
+/* ---------- Domande e modalità ---------- */
+let part = 1, mock = null;
+let p1Order = shuffle(P1.length), p2Order = shuffle(P2.length), p1i = 0, p2i = 0, qi = 0, p3Source = null;
+
+function current() {
+  if (mock) { const s = mock.steps[mock.i]; return { ...s, idx: mock.i, total: mock.steps.length }; }
+  if (part === 1) { const t = P1[p1Order[p1i % P1.length]]; return { part: 1, topic: t.topic, text: t.qs[qi], idx: qi, total: t.qs.length }; }
+  if (part === 2) { const c = P2[p2Order[p2i % P2.length]]; return { part: 2, topic: c.topic, text: c.prompt, card: c, idx: 0, total: 1 }; }
+  const c = P2[p3Source ?? p2Order[p2i % P2.length]]; return { part: 3, topic: c.topic, text: c.p3[qi], idx: qi, total: c.p3.length };
+}
+const spoken = q => q.card ? `${q.card.prompt} You should say ${q.card.bullets.join(", ")}, ${q.card.closing}` : q.text;
+const cardText = q => q.card ? `${q.card.prompt} You should say ${q.card.bullets.join("; ")}; ${q.card.closing}` : q.text;
 
 function showQuestion(autoRead = true) {
   const q = current();
-  $("topic").textContent = q.topic;
-  $("progress").textContent = q.total > 1 ? `Domanda ${q.idx + 1} di ${q.total}` : "Cue card";
+  if (mock) part = q.part;
+  $("topic").textContent = mock ? `Part ${q.part}, ${q.topic}` : q.topic;
+  $("progress").textContent = mock ? `${q.idx + 1} di ${q.total}` : q.total > 1 ? `Domanda ${q.idx + 1} di ${q.total}` : "Cue card";
+  const steps = $("steps");
+  if (mock) {
+    steps.innerHTML = mock.steps.map((_, i) => `<i class="${i < mock.i ? "done" : i === mock.i ? "now" : ""}"></i>`).join("");
+    steps.classList.remove("hidden");
+  } else steps.classList.add("hidden");
   $("question").textContent = q.text;
   const ul = $("bullets");
   if (q.card) {
@@ -515,51 +641,60 @@ function showQuestion(autoRead = true) {
   } else ul.classList.add("hidden");
   const last = q.idx + 1 >= q.total;
   $("nextQLabel").textContent = part === 2 ? "Passa alla Part 3 su questo tema" : last ? "Nuovo argomento" : "Domanda successiva";
-  $("resultNext").textContent = $("nextQLabel").textContent;
+  ["nextQ", "newTopic"].forEach(id => $(id).classList.toggle("hidden", !!mock));
+  $("exitMock").classList.toggle("hidden", !mock);
+  document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(mock ? b.dataset.part === "mock" : b.dataset.part === String(part))));
   setTarget(); resetClock();
-  $("live").textContent = "";
   if (state === "idle") setState("idle");
   if (autoRead && settings.autoRead && configured() && window.sdkState === "ok") speak(spoken(q));
 }
-const spoken = q => q.card ? `${q.card.prompt} You should say ${q.card.bullets.join(", ")}, ${q.card.closing}` : q.text;
 
 function setPart(p, keepTopic) {
   if (busy()) return;
-  part = p; qi = 0;
+  if (p === "mock") return startMock();
+  if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
+  mock = null; part = p; qi = 0;
   if (p === 3 && !keepTopic) p3Source = p2Order[p2i % P2.length];
-  document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.part === p)));
-  hideResults(); showQuestion();
+  hideResults(); clearLive(); showQuestion();
 }
-document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(+b.dataset.part));
+document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(b.dataset.part === "mock" ? "mock" : +b.dataset.part));
+
+function startMock() {
+  if (mock && mock.answers.length && !confirm("Vuoi ricominciare l'esame da capo?")) return;
+  const t = P1[rnd(P1.length)], c = P2[rnd(P2.length)];
+  const steps = [
+    ...t.qs.map(q => ({ part: 1, topic: t.topic, text: q })),
+    { part: 2, topic: c.topic, text: c.prompt, card: c },
+    ...c.p3.map(q => ({ part: 3, topic: c.topic, text: q }))
+  ];
+  mock = { steps, i: 0, answers: [] };
+  hideResults(); hideAlert(); clearLive();
+  showQuestion();
+  toast("Esame completo, 9 domande. Rispondi come il giorno dell'esame.");
+}
+$("exitMock").onclick = () => setPart(part === 2 ? 2 : part);
 
 function nextQuestion() {
-  if (busy()) return;
+  if (busy() || mock) return;
   const q = current();
   if (part === 2) { p3Source = p2Order[p2i % P2.length]; return setPart(3, true); }
-  if (q.idx + 1 < q.total) qi++; else newTopic(true);
-  hideResults(); showQuestion();
+  if (q.idx + 1 < q.total) qi++; else bumpTopic();
+  hideResults(); clearLive(); showQuestion();
 }
-function newTopic(silent) {
-  if (busy()) return;
+function bumpTopic() {
   qi = 0;
   if (part === 1) p1i++;
   else if (part === 2) p2i++;
-  else { const i = P2.findIndex((_, k) => k === p3Source); p3Source = (i + 1 + Math.floor(Math.random() * (P2.length - 1))) % P2.length; }
-  if (silent !== true) { hideResults(); showQuestion(); }
+  else p3Source = ((p3Source ?? 0) + 1 + rnd(P2.length - 1)) % P2.length;
 }
 $("nextQ").onclick = nextQuestion;
-$("resultNext").onclick = nextQuestion;
-$("newTopic").onclick = () => newTopic();
+$("newTopic").onclick = () => { if (busy() || mock) return; bumpTopic(); hideResults(); clearLive(); showQuestion(); };
 $("listen").onclick = () => speak(spoken(current()));
 
 /* ---------- Sintesi vocale ---------- */
 let synth = null;
 function resetSynth() { try { synth && synth.close(); } catch {} synth = null; }
-function speechConfig() {
-  const c = SpeechSDK.SpeechConfig.fromSubscription(settings.key, settings.region);
-  c.speechRecognitionLanguage = settings.lang;
-  return c;
-}
+function speechConfig() { const c = SpeechSDK.SpeechConfig.fromSubscription(settings.key, settings.region); c.speechRecognitionLanguage = settings.lang; return c; }
 function speak(text) {
   if (!ensureReady()) return;
   try {
@@ -580,7 +715,7 @@ function hideAlert() { $("alert").classList.add("hidden"); }
 $("alertFix").onclick = () => openSettings(false);
 function handleAzureError(details = "") {
   const d = details.toLowerCase();
-  if (d.includes("401") || d.includes("auth") || d.includes("subscription")) showAlert("Azure ha rifiutato la chiave. Controlla di aver copiato la Key 1 della risorsa giusta.", true);
+  if (d.includes("401") || d.includes("auth") || d.includes("subscription")) showAlert("Azure ha rifiutato la chiave. Controlla di aver copiato la Key 1 della risorsa Speech giusta.", true);
   else if (d.includes("1006") || d.includes("unable to contact") || d.includes("websocket") || d.includes("network")) showAlert(`Non riesco a collegarmi ad Azure nella regione "${settings.region}". Controlla che sia scritta come in Posizione/Area, ad esempio italynorth.`, true);
   else if (d.includes("quota") || d.includes("429")) showAlert("Hai raggiunto il limite gratuito di Azure per questo periodo. Riprova più tardi.", false);
   else showAlert("Azure ha restituito un errore. " + details, true);
@@ -592,7 +727,7 @@ function ensureReady() {
   return true;
 }
 
-/* ---------- Timer e barra obiettivo ---------- */
+/* ---------- Timer ---------- */
 function setTarget() {
   const [min, max, scale] = TARGET[part];
   $("target").style.left = (min / scale * 100) + "%";
@@ -606,20 +741,20 @@ function updateClock(t) {
   $("fill").style.width = Math.min(100, t / scale * 100) + "%";
   $("fill").classList.toggle("in", t >= min && t <= max + 5);
 }
+function clearLive() { $("live").textContent = ""; $("live").classList.remove("quiet"); }
 
 /* ---------- Registrazione ---------- */
-let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, partial = "";
+let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null;
 const busy = () => state !== "idle";
 function setState(s) {
   state = s;
-  const btn = $("rec"), label = $("recLabel");
+  const btn = $("rec");
   btn.classList.toggle("live", s === "listening");
   btn.classList.toggle("wait", s === "connecting" || s === "processing");
   btn.disabled = s === "connecting" || s === "processing";
-  label.textContent = { idle: part === 2 ? "Inizia la preparazione" : "Inizia a parlare", prep: "Inizia subito a parlare", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
-  document.querySelectorAll(".parts button, #nextQ, #newTopic").forEach(b => b.disabled = s !== "idle");
+  $("recLabel").textContent = { idle: part === 2 ? "Inizia la preparazione" : "Inizia a parlare", prep: "Inizia subito a parlare", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
+  document.querySelectorAll(".parts button, #nextQ, #newTopic, #exitMock").forEach(b => b.disabled = s !== "idle");
 }
-
 $("rec").onclick = () => {
   if (state === "listening") return stop();
   if (state === "prep") return start();
@@ -629,7 +764,6 @@ $("rec").onclick = () => {
   if (part === 2) return startPrep();
   start();
 };
-
 function startPrep() {
   hideResults();
   let left = 60;
@@ -637,30 +771,22 @@ function startPrep() {
   $("clock").textContent = fmt(left);
   $("clockNote").textContent = "Un minuto per prepararti, prendi appunti su carta";
   $("fill").style.width = "0";
-  prepTimer = setInterval(() => {
-    left--; $("clock").textContent = fmt(left);
-    if (left <= 0) start();
-  }, 1000);
+  prepTimer = setInterval(() => { left--; $("clock").textContent = fmt(left); if (left <= 0) start(); }, 1000);
 }
-
 function start() {
   clearInterval(prepTimer); prepTimer = null;
-  hideResults(); segments = []; partial = ""; $("live").textContent = "";
+  hideResults(); segments = []; clearLive();
   setTarget(); resetClock();
   setState("connecting");
   try {
-    const cfg = speechConfig();
-    const pa = new SpeechSDK.PronunciationAssessmentConfig("",
-      SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
-      SpeechSDK.PronunciationAssessmentGranularity.Phoneme, false);
+    const pa = new SpeechSDK.PronunciationAssessmentConfig("", SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark, SpeechSDK.PronunciationAssessmentGranularity.Phoneme, false);
     pa.enableProsodyAssessment = true;
     if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
-    recognizer = new SpeechSDK.SpeechRecognizer(cfg, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+    recognizer = new SpeechSDK.SpeechRecognizer(speechConfig(), SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
     pa.applyTo(recognizer);
   } catch (e) { setState("idle"); handleAzureError(String(e)); return; }
-
   const finalText = () => segments.map(s => s.text).join(" ");
-  recognizer.recognizing = (s, e) => { partial = e.result.text; $("live").textContent = (finalText() + " " + partial).trim(); };
+  recognizer.recognizing = (s, e) => { $("live").textContent = (finalText() + " " + e.result.text).trim(); };
   recognizer.recognized = (s, e) => {
     if (e.result.reason !== SpeechSDK.ResultReason.RecognizedSpeech) return;
     try {
@@ -668,144 +794,291 @@ function start() {
       const nb = j.NBest && j.NBest[0];
       if (nb && nb.Words && nb.Words.length) segments.push({ text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words });
     } catch (err) { console.warn(err); }
-    partial = ""; $("live").textContent = finalText();
+    $("live").textContent = finalText();
   };
-  recognizer.canceled = (s, e) => {
-    if (e.reason === SpeechSDK.CancellationReason.Error) { cleanup(); handleAzureError(e.errorDetails); }
-  };
-
+  recognizer.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { cleanup(); handleAzureError(e.errorDetails); } };
   recognizer.startContinuousRecognitionAsync(() => {
     setState("listening"); startAt = Date.now();
-    tick = setInterval(() => {
-      const t = (Date.now() - startAt) / 1000;
-      updateClock(t);
-      if (part === 2 && t >= 120) stop();
-    }, 200);
+    tick = setInterval(() => { const t = (Date.now() - startAt) / 1000; updateClock(t); if (part === 2 && t >= 120) stop(); }, 200);
   }, err => {
     cleanup();
     const msg = String(err).toLowerCase();
-    if (msg.includes("permission") || msg.includes("notallowed") || msg.includes("microphone")) showAlert("Il browser non ha accesso al microfono. Clicca sul lucchetto accanto all'indirizzo e consenti il microfono.", false);
+    if (msg.includes("permission") || msg.includes("notallowed") || msg.includes("microphone")) showAlert("Il browser non ha accesso al microfono. Tocca il lucchetto accanto all'indirizzo e consenti il microfono.", false);
     else handleAzureError(String(err));
   });
 }
-
 function cleanup() {
   clearInterval(tick); clearInterval(prepTimer); prepTimer = null;
   const r = recognizer; recognizer = null;
   if (r) { try { r.close(); } catch {} }
   setState("idle");
 }
-
 function stop() {
   if (state !== "listening" || !recognizer) return;
   clearInterval(tick);
   const seconds = (Date.now() - startAt) / 1000;
   setState("processing");
   const r = recognizer;
-  r.stopContinuousRecognitionAsync(() => {
-    recognizer = null; try { r.close(); } catch {}
-    setState("idle");
-    render(seconds);
-  }, () => { cleanup(); });
+  r.stopContinuousRecognitionAsync(() => { recognizer = null; try { r.close(); } catch {} setState("idle"); finished(seconds); }, () => cleanup());
 }
 
-/* ---------- Risultati ---------- */
-let last = null;
-const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
-const color = v => v == null ? "var(--hair)" : `var(--${band(v)})`;
-const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo"
-  : v >= 70 ? "Chiara, con qualche suono da sistemare"
-  : v >= 55 ? "Comprensibile, ma alcuni errori si notano"
-  : "Da lavorare, alcune parole rischiano di non essere capite";
-
-function hideResults() { $("results").classList.add("hidden"); $("live").classList.remove("quiet"); }
-
-function render(seconds) {
-  if (!segments.length) {
-    showAlert("Non ho ricevuto parole. Se hai parlato, controlla che il microfono giusto sia quello predefinito in Windows.", false);
+function finished(seconds) {
+  if (!segments.length) { showAlert("Non ho ricevuto parole. Se hai parlato, controlla che il microfono giusto sia quello predefinito.", false); return; }
+  const item = { q: current(), segs: segments, seconds };
+  if (mock) {
+    mock.answers.push(item);
+    if (mock.i + 1 < mock.steps.length) {
+      mock.i++;
+      clearLive(); $("live").classList.add("quiet");
+      showQuestion();
+      toast(`Risposta salvata. Domanda ${mock.i + 1} di ${mock.steps.length}`);
+      window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
+    } else {
+      const answers = mock.answers; mock = null;
+      showRun(answers, true);
+    }
     return;
   }
-  const words = segments.flatMap(s => s.words);
+  showRun([item], false);
+}
+
+/* ---------- Analisi ---------- */
+function analyze(items) {
+  const segs = items.flatMap(it => it.segs);
+  const words = segs.flatMap(s => s.words);
   const n = words.length;
-  const avg = key => {
-    let tot = 0, w = 0;
-    segments.forEach(s => { if (typeof s.pa[key] === "number") { tot += s.pa[key] * s.words.length; w += s.words.length; } });
-    return w ? Math.round(tot / w) : null;
-  };
+  const avg = key => { let tot = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { tot += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(tot / w) : null; };
   const sc = { pron: avg("PronScore"), acc: avg("AccuracyScore"), flu: avg("FluencyScore"), pro: avg("ProsodyScore") };
-  const wpm = Math.round(n / Math.max(seconds, 1) * 60);
+  const seconds = items.reduce((a, it) => a + it.seconds, 0);
 
-  $("rPron").innerHTML = `${sc.pron ?? "–"}<small>/100</small>`;
-  $("rPron").style.color = sc.pron == null ? "" : color(sc.pron);
-  $("rTitle").textContent = sc.pron == null ? "Punteggio non disponibile" : verdict(sc.pron);
-  [["Acc", sc.acc], ["Flu", sc.flu], ["Pro", sc.pro]].forEach(([k, v]) => {
-    $("r" + k).textContent = v ?? "–";
-    $("b" + k).style.width = (v ?? 0) + "%"; $("b" + k).style.background = color(v);
+  // pause tra le parole, risposta per risposta
+  let longPauses = 0, longest = 0, speaking = 0;
+  items.forEach(it => {
+    const ws = it.segs.flatMap(s => s.words).filter(w => typeof w.Offset === "number").sort((a, b) => a.Offset - b.Offset);
+    for (let i = 0; i + 1 < ws.length; i++) {
+      const gap = (ws[i + 1].Offset - (ws[i].Offset + (ws[i].Duration || 0))) / TICK;
+      if (gap > 1) longPauses++;
+      if (gap > longest) longest = gap;
+    }
+    if (ws.length) speaking += (ws[ws.length - 1].Offset + (ws[ws.length - 1].Duration || 0) - ws[0].Offset) / TICK;
   });
-
-  $("transcript").innerHTML = words.map(w => {
-    const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
-    const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
-    return `<span class="w${cls}" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
-  }).join(" ");
-
-  const [min, max] = TARGET[part];
-  const lenNote = seconds < min ? "Risposta un po' corta, all'esame prova ad aggiungere un esempio o un motivo."
-    : seconds > max + 10 && part !== 2 ? "Risposta lunga, all'esame l'esaminatore potrebbe interromperti."
-    : "Lunghezza giusta per questa parte.";
-  const paceNote = wpm < 100 ? "ritmo lento" : wpm > 170 ? "ritmo molto veloce" : "ritmo naturale";
-  $("pace").textContent = `${n} parole in ${fmt(seconds)}, circa ${wpm} al minuto (${paceNote}). ${lenNote}`;
-
+  const fillers = words.filter(w => /^(u+m+|u+h+|e+r+m*|a+h+|h+m+|m{2,})$/i.test(w.Word)).length;
+  const text = items.map(it => it.segs.map(s => s.text).join(" ")).join(" ");
+  const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(s => s.split(/\s+/).length > 1).length || 1;
+  const unique = new Set(words.map(w => w.Word.toLowerCase())).size;
+  const minutes = Math.max(seconds, 1) / 60;
   const seen = new Set();
   const weak = words
     .map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
       phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" ") }))
-    .filter(w => w.acc < 80)
-    .sort((a, b) => a.acc - b.acc)
+    .filter(w => w.acc < 80).sort((a, b) => a.acc - b.acc)
     .filter(w => { const k = w.word.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
     .slice(0, 12);
-  $("weakBlock").classList.toggle("hidden", !weak.length);
-  $("chips").innerHTML = weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}">
+  return {
+    sc, n, seconds, text, weak, fillers, longest,
+    wpm: Math.round(n / minutes),
+    longPauses, pausesPerMin: +(longPauses / minutes).toFixed(1),
+    avgSentence: Math.round(n / sentences),
+    variety: n ? Math.round(unique / n * 100) : 0,
+    tooShort: !items.length || (items.length === 1 ? (seconds < 12 || n < 25) : n < 150)
+  };
+}
+
+/* ---------- Testo per la valutazione ---------- */
+function report(run) {
+  const a = run.a;
+  const lines = [];
+  lines.push(run.mock ? "Mode: full IELTS Speaking mock test (Part 1, 2 and 3)." : `Mode: single answer, Part ${run.items[0].q.part}.`);
+  lines.push("");
+  run.items.forEach((it, i) => {
+    const one = analyze([it]);
+    lines.push(`${run.mock ? `Answer ${i + 1}, ` : ""}Part ${it.q.part}, topic "${it.q.topic}"`);
+    lines.push(`Question: ${cardText(it.q)}`);
+    lines.push(`Transcript (${fmt(it.seconds)}, ${one.n} words): ${it.segs.map(s => s.text).join(" ")}`);
+    lines.push("");
+  });
+  lines.push("Azure pronunciation assessment, 0 to 100 (a signal, not a band)");
+  lines.push(`Overall ${a.sc.pron ?? "n/a"}, accuracy ${a.sc.acc ?? "n/a"}, fluency ${a.sc.flu ?? "n/a"}, prosody ${a.sc.pro ?? "n/a"}`);
+  lines.push(`Words ${a.n}, total time ${fmt(a.seconds)}, about ${a.wpm} words per minute`);
+  lines.push(`Pauses longer than 1 second ${a.longPauses} (${a.pausesPerMin} per minute), longest ${a.longest.toFixed(1)} s`);
+  lines.push(`Average sentence length ${a.avgSentence} words, lexical variety ${a.variety}% unique words`);
+  lines.push(`Filler words detected ${a.fillers} (speech recognition often removes them, so this may be an undercount)`);
+  lines.push(`Weakest words ${a.weak.length ? a.weak.map(w => `${w.word} ${w.acc}${w.phon ? ` /${w.phon}/` : ""}`).join(", ") : "none"}`);
+  if (a.tooShort) lines.push("Warning: the sample is short, so any band estimate has low confidence.");
+  return lines.join("\n");
+}
+
+function claudeText(run) {
+  return `Sto preparando lo Speaking IELTS. Qui sotto trovi ${run.mock ? "una simulazione completa" : "una mia risposta"}, registrata e analizzata da Azure.
+
+${report(run)}
+
+${RUBRIC}
+
+Valutami da esaminatore IELTS sui quattro criteri, con una band per ciascuno e la band complessiva. Usa i descrittori qui sopra e cita frasi della trascrizione come prova. Tieni conto che la trascrizione automatica può contenere errori e togliere le esitazioni, e che i punteggi Azure sono solo un indizio per la pronuncia. Poi dammi le 3 cose più utili da migliorare${run.mock ? "" : " e una versione migliorata della mia risposta, mantenendo le mie idee"}. Rispondi in italiano.`;
+}
+
+/* ---------- Valutazione automatica (Azure OpenAI) ---------- */
+const SYSTEM = `You are an experienced, strict but fair IELTS Speaking examiner. Rate the candidate using the band descriptors below. Base every judgement on evidence in the transcript and the measurements. The transcript comes from automatic speech recognition, so it may contain recognition errors and usually removes hesitations like "um": do not penalise obvious recognition errors, and use the pause data for fluency. Azure pronunciation scores are a useful signal but do not convert them mechanically into a band. Short samples give less reliable bands, so lower your confidence instead of guessing. Part 1 answers are naturally shorter than Part 3 answers.
+
+${RUBRIC}
+
+Reply with JSON only, in exactly this shape:
+{"fluency": number, "lexical": number, "grammar": number, "pronunciation": number, "confidence": "alta" | "media" | "bassa", "summary": string, "improvements": [string, string, string], "corrections": [{"said": string, "better": string, "why": string}], "better_answer": string}
+Bands go from 0 to 9 in steps of 0.5. Write summary, improvements and why in Italian, simple and direct, two sentences at most each, with short English examples where useful. "said" must quote the transcript exactly, "better" is the corrected English. Give at most 4 corrections, the most useful ones. "better_answer" is an improved version of the candidate's answer in natural English, keeping their ideas, for a single answer only; for a full mock test use an empty string.`;
+
+async function aiCall(messages) {
+  const base = settings.aiEndpoint.replace(/\/+$/, "");
+  const headers = { "Content-Type": "application/json", "api-key": settings.aiKey };
+  const payload = { messages, response_format: { type: "json_object" }, max_completion_tokens: 6000 };
+  let r = await fetch(`${base}/openai/v1/chat/completions`, { method: "POST", headers, body: JSON.stringify({ model: settings.aiDeployment, ...payload }) });
+  if (r.status === 404) {
+    r = await fetch(`${base}/openai/deployments/${encodeURIComponent(settings.aiDeployment)}/chat/completions?api-version=2025-04-01-preview`, { method: "POST", headers, body: JSON.stringify(payload) });
+  }
+  if (r.status === 400) {
+    const t = await r.clone().text();
+    if (/max_completion_tokens|response_format/i.test(t)) {
+      const alt = { messages, max_tokens: 2500 };
+      r = await fetch(`${base}/openai/v1/chat/completions`, { method: "POST", headers, body: JSON.stringify({ model: settings.aiDeployment, ...alt }) });
+    }
+  }
+  if (!r.ok) { const t = await r.text(); const e = new Error(t.slice(0, 300)); e.status = r.status; throw e; }
+  const j = await r.json();
+  const content = j.choices?.[0]?.message?.content || "";
+  const m = content.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("Risposta del modello non leggibile");
+  return JSON.parse(m[0]);
+}
+
+let lastRun = null;
+async function renderAi() {
+  const box = $("ai"), run = lastRun;
+  if (!run) return;
+  if (!aiConfigured()) {
+    box.innerHTML = `<div class="ai-promo"><span>Vuoi la band IELTS qui, senza copiare niente? Collega Azure OpenAI nelle impostazioni.</span><button class="secondary" type="button" id="aiSetup">Configura</button></div>`;
+    $("aiSetup").onclick = () => openSettings(false);
+    return;
+  }
+  if (run.ai) return drawAi(run.ai);
+  box.innerHTML = `<div class="ai-loading"><i></i>Sto stimando la band IELTS</div>`;
+  const token = run.token = Math.random();
+  try {
+    const res = await aiCall([{ role: "system", content: SYSTEM }, { role: "user", content: report(run) }]);
+    if (lastRun !== run || run.token !== token) return;
+    run.ai = res; drawAi(res); saveHistoryBand(run);
+  } catch (e) {
+    if (lastRun !== run) return;
+    let msg = "Non sono riuscito a ottenere la band.";
+    if (e.status === 401 || e.status === 403) msg = "Azure OpenAI ha rifiutato la chiave. Controlla chiave ed endpoint nelle impostazioni.";
+    else if (e.status === 404) msg = "Non trovo il deployment. Controlla che il nome sia identico a quello nel portale.";
+    else if (e.status === 429) msg = "Troppe richieste in poco tempo. Aspetta qualche secondo e riprova.";
+    else if (e instanceof TypeError) msg = "Non riesco a raggiungere Azure OpenAI. Controlla l'endpoint e la connessione.";
+    else msg += " " + e.message;
+    box.innerHTML = `<div class="ai-promo"><span>${esc(msg)}</span><button class="secondary" type="button" id="aiRetry">Riprova</button></div>`;
+    $("aiRetry").onclick = renderAi;
+  }
+}
+function drawAi(r) {
+  const c = k => { const v = Number(r[k]); return isFinite(v) ? Math.max(0, Math.min(9, roundBand(v))) : null; };
+  const crit = { fluency: c("fluency"), lexical: c("lexical"), grammar: c("grammar"), pronunciation: c("pronunciation") };
+  const vals = Object.values(crit).filter(v => v != null);
+  const overall = vals.length ? roundBand(vals.reduce((a, v) => a + v, 0) / vals.length) : null;
+  r._overall = overall;
+  const f = v => v == null ? "–" : v.toFixed(1);
+  const imp = (r.improvements || []).filter(Boolean);
+  const fixes = (r.corrections || []).filter(x => x && x.said && x.better);
+  $("ai").innerHTML = `
+    <div class="ai-head">
+      <div class="band-big">${f(overall)}<small>Band stimata${r.confidence ? `, affidabilità ${esc(r.confidence)}` : ""}</small></div>
+      <div class="crit">
+        <div><b>${f(crit.fluency)}</b><span>Fluency e coerenza</span></div>
+        <div><b>${f(crit.lexical)}</b><span>Lessico</span></div>
+        <div><b>${f(crit.grammar)}</b><span>Grammatica</span></div>
+        <div><b>${f(crit.pronunciation)}</b><span>Pronuncia</span></div>
+      </div>
+    </div>
+    <div class="ai-body">
+      ${r.summary ? `<p>${esc(r.summary)}</p>` : ""}
+      ${imp.length ? `<h3>Cosa migliorare</h3><ol>${imp.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}
+      ${fixes.length ? `<h3>Correzioni</h3>${fixes.map(x => `<div class="fix"><s>${esc(x.said)}</s><ins>${esc(x.better)}</ins>${x.why ? `<small>${esc(x.why)}</small>` : ""}</div>`).join("")}` : ""}
+      ${r.better_answer ? `<details class="better"><summary>Versione migliorata della risposta</summary><p>${esc(r.better_answer)}</p></details>` : ""}
+      <p class="conf">Stima indicativa fatta da un modello AI, utile per allenarti ma non equivalente al voto di un esaminatore.</p>
+    </div>`;
+}
+
+/* ---------- Risultati ---------- */
+const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
+const color = v => v == null ? "var(--hair)" : `var(--${band(v)})`;
+const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo" : v >= 70 ? "Chiara, con qualche suono da sistemare" : v >= 55 ? "Comprensibile, ma alcuni errori si notano" : "Da lavorare, alcune parole rischiano di non essere capite";
+function hideResults() { $("results").classList.add("hidden"); }
+const wordsHtml = segs => segs.flatMap(s => s.words).map(w => {
+  const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
+  return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""}" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+}).join(" ");
+
+function showRun(items, isMock) {
+  const a = analyze(items);
+  const run = lastRun = { items, mock: isMock, a };
+
+  const warn = $("warn");
+  if (a.tooShort) {
+    warn.textContent = isMock ? "Le risposte sono state brevi, quindi la valutazione è poco affidabile. All'esame prova a sviluppare di più ogni risposta."
+      : "Risposta troppo corta per un giudizio affidabile. Punta ad almeno 20 secondi, aggiungendo un motivo o un esempio.";
+    warn.classList.remove("hidden");
+  } else warn.classList.add("hidden");
+
+  $("rPron").innerHTML = `${a.sc.pron ?? "–"}<small>/100</small>`;
+  $("rPron").style.color = a.sc.pron == null ? "" : color(a.sc.pron);
+  $("rTitle").textContent = a.sc.pron == null ? "Punteggio non disponibile" : verdict(a.sc.pron);
+  [["Acc", a.sc.acc], ["Flu", a.sc.flu], ["Pro", a.sc.pro]].forEach(([k, v]) => { $("r" + k).textContent = v ?? "–"; $("b" + k).style.width = (v ?? 0) + "%"; $("b" + k).style.background = color(v); });
+
+  const paceNote = a.wpm < 100 ? "lento" : a.wpm > 170 ? "molto veloce" : "naturale";
+  $("stats").innerHTML = `
+    <div><dt>Durata</dt><dd>${fmt(a.seconds)}<small>${a.n} parole${isMock ? `, ${items.length} risposte` : ""}</small></dd></div>
+    <div><dt>Velocità</dt><dd>${a.wpm}<small>parole al minuto, ritmo ${paceNote}</small></dd></div>
+    <div><dt>Pause lunghe</dt><dd>${a.longPauses}<small>oltre 1 s, la più lunga ${a.longest.toFixed(1).replace(".", ",")} s</small></dd></div>
+    <div><dt>Varietà lessicale</dt><dd>${a.variety}%<small>parole diverse, frasi di ${a.avgSentence} parole</small></dd></div>`;
+
+  $("transcript").innerHTML = isMock
+    ? items.map(it => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs)}</p>`).join("")
+    : `<p class="transcript">${wordsHtml(items[0].segs)}</p>`;
+
+  $("weakBlock").classList.toggle("hidden", !a.weak.length);
+  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>
       ${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
   $("chips").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
 
-  const q = current();
-  last = { part, topic: q.topic, question: q.card ? spoken(q) : q.text, text: segments.map(s => s.text).join(" "), sc, wpm, seconds, weak };
+  $("nextRow").innerHTML = isMock
+    ? `<button class="primary" id="copy" type="button">Copia per Claude</button><button class="secondary" id="again" type="button">Nuovo esame completo</button><button class="secondary" id="back" type="button">Torna all'allenamento</button>`
+    : `<button class="primary" id="copy" type="button">Copia per Claude</button><button class="secondary" id="retry" type="button">Riprova questa domanda</button><button class="secondary" id="resultNext" type="button">${esc($("nextQLabel").textContent)}</button>`;
+  $("copy").onclick = () => copyRun(run);
+  if (isMock) { $("again").onclick = () => startMock(); $("back").onclick = () => setPart(1); }
+  else { $("retry").onclick = () => { hideResults(); resetClock(); clearLive(); window.scrollTo({ top: 0 }); }; $("resultNext").onclick = nextQuestion; }
+
+  const q = items[0].q;
+  run.histIndex = Date.now();
   const h = store.get("ist_history", []);
-  h.unshift({ at: Date.now(), part, q: q.text, pron: sc.pron, flu: sc.flu, acc: sc.acc });
-  store.set("ist_history", h.slice(0, 60));
+  h.unshift({ at: run.histIndex, part: isMock ? "Esame" : q.part, q: isMock ? `Esame completo, ${q.topic}` : q.text, pron: a.sc.pron, flu: a.sc.flu, band: null });
+  store.set("ist_history", h.slice(0, 80));
 
-  $("live").textContent = ""; $("live").classList.add("quiet");
+  if (isMock) showQuestion(false);
+  clearLive(); $("live").classList.add("quiet");
   $("results").classList.remove("hidden");
-  $("results").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  renderAi();
+  $("results").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
 }
-
-$("retry").onclick = () => { hideResults(); resetClock(); $("live").textContent = ""; window.scrollTo({ top: 0 }); };
-
-$("copy").onclick = async () => {
-  if (!last) return;
-  const weakTxt = last.weak.length ? last.weak.map(w => `${w.word} (${w.acc}${w.phon ? ", suoni deboli /" + w.phon + "/" : ""})`).join("; ") : "nessuna";
-  const txt =
-`Sto preparando lo Speaking IELTS. Ecco una mia risposta registrata e valutata da Azure.
-
-Part ${last.part}, argomento ${last.topic}
-Domanda
-${last.question}
-
-Trascrizione
-${last.text}
-
-Punteggi Azure su 100
-Pronuncia complessiva ${last.sc.pron ?? "n.d."}, suoni ${last.sc.acc ?? "n.d."}, scorrevolezza ${last.sc.flu ?? "n.d."}, ritmo e intonazione ${last.sc.pro ?? "n.d."}
-Durata ${fmt(last.seconds)}, circa ${last.wpm} parole al minuto
-Parole critiche ${weakTxt}
-
-Valutami secondo i quattro criteri IELTS (Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, Pronunciation) con una band stimata per ciascuno. Tieni conto che la trascrizione può contenere errori di riconoscimento. Poi dammi le 3 cose più utili da migliorare e una versione migliorata della mia risposta, mantenendo le mie idee.`;
+function saveHistoryBand(run) {
+  const h = store.get("ist_history", []);
+  const e = h.find(x => x.at === run.histIndex);
+  if (e && run.ai) { e.band = run.ai._overall; store.set("ist_history", h); }
+}
+async function copyRun(run) {
+  const txt = claudeText(run);
   try { await navigator.clipboard.writeText(txt); }
   catch { const t = document.createElement("textarea"); t.value = txt; document.body.append(t); t.select(); document.execCommand("copy"); t.remove(); }
   toast("Copiato, ora incollalo nella chat con Claude");
-};
+}
 
 /* ---------- Progressi ---------- */
 function openHistory() {
@@ -813,13 +1086,15 @@ function openHistory() {
   const list = $("histList");
   if (!h.length) { list.innerHTML = `<li class="empty">Ancora nessuna risposta. Registrane una e la trovi qui.</li>`; $("avg").classList.add("hidden"); }
   else {
-    const recent = h.slice(0, 10).filter(x => x.pron != null);
-    const mean = k => { const v = recent.filter(x => x[k] != null); return v.length ? Math.round(v.reduce((a, x) => a + x[k], 0) / v.length) : "–"; };
-    $("avg").innerHTML = `<div><b>${mean("pron")}</b><span>Pronuncia, media ultime 10</span></div><div><b>${mean("flu")}</b><span>Scorrevolezza</span></div><div><b>${h.length}</b><span>Risposte totali</span></div>`;
+    const recent = h.slice(0, 10);
+    const mean = (k, dec) => { const v = recent.filter(x => x[k] != null); if (!v.length) return "–"; const m = v.reduce((a, x) => a + x[k], 0) / v.length; return dec ? roundBand(m).toFixed(1) : Math.round(m); };
+    const hasBand = recent.some(x => x.band != null);
+    $("avg").innerHTML = `${hasBand ? `<div><b>${mean("band", true)}</b><span>Band media, ultime 10</span></div>` : ""}<div><b>${mean("pron")}</b><span>Pronuncia media</span></div><div><b>${mean("flu")}</b><span>Scorrevolezza media</span></div><div><b>${h.length}</b><span>Sessioni</span></div>`;
     $("avg").classList.remove("hidden");
     list.innerHTML = h.map(x => {
       const d = new Date(x.at || Date.now());
-      return `<li><span class="q">${esc(x.q)}</span><span class="s" style="color:${color(x.pron)}">${x.pron ?? "–"}</span><span class="when">Part ${x.part}, ${d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })} alle ${d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span></li>`;
+      const main = x.band != null ? `${Number(x.band).toFixed(1)}<small>band</small>` : `${x.pron ?? "–"}<small>pronuncia</small>`;
+      return `<li><span class="q">${esc(x.q)}</span><span class="s" style="${x.band != null ? "color:var(--cobalt)" : `color:${color(x.pron)}`}">${main}</span><span class="when">${x.part === "Esame" ? "Esame completo" : `Part ${x.part}`}, ${d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })} alle ${d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span></li>`;
     }).join("");
   }
   $("history").showModal();
@@ -830,10 +1105,9 @@ $("clearHistory").onclick = () => { if (confirm("Vuoi cancellare tutto lo storic
 
 /* ---------- Tastiera ---------- */
 document.addEventListener("keydown", e => {
-  if (e.code !== "Space" || e.repeat) return;
-  if (document.querySelector("dialog[open]")) return;
+  if (e.code !== "Space" || e.repeat || document.querySelector("dialog[open]")) return;
   const t = e.target;
-  if (t.closest && t.closest("input, textarea, select, button")) return;
+  if (t.closest && t.closest("input, textarea, select, button, summary")) return;
   e.preventDefault(); $("rec").click();
 });
 
@@ -855,7 +1129,11 @@ if (matchMedia("(pointer: coarse)").matches) $("live").dataset.empty = "Tocca il
 setState("idle");
 showQuestion(false);
 showSdk();
-if (!configured()) openSettings(true);
+if (!configured()) openGuide();
+
+// accesso per i test
+window.__t = { showRun, analyze, report, claudeText, drawAi, get lastRun() { return lastRun; }, setMock(m) { mock = m; }, startMock, finished, setSegments(s) { segments = s; } };
+}
 </script>
 </body>
 </html>
