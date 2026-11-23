@@ -29,6 +29,10 @@ La modalità Esame completo simula lo Speaking vero, con 4 domande di Part 1, un
 ## Altre funzioni
 
 - **Esercizio di lettura.** Dopo la valutazione leggi ad alta voce la versione migliorata della risposta. Azure sa cosa dovresti dire e controlla ogni parola, comprese quelle saltate.
+- **Valutazione in due passaggi.** Se Azure capisce una parola sbagliata (soap invece di soup), la band automatica ricostruisce dal contesto cosa volevi dire e Azure riascolta la registrazione sapendolo. Puoi anche correggere una parola a mano toccandola.
+- **Shadowing frase per frase.** La voce madrelingua dice una frase, tu la ripeti subito e Azure la valuta parola per parola.
+- **Coppie minime.** Esercizi di ascolto e pronuncia su coppie come ship e sheep, full e fool, cat e cut, più le coppie nate dai tuoi errori.
+- **Come muovere la bocca.** Toccando una parola trovi un'indicazione sul suono più debole e il link a YouGlish per vedere madrelingua veri pronunciarla.
 - **Riascoltati.** Ogni risposta resta registrata nella sessione, così puoi riascoltarti.
 - **Confronto parola per parola.** Tocca una parola sottolineata per sentire la tua pronuncia, quella corretta, o le due una dopo l'altra.
 - **Quaderno degli errori.** In Progressi trovi le parole che pronunci male più spesso e le correzioni ricorrenti.

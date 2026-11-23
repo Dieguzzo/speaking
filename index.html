@@ -84,7 +84,7 @@
   .layout { display: block; }
   .side-empty { display: none; }
 
-  .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: var(--seg); border-radius: 12px; margin-bottom: 18px; }
+  .parts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 4px; background: var(--seg); border-radius: 12px; margin-bottom: 18px; }
   .parts button { border: 0; background: transparent; border-radius: 9px; padding: 9px 10px 8px; cursor: pointer; text-align: left; }
   .parts button b { display: block; font-size: 15px; font-weight: 600; }
   .parts button small { display: block; font-size: 13px; color: var(--slate); }
@@ -306,6 +306,35 @@
 
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; background: #18202E; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px; transition: .2s; pointer-events: none; max-width: calc(100vw - 32px); z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .pass-note { margin: -8px 0 22px; font-size: 14px; color: var(--slate); }
+  .w.heard { text-decoration-line: underline; text-decoration-style: dashed; text-decoration-thickness: 2px; text-decoration-color: var(--cobalt); }
+  .pop-tip { margin-top: 10px; padding: 10px 12px; background: var(--seg); border-radius: 8px; font-size: 14px; }
+  .pop-tip p { margin: 0; }
+  .pop-tip p + p { margin-top: 6px; }
+  .pop-heard { margin: 10px 0 0; font-size: 14px; color: var(--body2); }
+  .pop-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+  .pop-fix { display: flex; gap: 8px; margin-top: 10px; }
+  .pop-fix input { flex: 1; min-width: 0; padding: 9px 10px; border: 1px solid var(--hair); border-radius: 8px; background: var(--field); font-size: 16px; }
+  .sents { list-style: none; margin: 12px 0 16px; padding: 0; display: grid; gap: 6px; }
+  .sents li { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; padding: 10px 12px; border-radius: 10px; font-size: 18px; line-height: 1.6; color: var(--slate); cursor: pointer; }
+  .sents li.now { background: var(--seg); color: var(--ink); }
+  .sents li.done { color: var(--ink); }
+  .sents li em { font-style: normal; font-weight: 700; font-size: 18px; flex: none; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pw { border: 1px solid var(--hair); background: var(--field); border-radius: 14px; padding: 22px 12px; cursor: pointer; text-align: center; }
+  .pw:hover { border-color: var(--cobalt); }
+  .pw b { display: block; font-size: clamp(30px, 6vw, 44px); letter-spacing: -0.02em; line-height: 1.1; }
+  .pw small { display: block; color: var(--slate); font-size: 15px; margin-top: 4px; }
+  .pair-say { font-size: 22px; margin: 4px 0 14px; }
+  .pair-say b { color: var(--cobalt); }
+  .pair-msg { font-size: 17px; margin: 14px 0 0; min-height: 1.5em; }
+  .pair-side h2 { font-size: 20px; margin: 0 0 12px; }
+  .pair-side .tips { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
+  .pair-side .tips li { padding: 12px 14px; border: 1px solid var(--hair); border-radius: var(--r-ctl); font-size: 15px; color: var(--body2); }
+  .pair-side .tips b { display: block; color: var(--ink); font-size: 17px; margin-bottom: 2px; }
+  .pair-side .yg { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .pair-side .yg a { text-decoration: none; color: var(--ink); font-size: 15px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .hidden { display: none !important; }
 
   @media (min-width: 1100px) {
@@ -318,7 +347,7 @@
   }
   @media (max-width: 600px) {
     .wrap { padding: 20px 16px 80px; }
-    .parts { grid-template-columns: 1fr 1fr; }
+    .parts { grid-template-columns: repeat(3, 1fr); }
     .card { padding: 22px 20px 18px; }
     .metrics { grid-template-columns: 1fr; gap: 18px; }
     .stats, .crit { grid-template-columns: 1fr 1fr; }
@@ -362,9 +391,10 @@
         <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card</small></button>
         <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione</small></button>
         <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Esame completo</b><small>Circa 12 minuti</small></button>
+        <button type="button" data-part="pairs" aria-pressed="false"><b>Suoni</b><small>Coppie minime</small></button>
       </div>
 
-      <article class="card" aria-live="polite">
+      <article class="card" id="qCard" aria-live="polite">
         <div class="card-top"><span class="topic" id="topic"></span><span id="progress"></span></div>
         <div class="steps hidden" id="steps"></div>
         <h1 class="question" id="question"></h1>
@@ -385,7 +415,7 @@
         </div>
       </article>
 
-      <section class="recorder">
+      <section class="recorder" id="recorder">
         <div class="rec-row">
           <button class="rec-btn" id="rec" type="button"><i class="dot"></i><span id="recLabel">Inizia a parlare</span></button>
           <div class="clock">
@@ -397,9 +427,27 @@
         <p class="live-text" id="live" data-empty="Premi il pulsante o la barra spaziatrice e rispondi come all'esame."></p>
         <div class="alert hidden" id="alert"><span id="alertText"></span><button type="button" id="alertFix" class="hidden">Apri impostazioni</button></div>
       </section>
+
+      <section class="pairs-view hidden" id="pairsView">
+        <div class="card">
+          <div class="card-top"><span class="topic">Coppie minime</span><span id="pairScore"></span></div>
+          <div class="field" style="margin-bottom:14px"><label for="pairCat" class="sr">Suono</label><select id="pairCat"></select></div>
+          <div class="pair" id="pairWords"></div>
+          <div class="card-actions">
+            <button class="ghost" id="pairHearBoth" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>Ascolta entrambe</button>
+            <button class="ghost" id="pairNext" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>Coppia successiva</button>
+          </div>
+        </div>
+        <div class="tabs" id="pairModes" role="tablist" style="margin-top:18px">
+          <button type="button" role="tab" data-pm="listen" aria-selected="true">Ascolta e scegli</button>
+          <button type="button" role="tab" data-pm="speak" aria-selected="false">Pronuncia</button>
+        </div>
+        <div id="pairTask"></div>
+      </section>
     </div>
 
     <div class="side">
+      <section class="pair-side hidden" id="pairSide"></section>
       <section class="side-empty" id="sideEmpty">
         <h2>Qui compariranno i risultati</h2>
         <p>Rispondi a voce alla domanda a sinistra. Quando premi Ho finito, la valutazione appare in questa colonna.</p>
@@ -413,6 +461,7 @@
 
       <section class="results hidden" id="results" aria-live="polite">
         <div class="warn hidden" id="warn"></div>
+        <p class="pass-note hidden" id="passNote"></p>
         <div class="ai" id="ai"></div>
 
         <div class="verdict">
@@ -436,7 +485,7 @@
           <h2>Cosa ha capito Azure</h2>
           <div id="transcript"></div>
           <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
-          <p class="hint">Tocca una parola sottolineata per sentire la tua pronuncia e quella corretta. Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
+          <p class="hint">Tocca una parola per sentire la tua pronuncia e quella corretta, o per correggerla se Azure ha capito male. Le parole con la sottolineatura tratteggiata all'inizio erano state capite male.</p>
         </div>
 
         <div class="block" id="weakBlock">
@@ -446,14 +495,17 @@
         </div>
 
         <section class="shadow hidden" id="shadow">
-          <h2>Esercizio di lettura</h2>
-          <p class="hint" style="margin-top:0">Leggi ad alta voce il testo qui sotto. Azure sa cosa dovresti dire e confronta ogni parola, quindi la valutazione della pronuncia è molto più precisa che nel parlato libero.</p>
-          <p class="ref" id="shadowRef"></p>
+          <h2>Shadowing</h2>
+          <p class="hint" style="margin-top:0">Ascolta una frase detta da un madrelingua e ripetila subito, imitando suono e ritmo. Azure sa cosa dovevi dire e controlla ogni parola. Tocca una frase per sceglierla.</p>
+          <p class="hint" id="shadowNote"></p>
+          <ol class="sents" id="sents"></ol>
           <div class="shadow-row">
-            <button class="rec-btn" id="shadowBtn" type="button"><i class="dot"></i><span id="shadowLabel">Inizia a leggere</span></button>
-            <span class="hint" id="shadowNote" style="margin:0"></span>
+            <button class="rec-btn" id="shadowBtn" type="button"><i class="dot"></i><span id="shadowLabel">Ascolta e ripeti</span></button>
+            <button class="secondary" id="shadowListen" type="button">Solo ascolta</button>
+            <button class="secondary" id="shadowNext" type="button">Frase successiva</button>
           </div>
           <div id="shadowOut"></div>
+          <p class="hint" id="shadowSum"></p>
         </section>
 
         <div class="next-row" id="nextRow"></div>
@@ -566,10 +618,20 @@
 <div class="pop hidden" id="pop" role="dialog" aria-label="Confronta la pronuncia">
   <div class="pop-head"><b id="popWord"></b><span id="popScore"></span></div>
   <p class="hint" id="popPh"></p>
+  <div class="pop-tip hidden" id="popTip"></div>
+  <p class="pop-heard hidden" id="popHeard"></p>
   <div class="pop-btns">
     <button type="button" class="secondary" id="popMine"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>La tua</button>
     <button type="button" class="secondary" id="popGood"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>Corretta</button>
     <button type="button" class="primary" id="popBoth">Una dopo l'altra</button>
+  </div>
+  <div class="pop-links">
+    <a id="popYg" href="#" target="_blank" rel="noopener" class="linkbtn">Guarda i madrelingua dirla</a>
+    <button type="button" class="linkbtn" id="popFix">Non ho detto questa parola</button>
+  </div>
+  <div class="pop-fix hidden" id="popFixRow">
+    <input type="text" id="popFixIn" placeholder="Cosa volevi dire" autocomplete="off" spellcheck="false">
+    <button type="button" class="primary" id="popFixGo">Riascolta</button>
   </div>
   <p class="hint" id="popNote"></p>
 </div>
@@ -745,13 +807,15 @@ function showQuestion(autoRead = true) {
 }
 function setPart(p, keepTopic) {
   if (busy()) return;
-  if (p === "mock") return startMock();
+  if (p === "pairs") return openPairs();
+  if (p === "mock") { closePairs(); return startMock(); }
+  closePairs();
   if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
   mock = null; part = p; qi = 0;
   if (p === 3 && !keepTopic) p3Source = p2Order[p2i % P2.length];
   hideResults(); clearLive(); showQuestion();
 }
-document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(b.dataset.part === "mock" ? "mock" : +b.dataset.part));
+document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(isNaN(+b.dataset.part) ? b.dataset.part : +b.dataset.part));
 function startMock() {
   if (busy()) return;
   if (mock && mock.answers.length && !confirm("Vuoi ricominciare l'esame da capo?")) return;
@@ -853,36 +917,84 @@ function stopTape() {
 }
 
 /* ---------- Riconoscimento ---------- */
-function makeRecognizer(reference, stream) {
+function makeRecognizer(reference, stream, opts = {}) {
   const pa = new SpeechSDK.PronunciationAssessmentConfig(reference || "", SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark, SpeechSDK.PronunciationAssessmentGranularity.Phoneme, !!reference);
   pa.enableProsodyAssessment = true;
   if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
-  let audio = null;
-  if (stream) { try { audio = SpeechSDK.AudioConfig.fromStreamInput(stream); } catch (e) { audio = null; } }
+  let audio = opts.audio || null;
+  if (!audio && stream) { try { audio = SpeechSDK.AudioConfig.fromStreamInput(stream); } catch (e) { audio = null; } }
   if (!audio) audio = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
   const r = new SpeechSDK.SpeechRecognizer(speechConfig(), audio);
   pa.applyTo(r);
-  const words = contextWords();
+  const words = [...contextWords(), ...(opts.phrases || [])];
   if (words.length) { try { const pl = SpeechSDK.PhraseListGrammar.fromRecognizer(r); words.forEach(w => pl.addPhrase(w)); } catch (e) { console.warn(e); } }
   return r;
 }
-function parseResult(e) {
-  const j = JSON.parse(e.result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult));
+function parseRes(result) {
+  const j = JSON.parse(result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult));
   const nb = j.NBest && j.NBest[0];
   if (!nb || !nb.Words || !nb.Words.length) return null;
   return { text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words, conf: typeof nb.Confidence === "number" ? nb.Confidence : null };
 }
+const parseResult = e => parseRes(e.result);
+
+/* Secondo passaggio: la stessa registrazione rivalutata sapendo cosa volevi dire */
+async function toPcm16(buf) {
+  const len = Math.max(1, Math.ceil(buf.duration * 16000));
+  const off = new OfflineAudioContext(1, len, 16000);
+  const src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start();
+  const out = await off.startRendering();
+  const f = out.getChannelData(0), pcm = new Int16Array(f.length);
+  for (let i = 0; i < f.length; i++) { const v = Math.max(-1, Math.min(1, f[i])); pcm[i] = v < 0 ? v * 0x8000 : v * 0x7FFF; }
+  return pcm;
+}
+function rescore(item, reference) {
+  return new Promise(async (res, rej) => {
+    try {
+      const t = await item.tapeP;
+      const buf = await getBuf(t);
+      if (!buf) return res([]);
+      const pcm = await toPcm16(buf);
+      const push = SpeechSDK.AudioInputStream.createPushStream(SpeechSDK.AudioStreamFormat.getWaveFormatPCM(16000, 16, 1));
+      push.write(pcm.buffer); push.close();
+      const r = makeRecognizer(reference, null, { audio: SpeechSDK.AudioConfig.fromStreamInput(push) });
+      const segs = []; let done = false;
+      const finish = () => { if (done) return; done = true; try { r.stopContinuousRecognitionAsync(() => { try { r.close(); } catch {} res(segs); }, () => { try { r.close(); } catch {} res(segs); }); } catch { res(segs); } };
+      r.recognized = (s, e) => { if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { const seg = parseRes(e.result); if (seg) segs.push(seg); } catch {} } };
+      r.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { if (done) return; done = true; try { r.close(); } catch {} rej(new Error(e.errorDetails)); } else finish(); };
+      r.sessionStopped = () => finish();
+      r.startContinuousRecognitionAsync(() => {}, err => { done = true; rej(err); });
+      setTimeout(finish, 180000);
+    } catch (e) { rej(e); }
+  });
+}
+const toks = s => String(s || "").split(/\s+/).map(norm).filter(Boolean).join(" ");
+async function secondPass(run, list) {
+  if (window.sdkState !== "ok" || !list.length) return;
+  const note = $("passNote");
+  note.textContent = "Riascolto la registrazione sapendo cosa volevi dire, per correggere gli errori di riconoscimento";
+  note.classList.remove("hidden");
+  for (const { item, ref } of list) {
+    try { const segs = await rescore(item, ref); if (segs.length) { item.segs2 = segs; item.intended = ref; } }
+    catch (e) { console.warn(e); }
+  }
+  if (lastRun === run) {
+    run.a = analyze(run.items);
+    renderBody(run);
+    note.textContent = "Punteggi di pronuncia aggiornati dopo il secondo ascolto, con il contesto.";
+  }
+}
 
 let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false, curDelta = 0;
-const busy = () => state !== "idle" || !!shadowBusy;
+const busy = () => state !== "idle" || !!shadowBusy || pairBusy;
 function setState(s) {
   state = s;
   const btn = $("rec");
   btn.classList.toggle("live", s === "listening");
   btn.classList.toggle("wait", s === "connecting" || s === "processing");
-  btn.disabled = s === "connecting" || s === "processing" || !!shadowBusy;
+  btn.disabled = s === "connecting" || s === "processing" || !!shadowBusy || pairBusy;
   $("recLabel").textContent = { idle: part === 2 ? "Inizia la preparazione" : "Inizia a parlare", prep: "Inizia subito a parlare", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
-  document.querySelectorAll(".parts button, #nextQ, #newTopic, #exitMock").forEach(b => b.disabled = s !== "idle" || !!shadowBusy);
+  document.querySelectorAll(".parts button, #nextQ, #newTopic, #exitMock").forEach(b => b.disabled = s !== "idle" || !!shadowBusy || pairBusy);
 }
 $("rec").onclick = () => {
   if (state === "listening") return stop();
@@ -968,15 +1080,15 @@ function finished(seconds, tapeP) {
 
 /* ---------- Analisi ---------- */
 function analyze(items) {
-  const segs = items.flatMap(it => it.segs);
-  const words = segs.flatMap(s => s.words);
+  const segs = items.flatMap(it => segsOf(it));
+  const words = segs.flatMap(s => s.words).filter(w => !isMiscue(w));
   const n = words.length;
   const avg = key => { let tot = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { tot += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(tot / w) : null; };
   const sc = { pron: avg("PronScore"), acc: avg("AccuracyScore"), flu: avg("FluencyScore"), pro: avg("ProsodyScore") };
   const seconds = items.reduce((a, it) => a + it.seconds, 0);
   let longPauses = 0, longest = 0;
   items.forEach(it => {
-    const ws = it.segs.flatMap(s => s.words).filter(w => typeof w.Offset === "number").sort((a, b) => a.Offset - b.Offset);
+    const ws = segsOf(it).flatMap(s => s.words).filter(w => !isMiscue(w) && typeof w.Offset === "number").sort((a, b) => a.Offset - b.Offset);
     for (let i = 0; i + 1 < ws.length; i++) {
       const gap = (ws[i + 1].Offset - (ws[i].Offset + (ws[i].Duration || 0))) / TICK;
       if (gap > 1) longPauses++;
@@ -984,10 +1096,10 @@ function analyze(items) {
     }
   });
   let cTot = 0, cW = 0;
-  segs.forEach(s => { if (s.conf != null) { cTot += s.conf * s.words.length; cW += s.words.length; } });
+  items.flatMap(it => it.segs).forEach(s => { if (s.conf != null) { cTot += s.conf * s.words.length; cW += s.words.length; } });
   const conf = cW ? cTot / cW : null;
   const fillers = words.filter(w => /^(u+m+|u+h+|e+r+m*|a+h+|h+m+|m{2,})$/i.test(w.Word)).length;
-  const text = items.map(it => it.segs.map(s => s.text).join(" ")).join(" ");
+  const text = items.map(it => it.intended || it.segs.map(s => s.text).join(" ")).join(" ");
   const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(s => s.split(/\s+/).length > 1).length || 1;
   const unique = new Set(words.map(w => w.Word.toLowerCase())).size;
   const minutes = Math.max(seconds, 1) / 60;
@@ -1017,7 +1129,7 @@ function report(run) {
     const one = analyze([it]);
     lines.push(`${run.mock ? `Answer ${i + 1}, ` : ""}Part ${it.q.part}, topic "${it.q.topic}"`);
     lines.push(`Question: ${cardText(it.q)}`);
-    lines.push(`Transcript (${fmt(it.seconds)}, ${one.n} words): ${it.segs.map(s => s.text).join(" ")}`);
+    lines.push(`Transcript (${fmt(it.seconds)}, ${one.n} words): ${it.intended || it.segs.map(s => s.text).join(" ")}`);
     lines.push("");
   });
   lines.push("Azure pronunciation assessment, 0 to 100 (a signal, not a band)");
@@ -1046,7 +1158,8 @@ const SYSTEM = `You are an experienced, strict but fair IELTS Speaking examiner.
 
 How to work
 1. For each criterion, first collect evidence: short exact quotes from the transcript and the relevant measurements. Only then decide the band.
-2. The transcript comes from automatic speech recognition. It may contain recognition errors and usually removes hesitations like "um". A strange word, an odd proper noun or a phrase that makes no sense in context is most likely a recognition error: do not count it against the candidate, do not "correct" it, and list it in possible_misrecognitions instead. Use the pause data for fluency.
+2. The transcript comes from automatic speech recognition. It may contain recognition errors and usually removes hesitations like "um". A strange word, an odd proper noun or a phrase that makes no sense in context is most likely a recognition error: do not count it against the candidate and do not "correct" it as a language error. List each one in misheard, with what was heard and what the candidate most likely meant given the context (for example heard "soap", meant "soup" in a sentence about cooking). Use the pause data for fluency.
+6. Also return intended: one string per answer, in order, with the transcript exactly as recognized except that ONLY the recognition errors are replaced by what the candidate most likely said. Keep their grammar mistakes, word choices, repetitions and fillers unchanged. Base corrections on the intended text.
 3. Pronunciation: you cannot hear the audio. Base it mainly on the Azure scores (accuracy for individual sounds, prosody for rhythm and intonation), the weakest words and the recognition confidence, read through the descriptors. Do not convert numbers mechanically.
 4. Short samples give less reliable bands: lower your confidence instead of guessing. Part 1 answers are naturally shorter than Part 3 answers.
 5. Avoid defaulting to 6 or 6.5: use the anchors to place the candidate.
@@ -1056,8 +1169,8 @@ ${RUBRIC}
 ${ANCHORS}
 
 Reply with JSON only, in exactly this shape and order:
-{"evidence": {"fluency": string, "lexical": string, "grammar": string, "pronunciation": string}, "fluency": number, "lexical": number, "grammar": number, "pronunciation": number, "confidence": "alta" | "media" | "bassa", "summary": string, "improvements": [string, string, string], "corrections": [{"said": string, "better": string, "why": string}], "possible_misrecognitions": [string], "better_answer": string}
-Bands go from 0 to 9 in steps of 0.5. Write evidence, summary, improvements and why in Italian, simple and direct, two sentences at most each, keeping quotes in English. "said" must quote the transcript exactly and must be a real language error, never a likely recognition error; "better" is the corrected English. Give at most 4 corrections, the most useful ones. "better_answer" is an improved version of the candidate's answer in natural English, keeping their ideas and roughly their length, for a single answer only; for a full mock test use an empty string.`;
+{"evidence": {"fluency": string, "lexical": string, "grammar": string, "pronunciation": string}, "fluency": number, "lexical": number, "grammar": number, "pronunciation": number, "confidence": "alta" | "media" | "bassa", "summary": string, "improvements": [string, string, string], "corrections": [{"said": string, "better": string, "why": string}], "misheard": [{"heard": string, "meant": string}], "intended": [string], "better_answer": string}
+Bands go from 0 to 9 in steps of 0.5. Write evidence, summary, improvements and why in Italian, simple and direct, two sentences at most each, keeping quotes in English. "said" must quote the intended text exactly and must be a real language error, never a likely recognition error; "better" is the corrected English. Give at most 4 corrections, the most useful ones. "better_answer" is an improved version of the candidate's answer in natural English, keeping their ideas and roughly their length, for a single answer only; for a full mock test use an empty string.`;
 
 async function aiCall(messages) {
   const base = settings.aiEndpoint.replace(/\/+$/, "");
@@ -1110,6 +1223,10 @@ async function renderAi() {
     if (lastRun !== run || run.token !== token) return;
     run.ai = res; drawAi(res); saveHistoryBand(run); noteFixes(res);
     if (!run.mock && res.better_answer && !shadowBusy) setShadowRef(res.better_answer, "la versione migliorata della tua risposta");
+    (res.misheard || []).forEach(m => { if (m && m.heard && m.meant && norm(m.heard) !== norm(m.meant)) { String(m.meant).split(/\s+/).forEach(v => run.heardMap[norm(v)] = m.heard); notePair(m.meant, m.heard); } });
+    const ints = Array.isArray(res.intended) ? res.intended : (res.intended ? [res.intended] : []);
+    const todo = run.items.map((item, i) => ({ item, ref: ints[i] })).filter(x => x.ref && toks(x.ref) !== toks(x.item.segs.map(s => s.text).join(" ")));
+    if (todo.length) secondPass(run, todo); else if (Object.keys(run.heardMap).length) renderBody(run);
   } catch (e) {
     if (lastRun !== run) return;
     let msg = "Non sono riuscito a ottenere la band.";
@@ -1129,7 +1246,7 @@ function drawAi(r) {
   const f = v => v == null ? "–" : v.toFixed(1);
   const imp = (r.improvements || []).filter(Boolean);
   const fixes = (r.corrections || []).filter(x => x && x.said && x.better);
-  const mis = (r.possible_misrecognitions || []).filter(Boolean);
+  const mis = (r.misheard || []).filter(m => m && m.heard && m.meant && norm(m.heard) !== norm(m.meant));
   const ev = r.evidence || {};
   const evRows = [["fluency", "Fluency e coerenza"], ["lexical", "Lessico"], ["grammar", "Grammatica"], ["pronunciation", "Pronuncia"]].filter(([k]) => ev[k]);
   $("ai").innerHTML = `
@@ -1146,79 +1263,251 @@ function drawAi(r) {
       ${r.summary ? `<p>${esc(r.summary)}</p>` : ""}
       ${imp.length ? `<h3>Cosa migliorare</h3><ol>${imp.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}
       ${fixes.length ? `<h3>Correzioni</h3>${fixes.map(x => `<div class="fix"><s>${esc(x.said)}</s><ins>${esc(x.better)}</ins>${x.why ? `<small>${esc(x.why)}</small>` : ""}</div>`).join("")}` : ""}
-      ${mis.length ? `<p class="note">Probabili errori di riconoscimento, non contati come errori tuoi: ${mis.map(esc).join(", ")}.</p>` : ""}
+      ${mis.length ? `<h3>Parole capite male</h3>${mis.map(m => `<p class="note" style="margin-top:4px">Azure ha capito «${esc(m.heard)}», ma dal contesto volevi dire «${esc(m.meant)}». Non è contato come errore tuo, ma può voler dire che quei suoni vanno distinti meglio.</p>`).join("")}` : ""}
       ${evRows.length ? `<details><summary>Perché questi voti</summary><dl>${evRows.map(([k, l]) => `<div><dt>${l}</dt><dd>${esc(ev[k])}</dd></div>`).join("")}</dl></details>` : ""}
       ${r.better_answer ? `<details><summary>Versione migliorata della risposta</summary><p>${esc(r.better_answer)}</p></details>` : ""}
       <p class="note">Stima indicativa fatta da un modello AI${r._runs > 1 ? `, mediana di ${r._runs} valutazioni indipendenti` : ""}. Utile per allenarti, ma non equivalente al voto di un esaminatore.</p>
     </div>`;
 }
 
-/* ---------- Esercizio di lettura ---------- */
-let shadowRef = "", shadowRec = null, shadowSegs = [], shadowDelta = 0;
-function setShadowRef(text, label) {
-  shadowRef = String(text || "").trim();
-  $("shadowRef").textContent = shadowRef;
-  $("shadowNote").textContent = label ? `Testo da leggere, ${label}` : "";
-  $("shadowOut").innerHTML = "";
-  $("shadow").classList.toggle("hidden", !shadowRef);
+/* ---------- Shadowing frase per frase ---------- */
+let shadow = { sents: [], i: 0, results: [] }, regS = [];
+function splitLong(s) {
+  const parts = s.split(/(?<=,)\s+/), out = []; let cur = "";
+  parts.forEach(c => { const next = (cur + " " + c).trim(); if (cur && next.split(/\s+/).length > 16) { out.push(cur); cur = c; } else cur = next; });
+  if (cur) out.push(cur);
+  return out;
 }
+function splitSents(t) {
+  const parts = (String(t).match(/[^.!?]+[.!?]*/g) || []).map(s => s.trim()).filter(Boolean), out = [];
+  parts.forEach(p => { if (out.length && p.split(/\s+/).length < 4) out[out.length - 1] += " " + p; else out.push(p); });
+  return out.flatMap(s => s.split(/\s+/).length > 22 ? splitLong(s) : [s]);
+}
+function setShadowRef(text, label) {
+  const t = String(text || "").trim();
+  shadow = { sents: t ? splitSents(t) : [], i: 0, results: [] }; regS = [];
+  $("shadowNote").textContent = label ? `Testo, ${label}` : "";
+  $("shadowOut").innerHTML = "";
+  renderSents();
+  $("shadow").classList.toggle("hidden", !shadow.sents.length);
+}
+function renderSents() {
+  $("sents").innerHTML = shadow.sents.map((s, i) => {
+    const r = shadow.results[i];
+    return `<li class="${i === shadow.i ? "now" : ""}${r ? " done" : ""}" data-si="${i}"><span>${r ? r.html : esc(s)}</span>${r ? `<em style="color:${color(r.score)}">${r.score ?? "–"}</em>` : ""}</li>`;
+  }).join("");
+  $("shadowNext").disabled = shadow.i >= shadow.sents.length - 1;
+  const done = shadow.results.filter(Boolean);
+  if (done.length && done.length === shadow.sents.length) {
+    const avg = Math.round(done.reduce((a, r) => a + (r.score || 0), 0) / done.length);
+    $("shadowSum").innerHTML = `Hai ripetuto tutte le frasi, media <b style="color:${color(avg)}">${avg}</b>. Riprova quelle sotto 80 finché non salgono.`;
+  } else $("shadowSum").textContent = "";
+}
+$("sents").addEventListener("click", ev => {
+  if (ev.target.closest("[data-w]") || shadowBusy) return;
+  const li = ev.target.closest("li"); if (!li) return;
+  shadow.i = +li.dataset.si; renderSents(); $("shadowOut").innerHTML = "";
+});
 function shadowUi(s) {
   const b = $("shadowBtn");
-  b.classList.toggle("live", s === "listening"); b.classList.toggle("wait", s === "connecting" || s === "processing");
-  b.disabled = s === "connecting" || s === "processing";
-  $("shadowLabel").textContent = { idle: "Inizia a leggere", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
+  b.classList.toggle("live", s === "listening"); b.classList.toggle("wait", s === "connecting" || s === "model");
+  b.disabled = s !== "idle";
+  $("shadowListen").disabled = s !== "idle"; $("shadowNext").disabled = s !== "idle" || shadow.i >= shadow.sents.length - 1;
+  $("shadowLabel").textContent = { idle: shadow.results[shadow.i] ? "Riprova questa frase" : "Ascolta e ripeti", model: "Ascolta il madrelingua", connecting: "Mi collego", listening: "Ripeti ora" }[s];
   setState(state);
 }
+$("shadowListen").onclick = () => { if (!shadowBusy) speakWait(shadow.sents[shadow.i], false); };
+$("shadowNext").onclick = () => { if (shadowBusy || shadow.i >= shadow.sents.length - 1) return; shadow.i++; renderSents(); shadowUi("idle"); $("shadowOut").innerHTML = ""; };
 $("shadowBtn").onclick = async () => {
-  if (shadowRec && shadowBusy === "listening") return stopShadow();
-  if (busy() || !shadowRef) return;
+  if (busy() || !shadow.sents.length) return;
   if (!ensureReady()) return;
-  shadowSegs = []; shadowBusy = "connecting"; shadowUi("connecting"); $("shadowOut").innerHTML = ""; hidePop();
+  hidePop();
+  const i = shadow.i, sent = shadow.sents[i];
+  shadowBusy = "model"; shadowUi("model");
+  await speakWait(sent, false);
+  await new Promise(r => setTimeout(r, 200));
+  shadowBusy = "connecting"; shadowUi("connecting");
   const tp = await startTape();
-  try { shadowRec = makeRecognizer(shadowRef, tp && tp.s); } catch (e) { stopTape(); shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
+  let rec;
+  try { rec = makeRecognizer(sent, tp && tp.s); } catch (e) { stopTape(); shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
   const callAt = performance.now();
-  shadowRec.recognized = (s, e) => { if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { const seg = parseResult(e); if (seg) shadowSegs.push(seg); } catch {} } };
-  shadowRec.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { const r = shadowRec; shadowRec = null; try { r && r.close(); } catch {} shadowBusy = false; shadowUi("idle"); handleAzureError(e.errorDetails); } };
-  shadowRec.startContinuousRecognitionAsync(() => { shadowDelta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0; shadowBusy = "listening"; shadowUi("listening"); }, err => { stopTape(); shadowRec = null; shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
-};
-function stopShadow() {
-  const r = shadowRec; shadowBusy = "processing"; shadowUi("processing");
-  const delta = shadowDelta;
-  r.stopContinuousRecognitionAsync(() => {
-    shadowRec = null;
+  shadowBusy = "listening"; shadowUi("listening");
+  rec.recognizeOnceAsync(result => {
+    const delta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
     const tapeP = stopTape().then(t => t && { ...t, delta });
-    try { r.close(); } catch {}
-    shadowBusy = false; shadowUi("idle"); renderShadow(shadowRef, shadowSegs, tapeP);
-  }, () => { stopTape(); shadowRec = null; shadowBusy = false; shadowUi("idle"); });
-}
-function renderShadow(ref, segs, tapeP) {
-  const said = segs.flatMap(s => s.words).filter(w => { const t = w.PronunciationAssessment?.ErrorType; return t !== "Omission" && t !== "Insertion"; });
-  const tokens = ref.split(/\s+/).filter(Boolean);
-  let p = 0, matched = 0, accSum = 0;
-  const html = tokens.map(tok => {
-    const k = norm(tok);
-    if (!k) return esc(tok);
-    let hit = -1;
-    for (let j = p; j < Math.min(said.length, p + 4); j++) if (norm(said[j].Word) === k) { hit = j; break; }
-    if (hit < 0) return `<span class="w miss" title="Saltata">${esc(tok)}</span>`;
-    const a = said[hit].PronunciationAssessment?.AccuracyScore ?? 100;
-    p = hit + 1; matched++; accSum += a;
+    try { rec.close(); } catch {}
+    let seg = null;
+    if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { seg = parseRes(result); } catch {} }
+    else if (result.reason === SpeechSDK.ResultReason.Canceled) { const d = SpeechSDK.CancellationDetails.fromResult(result); if (d.reason === SpeechSDK.CancellationReason.Error) handleAzureError(d.errorDetails); }
+    shadowBusy = false;
+    finishSentence(i, seg, tapeP);
+    shadowUi("idle");
+  }, err => { stopTape(); try { rec.close(); } catch {} shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
+};
+function finishSentence(i, seg, tapeP) {
+  if (!seg) { $("shadowOut").innerHTML = `<p class="hint">Non ho sentito niente. Parla subito dopo il madrelingua, un po' più vicino al microfono.</p>`; return; }
+  const html = seg.words.map(w => {
+    const t = w.PronunciationAssessment?.ErrorType;
+    if (t === "Insertion") return "";
+    if (t === "Omission") return `<span class="w miss" title="Saltata">${esc(w.Word)}</span>`;
+    const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
     const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
-    const idx = cls ? regWord(said[hit], tapeP) : -1;
-    return `<span class="w${cls}${cls ? " tap" : ""}"${cls ? ` data-w="${idx}" tabindex="0" role="button"` : ""} title="Suono ${Math.round(a)} su 100">${esc(tok)}</span>`;
-  }).join(" ");
-  const countable = tokens.filter(t => norm(t)).length || 1;
-  const avg = key => { let t = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { t += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(t / w) : null; };
-  const acc = matched ? Math.round(accSum / matched) : null;
-  const comp = Math.round(matched / countable * 100);
-  const sc = [["Suoni", acc], ["Completezza", comp], ["Scorrevolezza", avg("FluencyScore")], ["Ritmo e intonazione", avg("ProsodyScore")]];
-  $("shadowOut").innerHTML = segs.length ? `
-    <div class="scores">${sc.map(([l, v]) => `<div><b style="color:${color(v)}">${v ?? "–"}</b><span>${l}</span></div>`).join("")}</div>
-    <p class="ref" style="margin-bottom:6px">${html}</p>
-    <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span><span class="l-miss">saltata</span></div>`
-    : `<p class="hint">Non ho ricevuto parole. Avvicinati al microfono e riprova.</p>`;
-  noteWords(said.map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100) })).filter(w => w.acc < 80));
+    regS.push(makeEntry(w, null, -1, false, tapeP));
+    return `<span class="w${cls} tap" data-w="s${regS.length - 1}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+  }).filter(Boolean).join(" ");
+  const pa = seg.pa, score = typeof pa.PronScore === "number" ? Math.round(pa.PronScore) : null;
+  shadow.results[i] = { html, score };
+  renderSents();
+  const sc = [["Suoni", pa.AccuracyScore], ["Completezza", pa.CompletenessScore], ["Scorrevolezza", pa.FluencyScore], ["Ritmo e intonazione", pa.ProsodyScore]].map(([l, v]) => [l, typeof v === "number" ? Math.round(v) : null]);
+  $("shadowOut").innerHTML = `<div class="scores">${sc.map(([l, v]) => `<div><b style="color:${color(v)}">${v ?? "–"}</b><span>${l}</span></div>`).join("")}</div>
+    <p class="hint">Tocca una parola per confrontare la tua versione con quella corretta.${score != null && score >= 80 && i < shadow.sents.length - 1 ? " Ottima, puoi passare alla frase successiva." : ""}</p>`;
+  noteWords(seg.words.filter(w => !["Omission", "Insertion"].includes(w.PronunciationAssessment?.ErrorType)).map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100) })).filter(w => w.acc < 80));
 }
+
+/* ---------- Coppie minime ---------- */
+const PAIRS = [
+  { name: "i corta e i lunga", sounds: ["ɪ", "iː"], pairs: [["ship", "sheep"], ["bit", "beat"], ["live", "leave"], ["sit", "seat"], ["fit", "feet"], ["hill", "heel"]] },
+  { name: "a aperta e u corta", sounds: ["æ", "ʌ"], pairs: [["cat", "cut"], ["bat", "but"], ["hat", "hut"], ["bad", "bud"], ["cap", "cup"]] },
+  { name: "u corta e u lunga", sounds: ["ʊ", "uː"], pairs: [["full", "fool"], ["pull", "pool"], ["foot", "food"], ["look", "Luke"]] },
+  { name: "u lunga e dittongo ou", sounds: ["uː", "əʊ"], pairs: [["soup", "soap"], ["boot", "boat"], ["cool", "coal"], ["rude", "road"], ["new", "know"]] },
+  { name: "dittongo ei e a aperta", sounds: ["eɪ", "æ"], pairs: [["plane", "plan"], ["mate", "mat"], ["made", "mad"], ["hate", "hat"], ["cane", "can"]] },
+  { name: "th e t", sounds: ["θ", "t"], pairs: [["three", "tree"], ["thank", "tank"], ["thin", "tin"], ["thought", "taught"], ["path", "pat"]] },
+  { name: "h e nessuna h", sounds: ["h", ""], pairs: [["hat", "at"], ["heat", "eat"], ["hair", "air"], ["hold", "old"], ["high", "eye"]] }
+];
+let pairsMode = false, pairBusy = false, pairCat = 0, pairIdx = 0, pairMode = "listen", pairTarget = null, pairQuiz = null, pairStats = { ok: 0, tot: 0 }, pairLast = null, pairCustom = null;
+function pairCats() {
+  const nb = store.get("ist_notebook", { words: {}, fixes: [], pairs: [] });
+  const mine = (nb.pairs || []).slice(0, 12).map(p => [p.a, p.b]);
+  const cats = PAIRS.slice();
+  if (pairCustom) cats.unshift({ name: `${pairCustom.a} e ${pairCustom.b}`, sounds: [], pairs: [[pairCustom.a, pairCustom.b]], custom: true });
+  if (mine.length) cats.splice(pairCustom ? 1 : 0, 0, { name: "Le tue coppie, dai tuoi errori", sounds: [], pairs: mine, mine: true });
+  return cats;
+}
+function curPair() { const c = pairCats()[pairCat] || PAIRS[0]; return { cat: c, pair: c.pairs[pairIdx % c.pairs.length] }; }
+function openPairs(custom) {
+  if (busy()) return;
+  if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
+  mock = null; pairsMode = true;
+  if (custom) { pairCustom = custom; pairCat = 0; pairIdx = 0; }
+  $("qCard").classList.add("hidden"); $("recorder").classList.add("hidden");
+  $("pairsView").classList.remove("hidden");
+  hideResults(); $("sideEmpty").classList.add("hidden"); $("pairSide").classList.remove("hidden");
+  document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.part === "pairs")));
+  renderPairs();
+  if (!wide()) window.scrollTo({ top: 0 });
+}
+function closePairs() {
+  pairsMode = false;
+  $("qCard").classList.remove("hidden"); $("recorder").classList.remove("hidden");
+  $("pairsView").classList.add("hidden"); $("pairSide").classList.add("hidden");
+}
+function renderPairs() {
+  const cats = pairCats();
+  if (pairCat >= cats.length) pairCat = 0;
+  $("pairCat").innerHTML = cats.map((c, i) => `<option value="${i}"${i === pairCat ? " selected" : ""}>${esc(c.name)}</option>`).join("");
+  const { cat, pair } = curPair();
+  const known = PAIRS.find(c => c.pairs.some(x => (norm(x[0]) === norm(pair[0]) && norm(x[1]) === norm(pair[1])) || (norm(x[0]) === norm(pair[1]) && norm(x[1]) === norm(pair[0]))));
+  const sounds = cat.sounds.length ? cat.sounds : known ? (norm(known.pairs.find(x => norm(x[0]) === norm(pair[0]) || norm(x[1]) === norm(pair[1]))?.[0] || "") === norm(pair[0]) ? known.sounds : known.sounds.slice().reverse()) : [];
+  pairQuiz = null; pairLast = null;
+  if (!pairTarget || !pair.includes(pairTarget)) pairTarget = pair[Math.floor(Math.random() * 2)];
+  $("pairWords").innerHTML = pair.map((w, i) => `<button type="button" class="pw" data-pw="${esc(w)}"><b>${esc(w)}</b>${sounds[i] ? `<small>/${esc(sounds[i])}/</small>` : ""}</button>`).join("");
+  $("pairScore").textContent = pairStats.tot ? `${pairStats.ok} giuste su ${pairStats.tot}` : `Coppia ${pairIdx % cat.pairs.length + 1} di ${cat.pairs.length}`;
+  document.querySelectorAll("#pairModes button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.pm === pairMode)));
+  renderPairTask();
+  const tips = sounds.map(s => s && TIPS[s] ? `<li><b>/${esc(s)}/</b>${esc(TIPS[s])}</li>` : "").join("");
+  $("pairSide").innerHTML = `
+    <h2>Come cambia la bocca</h2>
+    ${tips ? `<ul class="tips">${tips}</ul>` : `<p class="hint">Ascolta le due parole più volte e guarda come le pronunciano i madrelingua. All'inizio esagera la differenza.</p>`}
+    <p class="hint">Il primo passo è sentire la differenza, il secondo è produrla. All'inizio esagera il movimento della bocca, poi rendilo naturale.</p>
+    <div class="yg">${pair.map(w => `<a class="secondary" href="${ygUrl(w)}" target="_blank" rel="noopener">Guarda i madrelingua dire «${esc(w)}»</a>`).join("")}</div>`;
+}
+function renderPairTask() {
+  const t = $("pairTask");
+  if (pairMode === "listen") {
+    t.innerHTML = `<p class="hint" style="margin-top:0">Senti una delle due parole e tocca quella che hai sentito.</p>
+      <button class="rec-btn" type="button" id="pairPlay"><i class="dot"></i><span>Fammi sentire una parola</span></button>
+      <p class="pair-msg" id="pairMsg"></p>`;
+    $("pairPlay").onclick = async () => {
+      if (pairBusy) return;
+      const { pair } = curPair();
+      pairQuiz = pair[Math.floor(Math.random() * 2)];
+      $("pairMsg").textContent = "Quale hai sentito? Tocca una delle due parole sopra.";
+      pairBusy = true; await speakWait(pairQuiz, false); pairBusy = false;
+    };
+  } else {
+    t.innerHTML = `<p class="pair-say">Di' <b>${esc(pairTarget)}</b></p>
+      <button class="rec-btn" type="button" id="pairRec"><i class="dot"></i><span id="pairRecLabel">Registra</span></button>
+      <p class="pair-msg" id="pairMsg"></p>
+      <div class="pop-btns hidden" id="pairAfter">
+        <button type="button" class="secondary" id="pairMine">La tua</button>
+        <button type="button" class="secondary" id="pairGood">Corretta</button>
+        <button type="button" class="secondary" id="pairOther">Cambia parola</button>
+      </div>`;
+    $("pairRec").onclick = pairSpeak;
+    $("pairMine").onclick = () => pairLast && playMine(pairLast);
+    $("pairGood").onclick = () => speakSlow(pairTarget);
+    $("pairOther").onclick = () => { const { pair } = curPair(); pairTarget = pair.find(w => w !== pairTarget); renderPairTask(); };
+  }
+}
+$("pairWords").addEventListener("click", async ev => {
+  const b = ev.target.closest("[data-pw]"); if (!b || pairBusy) return;
+  const w = b.dataset.pw;
+  if (pairMode === "listen" && pairQuiz) {
+    const ok = norm(w) === norm(pairQuiz);
+    pairStats.tot++; if (ok) pairStats.ok++;
+    $("pairMsg").innerHTML = ok ? `Giusto, era «${esc(pairQuiz)}».` : `Era «${esc(pairQuiz)}». Riascoltale tutte e due e riprova.`;
+    $("pairMsg").style.color = ok ? "var(--good)" : "var(--weak)";
+    pairQuiz = null;
+    $("pairScore").textContent = `${pairStats.ok} giuste su ${pairStats.tot}`;
+    return;
+  }
+  pairBusy = true; await speakWait(w, true); pairBusy = false;
+});
+async function pairSpeak() {
+  if (pairBusy || busy()) return;
+  if (!ensureReady()) return;
+  const { pair } = curPair(), target = pairTarget, other = pair.find(w => w !== target);
+  pairBusy = true; $("pairRec").classList.add("wait"); $("pairRecLabel").textContent = "Mi collego"; setState(state);
+  const tp = await startTape();
+  let rec;
+  try { rec = makeRecognizer(null, tp && tp.s, { phrases: pair }); } catch (e) { stopTape(); pairBusy = false; renderPairTask(); handleAzureError(String(e)); return; }
+  const callAt = performance.now();
+  $("pairRec").classList.remove("wait"); $("pairRec").classList.add("live"); $("pairRecLabel").textContent = "Parla ora";
+  rec.recognizeOnceAsync(result => {
+    const delta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
+    const tapeP = stopTape().then(t => t && { ...t, delta });
+    try { rec.close(); } catch {}
+    pairBusy = false; setState(state);
+    $("pairRec").classList.remove("live"); $("pairRecLabel").textContent = "Riprova";
+    let seg = null;
+    if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { seg = parseRes(result); } catch {} }
+    const msg = $("pairMsg");
+    if (!seg) { msg.textContent = "Non ho sentito niente. Avvicinati al microfono e riprova."; msg.style.color = ""; return; }
+    const heardWords = seg.words.map(w => norm(w.Word));
+    const w0 = seg.words.find(w => [norm(target), norm(other)].includes(norm(w.Word))) || seg.words[0];
+    const heard = norm(w0.Word), acc = Math.round(w0.PronunciationAssessment?.AccuracyScore ?? 0);
+    pairLast = makeEntry(w0, null, -1, false, tapeP);
+    pairStats.tot++;
+    if (heard === norm(target)) {
+      pairStats.ok++;
+      msg.innerHTML = `Giusto, Azure ha sentito «${esc(target)}». Suono ${acc} su 100${acc < 70 ? ", si capisce ma il suono si può ancora migliorare" : ""}.`;
+      msg.style.color = "var(--good)";
+    } else if (heard === norm(other)) {
+      msg.innerHTML = `Azure ha sentito «${esc(other)}». Confronta la tua versione con quella corretta e guarda come muovere la bocca.`;
+      msg.style.color = "var(--weak)";
+      notePair(target, other);
+    } else {
+      msg.innerHTML = `Azure ha capito «${esc(seg.text || heardWords.join(" "))}». Riprova scandendo bene.`;
+      msg.style.color = "var(--mid)";
+    }
+    $("pairAfter").classList.remove("hidden");
+    $("pairScore").textContent = `${pairStats.ok} giuste su ${pairStats.tot}`;
+  }, err => { stopTape(); try { rec.close(); } catch {} pairBusy = false; renderPairTask(); handleAzureError(String(err)); });
+}
+$("pairCat").onchange = () => { pairCat = +$("pairCat").value; pairIdx = 0; pairTarget = null; renderPairs(); };
+$("pairNext").onclick = () => { if (pairBusy) return; pairIdx++; pairTarget = null; renderPairs(); };
+$("pairHearBoth").onclick = async () => { if (pairBusy) return; const { pair } = curPair(); pairBusy = true; await speakWait(pair[0], true); await new Promise(r => setTimeout(r, 350)); await speakWait(pair[1], true); pairBusy = false; };
+document.querySelectorAll("#pairModes button").forEach(b => b.onclick = () => { if (pairBusy) return; pairMode = b.dataset.pm; renderPairs(); });
 
 /* ---------- Quaderno degli errori ---------- */
 function noteWords(list) {
@@ -1236,6 +1525,15 @@ function noteFixes(r) {
   nb.fixes = [...fixes.map(x => ({ said: x.said, better: x.better, why: x.why || "", at: Date.now() })), ...nb.fixes].slice(0, 150);
   store.set("ist_notebook", nb);
 }
+function notePair(a, b) {
+  if (!a || !b || norm(a) === norm(b)) return;
+  const nb = store.get("ist_notebook", { words: {}, fixes: [], pairs: [] });
+  nb.pairs = nb.pairs || [];
+  const k = [norm(a), norm(b)].join("|"), e = nb.pairs.find(p => [norm(p.a), norm(p.b)].join("|") === k);
+  if (e) e.count++; else nb.pairs.unshift({ a: String(a), b: String(b), count: 1 });
+  nb.pairs = nb.pairs.slice(0, 40);
+  store.set("ist_notebook", nb);
+}
 function renderNotebook() {
   const nb = store.get("ist_notebook", { words: {}, fixes: [] });
   const words = Object.values(nb.words).filter(w => w.count >= 2).sort((a, b) => b.count - a.count || a.worst - b.worst).slice(0, 18);
@@ -1244,10 +1542,14 @@ function renderNotebook() {
     <h4 style="margin-top:4px">Parole che ti tornano più spesso</h4>
     ${words.length ? `<div class="chips">${words.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <small>${w.count} volte</small></button>`).join("")}</div><p class="hint">Tocca una parola per sentirla pronunciata.</p>`
       : `<p class="empty">Qui compaiono le parole pronunciate male in almeno due sessioni.</p>`}
+    <h4>Coppie di parole che Azure ha confuso</h4>
+    ${(nb.pairs || []).length ? `<div class="chips">${nb.pairs.slice(0, 12).map(p => `<button type="button" class="chip nbpair" data-a="${esc(p.a)}" data-b="${esc(p.b)}">${esc(p.a)} <small>sembrava</small> ${esc(p.b)}</button>`).join("")}</div><p class="hint">Tocca una coppia per allenarla.</p>`
+      : `<p class="empty">Quando Azure scambia una parola per un'altra, la coppia finisce qui.</p>`}
     <h4>Correzioni recenti</h4>
     ${fixes.length ? fixes.map(x => `<div class="nb-fix"><s>${esc(x.said)}</s><ins>${esc(x.better)}</ins>${x.why ? `<small style="color:var(--slate)">${esc(x.why)}</small>` : ""}</div>`).join("")
       : `<p class="empty">Le correzioni della band automatica si raccolgono qui, così vedi i tuoi errori ricorrenti.</p>`}`;
-  $("panelNotebook").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
+  $("panelNotebook").querySelectorAll(".chip:not(.nbpair)").forEach(c => c.onclick = () => speakSlow(c.dataset.word));
+  $("panelNotebook").querySelectorAll(".nbpair").forEach(c => c.onclick = () => { $("history").close(); openPairs({ a: c.dataset.a, b: c.dataset.b }); });
 }
 
 /* ---------- Risultati ---------- */
@@ -1255,23 +1557,74 @@ const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
 const color = v => v == null ? "var(--slate)" : `var(--${band(v)})`;
 const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo" : v >= 70 ? "Chiara, con qualche suono da sistemare" : v >= 55 ? "Comprensibile, ma alcuni errori si notano" : "Da lavorare, alcune parole rischiano di non essere capite";
 function hideResults() { $("results").classList.add("hidden"); $("sideEmpty").classList.remove("hidden"); renderSideStats(); }
-const wordsHtml = (segs, item) => segs.flatMap(s => s.words).map(w => {
-  const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
-  const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
-  if (!cls) return `<span class="w" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
-  const idx = regWord(w, item ? item.tapeP : null);
-  return `<span class="w${cls} tap" data-w="${idx}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
-}).join(" ");
+const segsOf = it => it.segs2 || it.segs;
+const isMiscue = w => { const t = w.PronunciationAssessment?.ErrorType; return t === "Insertion" || t === "Omission"; };
+const wordsHtml = (segs, item) => {
+  let wi = -1;
+  const heard = (lastRun && lastRun.heardMap) || {};
+  return segs.flatMap(s => s.words).map(w => {
+    const t = w.PronunciationAssessment?.ErrorType;
+    if (t === "Insertion") return "";
+    wi++;
+    if (t === "Omission") return `<span class="w miss" title="Non pronunciata">${esc(w.Word)}</span>`;
+    const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
+    const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
+    const h = heard[norm(w.Word)] ? " heard" : "";
+    reg.push(makeEntry(w, item, wi, !!(item && item.segs2), item ? item.tapeP : null));
+    return `<span class="w${cls}${h} tap" data-w="b${reg.length - 1}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+  }).filter(Boolean).join(" ");
+};
 function attachTape(item, el) { (item.tapeP || Promise.resolve(null)).then(t => { if (t && t.url && el && el.isConnected) { el.innerHTML = `<audio controls preload="metadata" src="${t.url}"></audio>`; $("tapeBlock").classList.remove("hidden"); } }); }
+
+/* ---------- Suggerimenti su come muovere la bocca ---------- */
+const TIPS = {
+  "iː": "i lunga, come in sheep. Labbra tese in un sorriso, lingua alta e in avanti, tieni il suono più a lungo della nostra i.",
+  "ɪ": "i corta, come in ship. Bocca rilassata e appena aperta, a metà tra la nostra i e la e, suono breve.",
+  "uː": "u lunga, come in soup e food. Labbra arrotondate e spinte in avanti, lingua indietro, suono lungo e fermo, senza scivolare verso la o.",
+  "ʊ": "u corta, come in full e book. Labbra appena arrotondate e rilassate, suono breve.",
+  "əʊ": "dittongo di soap e boat. Parti da una vocale neutra e chiudi verso la u, la bocca si muove durante il suono.",
+  "oʊ": "dittongo di soap e boat. Parti da una o e chiudi verso la u, la bocca si muove durante il suono.",
+  "æ": "a di cat. Bocca molto aperta e distesa ai lati, un suono a metà tra la nostra a e la e.",
+  "ʌ": "vocale di cut e but. Breve e rilassata, simile a una a chiusa, bocca poco aperta e labbra neutre.",
+  "ə": "vocale neutra, lo schwa, come la a finale di sofa. Bocca rilassata, suono brevissimo e debole.",
+  "eɪ": "dittongo di name e plane. Parti da una e e scivola verso la i, il suono si muove.",
+  "e": "e di bed. Breve, bocca a metà apertura.",
+  "θ": "th di think. Punta della lingua tra i denti e soffia, senza voce. Non è una t.",
+  "ð": "th di this. Lingua tra i denti come per think, ma con la voce.",
+  "h": "h di hat. È un soffio d'aria prima della vocale, non va saltata.",
+  "r": "r inglese. Non far vibrare la lingua, piegala indietro senza toccare il palato.",
+  "ɹ": "r inglese. Non far vibrare la lingua, piegala indietro senza toccare il palato.",
+  "ɜː": "vocale di bird e work. Bocca rilassata, lingua al centro, labbra neutre, suono lungo.",
+  "ɝ": "vocale di bird e work. Bocca rilassata, lingua al centro e un po' piegata indietro.",
+  "ɑː": "a lunga di car. Bocca ben aperta, lingua bassa e indietro.",
+  "ɑ": "a di father. Bocca aperta, lingua bassa e indietro.",
+  "ɔː": "o lunga di thought. Labbra arrotondate, suono lungo.",
+  "ɒ": "o breve di hot (britannico). Labbra un po' arrotondate, bocca aperta, suono breve.",
+  "aɪ": "dittongo di time. Parti da una a aperta e chiudi verso la i.",
+  "aʊ": "dittongo di now. Parti da una a e chiudi verso la u.",
+  "ɔɪ": "dittongo di boy. Parti da una o e chiudi verso la i.",
+  "ŋ": "ng di sing. La lingua chiude dietro, senza pronunciare la g finale.",
+  "w": "w di we. Labbra arrotondate che si aprono subito sulla vocale.",
+  "v": "v di very. Denti superiori sul labbro inferiore, con voce, diversa dalla b.",
+  "z": "z di easy, come la s sonora di rosa.",
+  "ʃ": "sh di she, come la sc di scena.",
+  "tʃ": "ch di church, come la c di ciao.",
+  "dʒ": "j di job, come la g di gelato.",
+  "ʒ": "s di vision, una sc sonora.",
+  "t": "t inglese, con la lingua appena dietro i denti, senza metterla tra i denti."
+};
+const SAPI = { iy: "iː", ih: "ɪ", uw: "uː", uh: "ʊ", ow: "əʊ", ae: "æ", ah: "ʌ", ax: "ə", ey: "eɪ", eh: "e", th: "θ", dh: "ð", hh: "h", r: "r", er: "ɜː", aa: "ɑː", ao: "ɔː", ay: "aɪ", aw: "aʊ", oy: "ɔɪ", ng: "ŋ", w: "w", v: "v", z: "z", sh: "ʃ", ch: "tʃ", jh: "dʒ", zh: "ʒ" };
+const tipFor = p => { const k = SAPI[String(p).toLowerCase()] || p; return TIPS[k] || TIPS[String(k).replace("ː", "")] || null; };
+const ygUrl = w => `https://youglish.com/pronounce/${encodeURIComponent(w)}/english/${settings.lang === "en-GB" ? "uk" : "us"}`;
 
 /* ---------- Confronto parola per parola ---------- */
 let reg = [], actx = null, popItem = null, popAnchor = null;
 const bufCache = new WeakMap();
-function regWord(w, tapeP) {
-  reg.push({ word: String(w.Word).replace(/[^A-Za-z'’-]/g, "") || w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
-    phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" "),
-    off: typeof w.Offset === "number" ? w.Offset / TICK : null, dur: (w.Duration || 0) / TICK, tapeP: tapeP || Promise.resolve(null) });
-  return reg.length - 1;
+function makeEntry(w, item, wi, zero, tapeP) {
+  const weakPh = (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme);
+  return { word: String(w.Word).replace(/[^A-Za-z'’-]/g, "") || w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
+    phon: weakPh.join(" "), phList: weakPh, off: typeof w.Offset === "number" ? w.Offset / TICK : null, dur: (w.Duration || 0) / TICK,
+    tapeP: tapeP || Promise.resolve(null), item, wi, zero };
 }
 async function getBuf(t) {
   if (!t || !t.blob) return null;
@@ -1286,39 +1639,57 @@ async function playMine(e) {
   const buf = await getBuf(t);
   if (!buf || e.off == null) { $("popNote").textContent = "La tua registrazione non è disponibile per questa parola."; return false; }
   if (actx.state === "suspended") await actx.resume();
-  const from = Math.max(0, e.off + (t.delta || 0) - 0.15);
+  const from = Math.max(0, e.off + (e.zero ? 0 : (t.delta || 0)) - 0.15);
   const len = Math.max(0.2, Math.min(buf.duration - from, e.dur + 0.35));
   const node = actx.createBufferSource();
   node.buffer = buf; node.connect(actx.destination);
   return new Promise(res => { node.onended = () => res(true); node.start(0, from, len); });
 }
+const voiceName = () => settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
 function getSynth() {
-  if (!synth) {
-    const c = speechConfig();
-    c.speechSynthesisVoiceName = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
-    synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput());
-  }
+  if (!synth) { const c = speechConfig(); c.speechSynthesisVoiceName = voiceName(); synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput()); }
   return synth;
 }
-function speakSlow(word) {
+// Parla e aspetta che l'audio sia finito davvero
+function speakWait(text, slow) {
   return new Promise(res => {
-    if (!ensureReady()) return res();
+    if (!text || !ensureReady()) return res(false);
+    let done = false; const fin = () => { if (!done) { done = true; res(true); } };
     try {
-      const voice = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
-      const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${settings.lang}"><voice name="${voice}"><prosody rate="-20%">${esc(word)}</prosody></voice></speak>`;
-      getSynth().speakSsmlAsync(ssml, () => res(), err => { resetSynth(); handleAzureError(String(err)); res(); });
-    } catch (e) { handleAzureError(String(e)); res(); }
+      const player = new SpeechSDK.SpeakerAudioDestination();
+      player.onAudioEnd = fin;
+      const c = speechConfig(); c.speechSynthesisVoiceName = voiceName();
+      const s = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromSpeakerOutput(player));
+      const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${settings.lang}"><voice name="${voiceName()}"><prosody rate="${slow ? "-20%" : "-5%"}">${esc(text)}</prosody></voice></speak>`;
+      s.speakSsmlAsync(ssml, r => {
+        try { s.close(); } catch {}
+        if (r.reason === SpeechSDK.ResultReason.Canceled) { const d = SpeechSDK.CancellationDetails.fromResult(r); handleAzureError(d.errorDetails); return fin(); }
+        setTimeout(fin, (r.audioDuration || 0) / 1e4 + 1500);
+      }, err => { try { s.close(); } catch {} handleAzureError(String(err)); fin(); });
+    } catch (e) { handleAzureError(String(e)); fin(); }
   });
 }
-function openPop(idx, anchor) {
-  const e = reg[idx]; if (!e) return;
+const speakSlow = w => speakWait(w, true);
+function openPop(key, anchor) {
+  const e = key[0] === "s" ? regS[+key.slice(1)] : reg[+key.slice(1)];
+  if (!e) return;
   popItem = e;
   if (popAnchor) popAnchor.classList.remove("on");
   popAnchor = anchor; anchor.classList.add("on");
   $("popWord").textContent = e.word;
   $("popScore").textContent = `Suono ${e.acc} su 100`;
   $("popScore").style.color = color(e.acc);
-  $("popPh").textContent = e.phon ? `Suoni più deboli /${e.phon}/` : "Ascolta la differenza tra le due versioni.";
+  $("popPh").textContent = e.phon ? `Suoni più deboli /${e.phon}/` : e.acc < 80 ? "Ascolta la differenza tra le due versioni." : "Questa parola è venuta bene.";
+  const tips = [...new Set(e.phList.map(tipFor).filter(Boolean))].slice(0, 2);
+  $("popTip").innerHTML = tips.length ? tips.map(t => `<p>${esc(t)}</p>`).join("") + `<p class="hint">All'inizio esagera il movimento della bocca, poi rendilo naturale.</p>` : "";
+  $("popTip").classList.toggle("hidden", !tips.length);
+  const heard = lastRun && lastRun.heardMap && lastRun.heardMap[norm(e.word)];
+  $("popHeard").innerHTML = heard ? `All'inizio Azure aveva capito «${esc(heard)}». Può essere un errore di riconoscimento, o un segnale che questi due suoni per te si somigliano. <button type="button" class="linkbtn" id="popPair">Allenati con ${esc(e.word)} e ${esc(heard)}</button>` : "";
+  $("popHeard").classList.toggle("hidden", !heard);
+  if (heard) $("popPair").onclick = () => { hidePop(); openPairs({ a: e.word, b: heard }); };
+  $("popYg").href = ygUrl(e.word);
+  $("popFixRow").classList.add("hidden");
+  $("popFix").classList.toggle("hidden", !e.item);
   $("popNote").textContent = "";
   const pop = $("pop");
   pop.classList.remove("hidden");
@@ -1331,20 +1702,34 @@ function openPop(idx, anchor) {
 function hidePop() { $("pop").classList.add("hidden"); if (popAnchor) popAnchor.classList.remove("on"); popAnchor = null; popItem = null; }
 document.addEventListener("click", ev => {
   const w = ev.target.closest && ev.target.closest("[data-w]");
-  if (w) { ev.preventDefault(); return openPop(+w.dataset.w, w); }
+  if (w) { ev.preventDefault(); return openPop(w.dataset.w, w); }
   if (!ev.target.closest || !ev.target.closest("#pop")) hidePop();
 });
 document.addEventListener("keydown", ev => {
   if (ev.key === "Escape") hidePop();
-  if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches("[data-w]")) { ev.preventDefault(); openPop(+ev.target.dataset.w, ev.target); }
+  if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches("[data-w]")) { ev.preventDefault(); openPop(ev.target.dataset.w, ev.target); }
 });
 $("popMine").onclick = () => popItem && playMine(popItem);
 $("popGood").onclick = () => popItem && speakSlow(popItem.word);
 $("popBoth").onclick = async () => { const e = popItem; if (!e) return; const ok = await playMine(e); if (ok) await new Promise(r => setTimeout(r, 450)); speakSlow(e.word); };
+$("popFix").onclick = () => { $("popFixRow").classList.remove("hidden"); $("popFixIn").value = ""; $("popFixIn").focus(); };
+$("popFixGo").onclick = () => correctWord();
+$("popFixIn").addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); correctWord(); } });
+async function correctWord() {
+  const e = popItem, val = $("popFixIn").value.trim();
+  if (!e || !e.item || !val || !lastRun) return;
+  const words = segsOf(e.item).flatMap(s => s.words).filter(w => w.PronunciationAssessment?.ErrorType !== "Insertion").map(w => w.Word);
+  const old = words[e.wi];
+  words.splice(e.wi, 1, ...val.split(/\s+/));
+  lastRun.heardMap = { ...(lastRun.heardMap || {}) };
+  val.split(/\s+/).forEach(v => lastRun.heardMap[norm(v)] = old);
+  notePair(val, old);
+  hidePop();
+  await secondPass(lastRun, [{ item: e.item, ref: words.join(" ") }]);
+}
 
-function showRun(items, isMock) {
-  const a = analyze(items);
-  const run = lastRun = { items, mock: isMock, a };
+function renderBody(run) {
+  const { items, mock: isMock, a } = run;
   reg = []; hidePop();
   const warns = [];
   if (a.lowAudio) warns.push("Azure ti ha sentito poco chiaramente, quindi alcune parole potrebbero essere state trascritte male. Parla un po' più forte o più vicino al microfono.");
@@ -1366,20 +1751,25 @@ function showRun(items, isMock) {
   $("tapeBlock").classList.add("hidden");
   $("tape").innerHTML = "";
   if (isMock) {
-    $("transcript").innerHTML = items.map((it, i) => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs, it)}</p><div data-tape="${i}"></div>`).join("");
+    $("transcript").innerHTML = items.map((it, i) => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(segsOf(it), it)}</p><div data-tape="${i}"></div>`).join("");
     items.forEach((it, i) => attachTape(it, $("transcript").querySelector(`[data-tape="${i}"]`)));
   } else {
-    $("transcript").innerHTML = `<p class="transcript">${wordsHtml(items[0].segs, items[0])}</p>`;
+    $("transcript").innerHTML = `<p class="transcript">${wordsHtml(segsOf(items[0]), items[0])}</p>`;
     attachTape(items[0], $("tape"));
   }
 
   $("weakBlock").classList.toggle("hidden", !a.weak.length);
   const firstIdx = word => reg.findIndex(e => norm(e.word) === norm(word));
-  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"${firstIdx(w.word) >= 0 ? ` data-w="${firstIdx(w.word)}"` : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
-  $("chips").querySelectorAll(".chip:not([data-w])").forEach(c => c.onclick = () => speak(c.dataset.word));
-  noteWords(a.weak);
+  $("chips").innerHTML = a.weak.map(w => { const i = firstIdx(w.word); return `<button type="button" class="chip" data-word="${esc(w.word)}"${i >= 0 ? ` data-w="b${i}"` : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`; }).join("");
+  $("chips").querySelectorAll(".chip:not([data-w])").forEach(c => c.onclick = () => speakSlow(c.dataset.word));
+}
 
-  if (isMock) setShadowRef("", ""); else setShadowRef(a.text, aiConfigured() ? "per ora la tua risposta, poi la versione migliorata" : "la tua risposta");
+function showRun(items, isMock) {
+  const run = lastRun = { items, mock: isMock, a: analyze(items), heardMap: {} };
+  $("passNote").classList.add("hidden");
+  renderBody(run);
+  noteWords(run.a.weak);
+  if (isMock) setShadowRef("", ""); else setShadowRef(run.a.text, aiConfigured() ? "per ora la tua risposta, poi la versione migliorata" : "la tua risposta");
 
   $("nextRow").innerHTML = isMock
     ? `<button class="primary" id="copy" type="button">Copia per Claude</button><button class="secondary" id="again" type="button">Nuovo esame completo</button><button class="secondary" id="back" type="button">Torna all'allenamento</button>`
@@ -1391,7 +1781,7 @@ function showRun(items, isMock) {
   const q = items[0].q;
   run.histIndex = Date.now();
   const h = store.get("ist_history", []);
-  h.unshift({ at: run.histIndex, part: isMock ? "Esame" : q.part, q: isMock ? `Esame completo, ${q.topic}` : q.text, pron: a.sc.pron, flu: a.sc.flu, band: null });
+  h.unshift({ at: run.histIndex, part: isMock ? "Esame" : q.part, q: isMock ? `Esame completo, ${q.topic}` : q.text, pron: run.a.sc.pron, flu: run.a.sc.flu, band: null });
   store.set("ist_history", h.slice(0, 80));
 
   if (isMock) showQuestion(false);
@@ -1482,7 +1872,7 @@ renderSideStats();
 showSdk();
 if (!configured()) openGuide();
 
-window.__t = { showRun, analyze, report, claudeText, drawAi, renderShadow, setShadowRef, evaluate, get lastRun() { return lastRun; }, finished, setSegments(s) { segments = s; } };
+window.__t = { showRun, analyze, report, claudeText, drawAi, finishSentence, setShadowRef, evaluate, openPairs, renderBody, secondPass, get lastRun() { return lastRun; }, finished, setSegments(s) { segments = s; } };
 }
 </script>
 </body>
