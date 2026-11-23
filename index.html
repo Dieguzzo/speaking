@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Speaking, allenamento IELTS</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#E6E9EE">
+<meta name="theme-color" content="#E6E9EE" id="themeColor">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-title" content="Speaking">
@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
+  try { var t = JSON.parse(localStorage.getItem("ist_settings") || "{}").theme; if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}
   window.SDK_SOURCES = [
     "https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js",
     "https://unpkg.com/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js",
@@ -33,47 +34,65 @@
 </script>
 <style>
   :root {
-    --fog: #E6E9EE;
-    --paper: #FBFCFD;
-    --ink: #18202E;
-    --slate: #5B6577;
-    --hair: #D3D8E0;
-    --cobalt: #2F4BD8;
-    --cobalt-press: #2239B0;
-    --cobalt-tint: #E7EBFC;
-    --live: #E5484D;
-    --good: #1E7F5A;
-    --mid: #B7791F;
-    --weak: #C23B4A;
-    --r-card: 14px;
-    --r-ctl: 10px;
+    --fog: #E6E9EE; --paper: #FBFCFD; --ink: #18202E; --slate: #5B6577; --body2: #39414F; --hair: #D3D8E0;
+    --cobalt: #2F4BD8; --btn: #2F4BD8; --btn-press: #2239B0; --cobalt-tint: #E7EBFC;
+    --live: #E5484D; --good: #1E7F5A; --mid: #B7791F; --weak: #C23B4A;
+    --seg: #D9DDE4; --track: #D3D8E0; --field: #FFFFFF; --code: #EEF1F5; --hover: rgba(24,32,46,.06);
+    --alert-bg: #FBE9EB; --alert-ink: #7A1E29; --warn-bg: #FBF1DE; --warn-ink: #6B4510;
+    --shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.28);
+    --r-card: 14px; --r-ctl: 10px;
     --font: "Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --fog: #121723; --paper: #1B2232; --ink: #E8EBF1; --slate: #9BA5B6; --body2: #C5CCD8; --hair: #2E3748;
+    --cobalt: #8EA0FF; --btn: #4A63E8; --btn-press: #3A52D0; --cobalt-tint: #26305A;
+    --live: #FF5C61; --good: #3DBE8B; --mid: #E0A63E; --weak: #F06A78;
+    --seg: #232B3C; --track: #2E3748; --field: #141A26; --code: #262E3F; --hover: rgba(255,255,255,.07);
+    --alert-bg: #3A1E25; --alert-ink: #FFC2C9; --warn-bg: #3A2E17; --warn-ink: #F6D69B;
+    --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 36px -20px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fog: #121723; --paper: #1B2232; --ink: #E8EBF1; --slate: #9BA5B6; --body2: #C5CCD8; --hair: #2E3748;
+      --cobalt: #8EA0FF; --btn: #4A63E8; --btn-press: #3A52D0; --cobalt-tint: #26305A;
+      --live: #FF5C61; --good: #3DBE8B; --mid: #E0A63E; --weak: #F06A78;
+      --seg: #232B3C; --track: #2E3748; --field: #141A26; --code: #262E3F; --hover: rgba(255,255,255,.07);
+      --alert-bg: #3A1E25; --alert-ink: #FFC2C9; --warn-bg: #3A2E17; --warn-ink: #F6D69B;
+      --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 36px -20px rgba(0,0,0,.7);
+      color-scheme: dark;
+    }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--fog); color: var(--ink); font: 400 17px/1.5 var(--font); font-variant-numeric: tabular-nums; }
-  button, input, select { font: inherit; color: inherit; }
+  button, input, select, textarea { font: inherit; color: inherit; }
   :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 22px 96px; }
+  audio { width: 100%; max-width: 420px; height: 40px; }
 
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 22px 96px; }
   header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 36px; }
   .mark { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
   .mark span { display: block; font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--slate); margin-top: 4px; }
   .tools { display: flex; gap: 6px; }
   .ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 0; border-radius: var(--r-ctl); padding: 9px 12px; font-size: 15px; font-weight: 500; color: var(--ink); cursor: pointer; }
-  .ghost:hover { background: rgba(24,32,46,.06); }
+  .ghost:hover { background: var(--hover); }
   .ghost svg { width: 18px; height: 18px; flex: none; }
   .ghost:disabled { opacity: .4; cursor: default; }
 
-  .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: #D9DDE4; border-radius: 12px; margin-bottom: 18px; }
+  .layout { display: block; }
+  .side-empty { display: none; }
+
+  .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: var(--seg); border-radius: 12px; margin-bottom: 18px; }
   .parts button { border: 0; background: transparent; border-radius: 9px; padding: 9px 10px 8px; cursor: pointer; text-align: left; }
   .parts button b { display: block; font-size: 15px; font-weight: 600; }
   .parts button small { display: block; font-size: 13px; color: var(--slate); }
-  .parts button[aria-pressed="true"] { background: var(--paper); box-shadow: 0 1px 2px rgba(24,32,46,.12); }
+  .parts button[aria-pressed="true"] { background: var(--paper); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
   .parts button.mockbtn b { color: var(--cobalt); }
   .parts button:disabled { cursor: default; }
 
-  .card { background: var(--paper); border-radius: var(--r-card); padding: 28px 30px 22px; position: relative; box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.28); }
+  .card { background: var(--paper); border-radius: var(--r-card); padding: 28px 30px 22px; position: relative; box-shadow: var(--shadow); }
   .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; color: var(--slate); font-size: 15px; }
   .topic { font-weight: 600; color: var(--cobalt); }
   .steps { display: flex; gap: 3px; margin: -8px 0 18px; }
@@ -90,11 +109,11 @@
 
   .recorder { padding: 26px 2px 0; }
   .rec-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-  .rec-btn { display: inline-flex; align-items: center; gap: 12px; border: 0; border-radius: 999px; padding: 16px 26px 16px 20px; min-width: 210px; background: var(--cobalt); color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; transition: background .15s; }
-  .rec-btn:hover { background: var(--cobalt-press); }
+  .rec-btn { display: inline-flex; align-items: center; gap: 12px; border: 0; border-radius: 999px; padding: 16px 26px 16px 20px; min-width: 210px; background: var(--btn); color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; transition: background .15s; }
+  .rec-btn:hover { background: var(--btn-press); }
   .rec-btn:disabled { opacity: .55; cursor: default; }
   .rec-btn .dot { width: 14px; height: 14px; border-radius: 50%; background: #fff; flex: none; }
-  .rec-btn.live { background: var(--ink); }
+  .rec-btn.live { background: #18202E; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
   .rec-btn.live .dot { background: var(--live); animation: pulse 1.2s ease-in-out infinite; }
   .rec-btn.wait .dot { background: transparent; border: 2px solid rgba(255,255,255,.7); border-top-color: transparent; animation: spin .8s linear infinite; }
   @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,72,77,.55); } 50% { box-shadow: 0 0 0 7px rgba(229,72,77,0); } }
@@ -102,21 +121,23 @@
   .clock { flex: 1; min-width: 200px; }
   .clock-time { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
   .clock-note { font-size: 14px; color: var(--slate); margin-top: 6px; }
-  .track { position: relative; height: 6px; background: #D3D8E0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
-  .track .target { position: absolute; top: 0; bottom: 0; background: rgba(30,127,90,.22); }
+  .track { position: relative; height: 6px; background: var(--track); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .track .target { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--good) 28%, transparent); }
   .track .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--ink); border-radius: 3px; transition: width .25s linear; }
   .track .fill.in { background: var(--good); }
   .live-text { margin-top: 22px; font-size: 21px; line-height: 1.45; color: var(--slate); min-height: 1.45em; max-width: 60ch; }
   .live-text.quiet:empty::before { content: none; }
-  .live-text:empty::before { content: attr(data-empty); color: #8A93A3; font-size: 16px; }
-  .alert { margin-top: 18px; padding: 14px 16px; border-radius: var(--r-ctl); background: #FBE9EB; color: #7A1E29; font-size: 15px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-  .alert button { border: 0; background: #fff; border-radius: 8px; padding: 7px 12px; font-size: 14px; font-weight: 600; cursor: pointer; color: #7A1E29; }
+  .live-text:empty::before { content: attr(data-empty); color: var(--slate); opacity: .8; font-size: 16px; }
+  .alert { margin-top: 18px; padding: 14px 16px; border-radius: var(--r-ctl); background: var(--alert-bg); color: var(--alert-ink); font-size: 15px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .alert button { border: 0; background: var(--paper); border-radius: 8px; padding: 7px 12px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--alert-ink); }
 
   .results { margin-top: 20px; }
   .results h2 { font-size: 15px; font-weight: 600; color: var(--slate); margin: 0 0 14px; }
-  .warn { padding: 12px 16px; border-radius: var(--r-ctl); background: #FBF1DE; color: #6B4510; font-size: 15px; margin-bottom: 22px; }
+  .warn { padding: 12px 16px; border-radius: var(--r-ctl); background: var(--warn-bg); color: var(--warn-ink); font-size: 15px; margin-bottom: 22px; }
+  .warn p { margin: 0; }
+  .warn p + p { margin-top: 6px; }
 
-  .ai { background: var(--paper); border-radius: var(--r-card); padding: 24px 26px; margin-bottom: 30px; box-shadow: 0 1px 0 rgba(24,32,46,.04), 0 12px 32px -18px rgba(24,32,46,.22); }
+  .ai { background: var(--paper); border-radius: var(--r-card); padding: 24px 26px; margin-bottom: 30px; box-shadow: var(--shadow); }
   .ai-head { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
   .band-big { font-size: 76px; line-height: .85; font-weight: 700; letter-spacing: -0.04em; color: var(--cobalt); }
   .band-big small { display: block; font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--slate); margin-top: 10px; }
@@ -124,7 +145,7 @@
   .crit div b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
   .crit div span { font-size: 13px; color: var(--slate); line-height: 1.3; display: block; }
   .ai-body { padding-top: 18px; }
-  .ai-body p { margin: 0 0 14px; max-width: 64ch; }
+  .ai-body > p { margin: 0 0 14px; max-width: 64ch; }
   .ai-body h3 { font-size: 15px; font-weight: 600; margin: 18px 0 8px; }
   .ai-body ol { margin: 0; padding-left: 22px; max-width: 64ch; }
   .ai-body li { margin-bottom: 8px; }
@@ -132,12 +153,15 @@
   .fix s { color: var(--weak); text-decoration-thickness: 1px; }
   .fix ins { text-decoration: none; color: var(--good); font-weight: 500; }
   .fix small { grid-column: 1 / -1; color: var(--slate); font-size: 14px; }
-  details.better { margin-top: 16px; border-top: 1px solid var(--hair); padding-top: 12px; }
-  details.better summary { cursor: pointer; font-weight: 600; font-size: 15px; }
-  details.better p { margin-top: 10px; font-size: 17px; line-height: 1.6; }
-  .conf { font-size: 13px; color: var(--slate); margin: 16px 0 0 !important; }
+  .ai details { margin-top: 16px; border-top: 1px solid var(--hair); padding-top: 12px; }
+  .ai summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  .ai details p { margin: 10px 0 0; font-size: 16px; line-height: 1.6; }
+  .ai details dl { margin: 10px 0 0; display: grid; gap: 10px; }
+  .ai details dt { font-size: 14px; font-weight: 600; }
+  .ai details dd { margin: 2px 0 0; font-size: 15px; color: var(--body2); }
+  .note { font-size: 14px; color: var(--slate); margin: 14px 0 0; }
   .ai-loading { display: flex; align-items: center; gap: 12px; color: var(--slate); }
-  .ai-loading i { width: 16px; height: 16px; border: 2px solid var(--cobalt); border-top-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
+  .ai-loading i { width: 16px; height: 16px; border: 2px solid var(--cobalt); border-top-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
   .ai-promo { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; color: var(--slate); font-size: 15px; }
 
   .verdict { display: grid; grid-template-columns: auto 1fr; gap: 6px 26px; align-items: end; padding-bottom: 26px; border-bottom: 1px solid var(--hair); }
@@ -152,7 +176,6 @@
   .metric .bar { height: 4px; background: var(--hair); border-radius: 2px; margin: 8px 0; overflow: hidden; }
   .metric .bar i { display: block; height: 100%; border-radius: 2px; }
   .metric p { margin: 0; font-size: 14px; color: var(--slate); line-height: 1.4; }
-
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 22px 0 24px; border-bottom: 1px solid var(--hair); margin: 0; }
   .stats dt { font-size: 13px; color: var(--slate); }
   .stats dd { margin: 2px 0 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
@@ -160,16 +183,18 @@
 
   .block { padding: 24px 0 4px; }
   .transcript { font-size: 20px; line-height: 1.75; max-width: 62ch; margin: 0; }
-  .tq { font-size: 14px; color: var(--slate); margin: 18px 0 2px; font-weight: 500; }
+  .tq { font-size: 14px; color: var(--slate); margin: 20px 0 2px; font-weight: 500; }
   .tq:first-child { margin-top: 0; }
-  .ta { font-size: 18px; line-height: 1.7; margin: 0; max-width: 62ch; }
+  .ta { font-size: 18px; line-height: 1.7; margin: 0 0 6px; max-width: 62ch; }
   .w { text-decoration-line: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: transparent; }
-  .w.mid { text-decoration-color: rgba(183,121,31,.75); }
+  .w.mid { text-decoration-color: color-mix(in srgb, var(--mid) 80%, transparent); }
   .w.low { text-decoration-color: var(--weak); color: var(--weak); }
-  .legend { display: flex; gap: 18px; font-size: 14px; color: var(--slate); margin-top: 10px; }
+  .w.miss { color: var(--slate); text-decoration-line: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--slate); opacity: .75; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--slate); margin-top: 10px; }
   .legend span::before { content: ""; display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
-  .legend .l-mid::before { background: rgba(183,121,31,.75); }
+  .legend .l-mid::before { background: var(--mid); }
   .legend .l-low::before { background: var(--weak); }
+  .legend .l-miss::before { background: var(--slate); height: 1px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--hair); background: var(--paper); border-radius: 999px; padding: 7px 14px 7px 10px; cursor: pointer; font-size: 16px; }
   .chip:hover { border-color: var(--cobalt); }
@@ -177,19 +202,39 @@
   .chip em { font-style: normal; font-size: 13px; font-weight: 600; }
   .chip small { color: var(--slate); font-size: 13px; }
   .hint { font-size: 14px; color: var(--slate); margin: 10px 0 0; }
+
+  .shadow { margin-top: 26px; padding: 22px 24px; border-radius: var(--r-card); border: 1px solid var(--hair); }
+  .shadow h2 { color: var(--ink) !important; font-size: 17px !important; margin-bottom: 4px !important; }
+  .shadow .ref { font-size: 19px; line-height: 1.7; margin: 14px 0 16px; max-width: 62ch; }
+  .shadow-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .shadow .rec-btn { min-width: 0; padding: 12px 20px 12px 16px; font-size: 16px; }
+  .shadow .scores { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 16px; }
+  .shadow .scores b { display: block; font-size: 24px; font-weight: 600; }
+  .shadow .scores span { font-size: 13px; color: var(--slate); }
+
   .next-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--hair); }
-  .primary { border: 0; border-radius: var(--r-ctl); background: var(--cobalt); color: #fff; padding: 12px 18px; font-size: 16px; font-weight: 600; cursor: pointer; }
-  .primary:hover { background: var(--cobalt-press); }
+  .primary { border: 0; border-radius: var(--r-ctl); background: var(--btn); color: #fff; padding: 12px 18px; font-size: 16px; font-weight: 600; cursor: pointer; }
+  .primary:hover { background: var(--btn-press); }
   .secondary { border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--paper); padding: 11px 16px; font-size: 16px; font-weight: 500; cursor: pointer; }
   .secondary:hover { border-color: var(--slate); }
 
-  dialog { border: 0; border-radius: 16px; padding: 0; width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 30px 80px -20px rgba(24,32,46,.45); }
-  dialog::backdrop { background: rgba(24,32,46,.38); }
+  .side-empty h2 { font-size: 22px; letter-spacing: -0.01em; margin: 0 0 8px; }
+  .side-empty > p { color: var(--slate); margin: 0 0 22px; max-width: 46ch; }
+  .side-empty ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; max-width: 52ch; }
+  .side-empty li { padding: 14px 16px; border: 1px solid var(--hair); border-radius: var(--r-ctl); font-size: 15px; color: var(--body2); }
+  .side-empty li b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 2px; }
+  .side-stats { display: flex; gap: 28px; margin-top: 26px; flex-wrap: wrap; }
+  .side-stats b { display: block; font-size: 32px; font-weight: 700; letter-spacing: -0.03em; }
+  .side-stats span { font-size: 13px; color: var(--slate); }
+
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); }
+  dialog::backdrop { background: rgba(10,14,22,.5); }
   dialog[open] { animation: rise .18s ease-out; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
   .dlg { padding: 26px 26px 22px; }
   .dlg h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; }
   .dlg .lead { margin: 0 0 20px; color: var(--slate); font-size: 15px; }
+  .dlg h4 { font-size: 16px; margin: 22px 0 10px; }
   fieldset { border: 0; padding: 0; margin: 0 0 6px; }
   legend { font-size: 17px; font-weight: 600; padding: 0; margin-bottom: 4px; }
   .legend-sub { font-size: 14px; color: var(--slate); margin: 0 0 14px; }
@@ -197,8 +242,9 @@
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
   .field .help { font-size: 13px; color: var(--slate); margin-top: 6px; }
-  .field input[type=text], .field input[type=password], .field select { width: 100%; padding: 11px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: #fff; font-size: 16px; }
-  .field input:focus, .field select:focus { outline: 2px solid var(--cobalt); outline-offset: -1px; border-color: transparent; }
+  .field input[type=text], .field input[type=password], .field select, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--field); font-size: 16px; }
+  .field textarea { min-height: 70px; resize: vertical; line-height: 1.4; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--cobalt); outline-offset: -1px; border-color: transparent; }
   .keyrow { display: flex; gap: 8px; }
   .keyrow input { flex: 1; min-width: 0; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -207,15 +253,16 @@
   .switch span { font-size: 13px; color: var(--slate); }
   .switch input { width: 42px; height: 24px; appearance: none; background: var(--hair); border-radius: 12px; position: relative; cursor: pointer; flex: none; transition: background .15s; }
   .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
-  .switch input:checked { background: var(--cobalt); }
+  .switch input:checked { background: var(--btn); }
   .switch input:checked::after { transform: translateX(18px); }
   .sdk { font-size: 13px; color: var(--slate); display: flex; align-items: center; gap: 8px; margin-top: 4px; }
   .sdk i { width: 8px; height: 8px; border-radius: 50%; background: var(--mid); flex: none; }
   .sdk.ok i { background: var(--good); }
   .sdk.failed i { background: var(--weak); }
   .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; position: sticky; bottom: -22px; background: var(--paper); padding: 12px 0 2px; }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--cobalt); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 
-  .hist { list-style: none; margin: 0; padding: 0; max-height: 52vh; overflow: auto; }
+  .hist { list-style: none; margin: 0; padding: 0; }
   .hist li { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-top: 1px solid var(--hair); }
   .hist .q { font-weight: 500; font-size: 15px; }
   .hist .when { font-size: 13px; color: var(--slate); }
@@ -225,41 +272,54 @@
   .avg b { display: block; font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
   .avg span { font-size: 13px; color: var(--slate); }
   .empty { color: var(--slate); font-size: 15px; padding: 10px 0; }
-  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px; transition: .2s; pointer-events: none; max-width: calc(100vw - 32px); }
-  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .nb-fix { padding: 10px 0; border-top: 1px solid var(--hair); font-size: 15px; display: grid; gap: 2px; }
+  .nb-fix s { color: var(--weak); }
+  .nb-fix ins { color: var(--good); text-decoration: none; font-weight: 500; }
+  .tabs { display: flex; gap: 4px; padding: 4px; background: var(--seg); border-radius: 10px; margin: 6px 0 16px; }
+  .tabs button { flex: 1; border: 0; background: transparent; border-radius: 7px; padding: 8px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--paper); }
+
   .guide { width: min(640px, calc(100vw - 32px)); }
   .guide .lead { font-size: 16px; }
-  .guide h4 { font-size: 17px; margin: 22px 0 10px; }
   .guide ol { list-style: none; counter-reset: g; margin: 0; padding: 0; }
   .guide ol > li { counter-increment: g; position: relative; padding: 0 0 18px 44px; }
   .guide ol > li::before { content: counter(g); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--cobalt-tint); color: var(--cobalt); font-weight: 700; font-size: 15px; display: grid; place-items: center; }
   .guide ol > li b { display: block; font-size: 16px; margin-bottom: 2px; }
-  .guide ol > li p { margin: 0; font-size: 15px; color: #39414F; line-height: 1.5; }
+  .guide ol > li p { margin: 0; font-size: 15px; color: var(--body2); line-height: 1.5; }
   .guide a { color: var(--cobalt); font-weight: 500; }
   .guide .tip { margin-top: 6px; font-size: 14px; color: var(--slate); }
-  .guide code { font-size: 14px; background: #EEF1F5; padding: 1px 5px; border-radius: 4px; }
+  .guide code { font-size: 14px; background: var(--code); padding: 1px 5px; border-radius: 4px; }
   .guide details { border-top: 1px solid var(--hair); padding-top: 14px; margin-top: 6px; }
   .guide summary { cursor: pointer; font-weight: 600; font-size: 17px; }
   .guide summary small { display: block; font-weight: 400; font-size: 14px; color: var(--slate); margin-top: 2px; }
   .guide details ol { margin-top: 16px; }
-  .linkbtn { background: none; border: 0; padding: 0; color: var(--cobalt); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; background: #18202E; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 15px; transition: .2s; pointer-events: none; max-width: calc(100vw - 32px); z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .hidden { display: none !important; }
 
+  @media (min-width: 1100px) {
+    .wrap { max-width: 1280px; padding: 32px 40px 80px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 540px) minmax(0, 1fr); gap: 48px; align-items: start; }
+    .stage { position: sticky; top: 24px; }
+    .question { font-size: 32px; }
+    .side-empty { display: block; padding-top: 8px; }
+    .results { margin-top: 0; }
+  }
   @media (max-width: 600px) {
     .wrap { padding: 20px 16px 80px; }
     .parts { grid-template-columns: 1fr 1fr; }
     .card { padding: 22px 20px 18px; }
     .metrics { grid-template-columns: 1fr; gap: 18px; }
-    .stats { grid-template-columns: 1fr 1fr; }
-    .crit { grid-template-columns: 1fr 1fr; }
-    .big { font-size: 68px; }
+    .stats, .crit { grid-template-columns: 1fr 1fr; }
+    .verdict { grid-template-columns: 1fr; gap: 10px; }
+    .big { font-size: 68px; grid-row: auto; }
     .two { grid-template-columns: 1fr; }
     .tools .ghost span { display: none; }
     .rec-btn { width: 100%; justify-content: center; }
+    .shadow .rec-btn { width: auto; }
     .fix { grid-template-columns: 1fr; }
-    .verdict { grid-template-columns: 1fr; gap: 10px; }
-    .big { grid-row: auto; }
-    .ai { padding: 20px 18px; }
+    .ai, .shadow { padding: 20px 18px; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
@@ -270,103 +330,125 @@
     <div class="mark">Speaking<span>Allenamento IELTS</span></div>
     <div class="tools">
       <button class="ghost hidden" id="install" type="button" aria-label="Installa l'app">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
-        <span>Installa</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Installa</span>
       </button>
       <button class="ghost" id="openGuide" type="button" aria-label="Guida">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>
-        <span>Guida</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg><span>Guida</span>
       </button>
       <button class="ghost" id="openHistory" type="button" aria-label="Progressi">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
-        <span>Progressi</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg><span>Progressi</span>
       </button>
       <button class="ghost" id="openSettings" type="button" aria-label="Impostazioni">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
-        <span>Impostazioni</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Impostazioni</span>
       </button>
     </div>
   </header>
 
-  <div class="parts" role="group" aria-label="Modalità">
-    <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi</small></button>
-    <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card</small></button>
-    <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione</small></button>
-    <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Esame completo</b><small>Circa 12 minuti</small></button>
-  </div>
-
-  <article class="card" aria-live="polite">
-    <div class="card-top"><span class="topic" id="topic"></span><span id="progress"></span></div>
-    <div class="steps hidden" id="steps"></div>
-    <h1 class="question" id="question"></h1>
-    <ul class="bullets hidden" id="bullets"></ul>
-    <div class="card-actions">
-      <button class="ghost" id="listen" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>
-        Ascolta la domanda
-      </button>
-      <button class="ghost" id="nextQ" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-        <span id="nextQLabel">Domanda successiva</span>
-      </button>
-      <button class="ghost" id="newTopic" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>
-        Cambia argomento
-      </button>
-      <button class="ghost hidden" id="exitMock" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        Esci dall'esame
-      </button>
-    </div>
-  </article>
-
-  <section class="recorder">
-    <div class="rec-row">
-      <button class="rec-btn" id="rec" type="button"><i class="dot"></i><span id="recLabel">Inizia a parlare</span></button>
-      <div class="clock">
-        <div class="clock-time" id="clock">0:00</div>
-        <div class="track" aria-hidden="true"><i class="target" id="target"></i><i class="fill" id="fill"></i></div>
-        <div class="clock-note" id="clockNote"></div>
+  <div class="layout">
+    <div class="stage">
+      <div class="parts" role="group" aria-label="Modalità">
+        <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi</small></button>
+        <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card</small></button>
+        <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione</small></button>
+        <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Esame completo</b><small>Circa 12 minuti</small></button>
       </div>
+
+      <article class="card" aria-live="polite">
+        <div class="card-top"><span class="topic" id="topic"></span><span id="progress"></span></div>
+        <div class="steps hidden" id="steps"></div>
+        <h1 class="question" id="question"></h1>
+        <ul class="bullets hidden" id="bullets"></ul>
+        <div class="card-actions">
+          <button class="ghost" id="listen" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>Ascolta la domanda
+          </button>
+          <button class="ghost" id="nextQ" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg><span id="nextQLabel">Domanda successiva</span>
+          </button>
+          <button class="ghost" id="newTopic" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>Cambia argomento
+          </button>
+          <button class="ghost hidden" id="exitMock" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Esci dall'esame
+          </button>
+        </div>
+      </article>
+
+      <section class="recorder">
+        <div class="rec-row">
+          <button class="rec-btn" id="rec" type="button"><i class="dot"></i><span id="recLabel">Inizia a parlare</span></button>
+          <div class="clock">
+            <div class="clock-time" id="clock">0:00</div>
+            <div class="track" aria-hidden="true"><i class="target" id="target"></i><i class="fill" id="fill"></i></div>
+            <div class="clock-note" id="clockNote"></div>
+          </div>
+        </div>
+        <p class="live-text" id="live" data-empty="Premi il pulsante o la barra spaziatrice e rispondi come all'esame."></p>
+        <div class="alert hidden" id="alert"><span id="alertText"></span><button type="button" id="alertFix" class="hidden">Apri impostazioni</button></div>
+      </section>
     </div>
-    <p class="live-text" id="live" data-empty="Premi il pulsante o la barra spaziatrice e rispondi come all'esame."></p>
-    <div class="alert hidden" id="alert"><span id="alertText"></span><button type="button" id="alertFix" class="hidden">Apri impostazioni</button></div>
-  </section>
 
-  <section class="results hidden" id="results" aria-live="polite">
-    <div class="warn hidden" id="warn"></div>
+    <div class="side">
+      <section class="side-empty" id="sideEmpty">
+        <h2>Qui compariranno i risultati</h2>
+        <p>Rispondi a voce alla domanda a sinistra. Quando premi Ho finito, la valutazione appare in questa colonna.</p>
+        <ul>
+          <li><b>Pronuncia</b>Azure ascolta ogni suono e ti dice quali parole non erano chiare.</li>
+          <li><b>Band IELTS</b>Se hai collegato Azure OpenAI, ricevi una band stimata sui quattro criteri, con correzioni ed esempi.</li>
+          <li><b>Esercizio</b>Dopo la valutazione puoi riascoltarti e allenarti a leggere la versione migliorata della risposta.</li>
+        </ul>
+        <div class="side-stats" id="sideStats"></div>
+      </section>
 
-    <div class="ai" id="ai"></div>
+      <section class="results hidden" id="results" aria-live="polite">
+        <div class="warn hidden" id="warn"></div>
+        <div class="ai" id="ai"></div>
 
-    <div class="verdict">
-      <div class="big" id="rPron">0<small>/100</small></div>
-      <div class="verdict-title" id="rTitle"></div>
-      <div class="verdict-sub">Pronuncia complessiva secondo Azure, da 0 a 100. Non è una band IELTS.</div>
+        <div class="verdict">
+          <div class="big" id="rPron">0<small>/100</small></div>
+          <div class="verdict-title" id="rTitle"></div>
+          <div class="verdict-sub">Pronuncia complessiva secondo Azure, da 0 a 100. Non è una band IELTS.</div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-head"><b>Suoni</b><span id="rAcc">–</span></div><div class="bar"><i id="bAcc"></i></div><p>Quanto ogni suono si avvicina a quello di un madrelingua.</p></div>
+          <div class="metric"><div class="metric-head"><b>Scorrevolezza</b><span id="rFlu">–</span></div><div class="bar"><i id="bFlu"></i></div><p>Pause, esitazioni e continuità del discorso.</p></div>
+          <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p>Accenti delle parole, melodia della frase, enfasi.</p></div>
+        </div>
+        <dl class="stats" id="stats"></dl>
+
+        <div class="block hidden" id="tapeBlock">
+          <h2>Riascoltati</h2>
+          <div id="tape"></div>
+        </div>
+
+        <div class="block">
+          <h2>Cosa ha capito Azure</h2>
+          <div id="transcript"></div>
+          <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
+          <p class="hint">Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
+        </div>
+
+        <div class="block" id="weakBlock">
+          <h2>Parole da ripassare</h2>
+          <div class="chips" id="chips"></div>
+          <p class="hint">Tocca una parola per sentirla pronunciata.</p>
+        </div>
+
+        <section class="shadow hidden" id="shadow">
+          <h2>Esercizio di lettura</h2>
+          <p class="hint" style="margin-top:0">Leggi ad alta voce il testo qui sotto. Azure sa cosa dovresti dire e confronta ogni parola, quindi la valutazione della pronuncia è molto più precisa che nel parlato libero.</p>
+          <p class="ref" id="shadowRef"></p>
+          <div class="shadow-row">
+            <button class="rec-btn" id="shadowBtn" type="button"><i class="dot"></i><span id="shadowLabel">Inizia a leggere</span></button>
+            <span class="hint" id="shadowNote" style="margin:0"></span>
+          </div>
+          <div id="shadowOut"></div>
+        </section>
+
+        <div class="next-row" id="nextRow"></div>
+      </section>
     </div>
-
-    <div class="metrics">
-      <div class="metric"><div class="metric-head"><b>Suoni</b><span id="rAcc">–</span></div><div class="bar"><i id="bAcc"></i></div><p>Quanto ogni suono si avvicina a quello di un madrelingua.</p></div>
-      <div class="metric"><div class="metric-head"><b>Scorrevolezza</b><span id="rFlu">–</span></div><div class="bar"><i id="bFlu"></i></div><p>Pause, esitazioni e continuità del discorso.</p></div>
-      <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p>Accenti delle parole, melodia della frase, enfasi.</p></div>
-    </div>
-
-    <dl class="stats" id="stats"></dl>
-
-    <div class="block">
-      <h2>Cosa ha capito Azure</h2>
-      <div id="transcript"></div>
-      <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
-      <p class="hint">Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
-    </div>
-
-    <div class="block" id="weakBlock">
-      <h2>Parole da ripassare</h2>
-      <div class="chips" id="chips"></div>
-      <p class="hint">Tocca una parola per sentirla pronunciata.</p>
-    </div>
-
-    <div class="next-row" id="nextRow"></div>
-  </section>
+  </div>
 </div>
 
 <dialog id="settings">
@@ -379,27 +461,13 @@
       <p class="legend-sub">La tua risorsa Azure Speech, da Chiavi ed endpoint.</p>
       <div class="field">
         <label for="fKey">Chiave</label>
-        <div class="keyrow">
-          <input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Key 1">
-          <button type="button" class="secondary" data-toggle="fKey">Mostra</button>
-        </div>
+        <div class="keyrow"><input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Key 1"><button type="button" class="secondary" data-toggle="fKey">Mostra</button></div>
       </div>
       <div class="two">
-        <div class="field">
-          <label for="fRegion">Regione</label>
-          <input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth">
-          <div class="help">Come in Posizione/Area</div>
-        </div>
-        <div class="field">
-          <label for="fLang">Accento</label>
-          <select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select>
-          <div class="help">Voce e pronuncia di riferimento</div>
-        </div>
+        <div class="field"><label for="fRegion">Regione</label><input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth"><div class="help">Come in Posizione/Area</div></div>
+        <div class="field"><label for="fLang">Accento</label><select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select><div class="help">Voce e pronuncia di riferimento</div></div>
       </div>
-      <label class="switch">
-        <div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div>
-        <input type="checkbox" id="fAuto">
-      </label>
+      <label class="switch"><div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div><input type="checkbox" id="fAuto"></label>
       <div class="sdk" id="sdk"><i></i><span id="sdkText"></span></div>
     </fieldset>
 
@@ -407,23 +475,25 @@
 
     <fieldset>
       <legend>Band IELTS automatica</legend>
-      <p class="legend-sub">Facoltativa. Con una risorsa Azure OpenAI l'app stima la band da sola, senza copiare niente. Lascia vuoto per usare solo Copia per Claude.</p>
-      <div class="field">
-        <label for="fAiEndpoint">Endpoint</label>
-        <input id="fAiEndpoint" type="text" autocomplete="off" spellcheck="false" placeholder="https://nome-risorsa.openai.azure.com">
-      </div>
-      <div class="field">
-        <label for="fAiKey">Chiave</label>
-        <div class="keyrow">
-          <input id="fAiKey" type="password" autocomplete="off" spellcheck="false">
-          <button type="button" class="secondary" data-toggle="fAiKey">Mostra</button>
-        </div>
-      </div>
-      <div class="field">
-        <label for="fAiDep">Nome del deployment</label>
-        <input id="fAiDep" type="text" autocomplete="off" spellcheck="false" placeholder="gpt-5-mini">
-        <div class="help">Il nome che hai dato al modello quando l'hai distribuito</div>
-      </div>
+      <p class="legend-sub">Facoltativa. Con una risorsa Azure OpenAI l'app stima la band da sola. Lascia vuoto per usare solo Copia per Claude.</p>
+      <div class="field"><label for="fAiEndpoint">Endpoint</label><input id="fAiEndpoint" type="text" autocomplete="off" spellcheck="false" placeholder="https://nome-risorsa.openai.azure.com"></div>
+      <div class="field"><label for="fAiKey">Chiave</label><div class="keyrow"><input id="fAiKey" type="password" autocomplete="off" spellcheck="false"><button type="button" class="secondary" data-toggle="fAiKey">Mostra</button></div></div>
+      <div class="field"><label for="fAiDep">Nome del deployment</label><input id="fAiDep" type="text" autocomplete="off" spellcheck="false" placeholder="gpt-5.4-mini"><div class="help">Il nome che hai dato al modello quando l'hai distribuito</div></div>
+    </fieldset>
+
+    <div class="sep"></div>
+
+    <fieldset>
+      <legend>Su di te</legend>
+      <p class="legend-sub">Facoltativo. Nomi propri e parole che usi spesso, separati da virgole. Azure li riconosce meglio e la valutazione non li scambia per errori.</p>
+      <div class="field"><textarea id="fContext" spellcheck="false" placeholder="ad esempio la tua città, l'università, il tuo corso"></textarea></div>
+    </fieldset>
+
+    <div class="sep"></div>
+
+    <fieldset>
+      <legend>Aspetto</legend>
+      <div class="field"><label for="fTheme">Tema</label><select id="fTheme"><option value="auto">Automatico, come il dispositivo</option><option value="light">Chiaro</option><option value="dark">Scuro</option></select></div>
     </fieldset>
 
     <div class="dlg-actions">
@@ -437,37 +507,25 @@
   <div class="dlg">
     <h3>Come iniziare</h3>
     <p class="lead">L'app usa Azure, il cloud di Microsoft, per ascoltarti e valutare la pronuncia. Ti serve una chiave tua, gratuita per gli studenti universitari. Ci vogliono circa 10 minuti, e lo fai una volta sola.</p>
-
     <h4>Voce e pronuncia, obbligatorio</h4>
     <ol>
-      <li><b>Crea un account Azure</b>
-        <p>Se sei studente universitario usa <a href="https://azure.microsoft.com/free/students" target="_blank" rel="noopener">Azure for Students</a> con la mail dell'università. Non serve la carta di credito e ricevi crediti gratuiti. Se la mail dell'università non funziona, puoi creare un account Azure gratuito normale.</p></li>
-      <li><b>Crea la risorsa Speech</b>
-        <p>Apri il <a href="https://portal.azure.com" target="_blank" rel="noopener">portale Azure</a>, cerca <code>Speech</code> nella barra in alto e scegli Speech dal Marketplace, pubblicato da Microsoft (in italiano può chiamarsi Voce). Evita Microsoft Foundry, che non ha il piano gratuito. Premi Crea e compila così.</p>
-        <p class="tip">Gruppo di risorse, creane uno nuovo, ad esempio <code>ielts</code>. Area, Italy North o un'altra in Europa. Nome, uno qualsiasi. Piano tariffario, <b style="display:inline">Free F0</b>, che include 5 ore di audio gratis al mese.</p></li>
-      <li><b>Se compare un errore di policy sulla regione</b>
-        <p>Con l'abbonamento studenti alcune regioni sono bloccate. Rifai la creazione scegliendo Italy North, Sweden Central, France Central o Germany West Central.</p></li>
-      <li><b>Copia chiave e regione</b>
-        <p>Quando la risorsa è pronta premi Vai alla risorsa e apri Chiavi ed endpoint. Copia la Key 1 e la regione indicata in Posizione/Area, scritta tutta attaccata, ad esempio <code>italynorth</code>. Tieni la chiave per te, funziona come una password.</p></li>
-      <li><b>Incollale nell'app</b>
-        <p>Apri Impostazioni, incolla chiave e regione e salva. Alla prima registrazione consenti l'accesso al microfono.</p></li>
+      <li><b>Crea un account Azure</b><p>Se sei studente universitario usa <a href="https://azure.microsoft.com/free/students" target="_blank" rel="noopener">Azure for Students</a> con la mail dell'università. Non serve la carta di credito e ricevi crediti gratuiti. Se la mail dell'università non funziona, puoi creare un account Azure gratuito normale.</p></li>
+      <li><b>Crea la risorsa Speech</b><p>Apri il <a href="https://portal.azure.com" target="_blank" rel="noopener">portale Azure</a>, cerca <code>Speech</code> nella barra in alto e scegli Speech dal Marketplace, pubblicato da Microsoft (in italiano può chiamarsi Voce). Evita Microsoft Foundry, che non ha il piano gratuito. Premi Crea e compila così.</p>
+        <p class="tip">Gruppo di risorse, creane uno nuovo, ad esempio <code>ielts</code>. Area, Italy North o un'altra in Europa. Nome, uno qualsiasi. Piano tariffario, Free F0, che include 5 ore di audio gratis al mese.</p></li>
+      <li><b>Se compare un errore di policy sulla regione</b><p>Con l'abbonamento studenti alcune regioni sono bloccate. Rifai la creazione scegliendo Italy North, France Central o Germany West Central.</p></li>
+      <li><b>Copia chiave e regione</b><p>Quando la risorsa è pronta premi Vai alla risorsa e apri Chiavi ed endpoint. Copia la Key 1 e la regione indicata in Posizione/Area, scritta tutta attaccata, ad esempio <code>italynorth</code>. Tieni la chiave per te, funziona come una password.</p></li>
+      <li><b>Incollale nell'app</b><p>Apri Impostazioni, incolla chiave e regione e salva. Alla prima registrazione consenti l'accesso al microfono.</p></li>
     </ol>
-
     <details>
       <summary>Band IELTS automatica, facoltativo<small>Per vedere la band direttamente nell'app senza copiare niente</small></summary>
       <ol>
-        <li><b>Crea una risorsa Azure OpenAI</b>
-          <p>Nel portale cerca <code>Azure OpenAI</code> e premi Crea. Usa lo stesso gruppo di risorse, una regione europea consentita (se una è bloccata provane un'altra) e il piano Standard. Si paga a consumo dai crediti, e ogni valutazione costa pochissimo.</p></li>
-        <li><b>Distribuisci un modello</b>
-          <p>Dalla risorsa apri il portale Foundry, vai su Distribuzioni e premi Distribuisci modello. Scegli un modello piccolo ed economico, ad esempio <code>gpt-5-mini</code> o <code>gpt-4.1-mini</code>, con tipo Global Standard. Annota il nome che dai alla distribuzione.</p></li>
-        <li><b>Copia endpoint e chiave</b>
-          <p>Torna alla risorsa nel portale Azure e apri Chiavi ed endpoint. Copia l'endpoint (inizia con https) e la Key 1.</p></li>
-        <li><b>Incollali nell'app</b>
-          <p>In Impostazioni, sezione Band IELTS automatica, inserisci endpoint, chiave e nome della distribuzione. Dalla risposta successiva la band compare da sola.</p></li>
+        <li><b>Crea una risorsa Azure OpenAI</b><p>Nel portale cerca <code>Azure OpenAI</code> e premi Crea. Usa lo stesso gruppo di risorse, una regione europea consentita (Italy North di solito funziona) e il piano Standard S0. Si paga a consumo dai crediti, e ogni valutazione costa pochissimo.</p></li>
+        <li><b>Distribuisci un modello</b><p>Dalla risorsa apri il portale Foundry, vai su Distribuzioni, poi Distribuisci modello e Distribuisci modello di base. Scegli un modello mini recente adatto alla chat, ad esempio <code>gpt-5.4-mini</code> o <code>gpt-5-mini</code>, con tipo Global Standard. Il nome della distribuzione è quello che ti propone.</p></li>
+        <li><b>Copia endpoint e chiave</b><p>Nella pagina della risorsa trovi l'Endpoint (inizia con https) e la Chiave API 1.</p></li>
+        <li><b>Incollali nell'app</b><p>In Impostazioni, sezione Band IELTS automatica, inserisci endpoint, chiave e nome della distribuzione.</p></li>
       </ol>
       <p class="tip">Se il tuo abbonamento non permette Azure OpenAI, puoi sempre usare Copia per Claude e incollare il risultato in una chat. I nomi dei menu nel portale a volte cambiano leggermente.</p>
     </details>
-
     <div class="dlg-actions">
       <button type="button" class="secondary" id="closeGuide">Chiudi</button>
       <button type="button" class="primary" id="guideToSettings">Apri le impostazioni</button>
@@ -478,9 +536,15 @@
 <dialog id="history">
   <div class="dlg">
     <h3>Progressi</h3>
-    <p class="lead">Le tue ultime risposte registrate in questo browser.</p>
-    <div class="avg hidden" id="avg"></div>
-    <ul class="hist" id="histList"></ul>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabSessions" aria-selected="true">Sessioni</button>
+      <button type="button" role="tab" id="tabNotebook" aria-selected="false">Quaderno degli errori</button>
+    </div>
+    <div id="panelSessions">
+      <div class="avg hidden" id="avg"></div>
+      <ul class="hist" id="histList"></ul>
+    </div>
+    <div id="panelNotebook" class="hidden"></div>
     <div class="dlg-actions">
       <button type="button" class="secondary" id="clearHistory">Svuota</button>
       <button type="button" class="primary" id="closeHistory">Chiudi</button>
@@ -492,7 +556,6 @@
 
 <script>
 {
-/* ---------- Domande ---------- */
 const P1 = [
   { topic: "Studio e lavoro", qs: ["Do you work or are you a student?", "What made you choose your field of study?", "What part of your course do you enjoy the most?", "Would you like to keep studying after your degree? Why?"] },
   { topic: "La tua città", qs: ["Where do you live at the moment?", "What do you like most about living there?", "Is there anything you would change about it?", "Do you think you will live there in the future?"] },
@@ -526,16 +589,20 @@ const P2 = [
     p3: ["Why is it important for young people to learn about history?", "Should historical sites be free to visit?", "How can museums make history more interesting for young people?", "Do you think we learn from the mistakes of the past?"] }
 ];
 const TARGET = { 1: [20, 30, 45], 2: [90, 120, 120], 3: [40, 60, 80] };
-const TICK = 1e7; // Azure misura il tempo in unità da 100 nanosecondi
+const TICK = 1e7;
 
-/* Riassunto dei descrittori IELTS Speaking, riformulato */
 const RUBRIC = `IELTS Speaking band descriptors (summary)
 Fluency and Coherence. 9 fluent, only rare hesitation linked to content, fully coherent. 8 fluent, occasional repetition or self-correction, develops topics coherently. 7 speaks at length without noticeable effort, some hesitation or repetition, uses a range of connectives flexibly. 6 willing to speak at length but loses coherence at times, some hesitation and repetition, connectives not always appropriate. 5 keeps going but relies on repetition, self-correction or slow speech, overuses some connectives. 4 noticeable pauses, slow, frequent repetition, simple linking only.
 Lexical Resource. 9 full flexibility and precision, natural idiomatic language. 8 wide resource used readily and flexibly, skilful use of less common and idiomatic items with occasional inaccuracies. 7 flexible across topics, some less common and idiomatic vocabulary, some inappropriate choices. 6 wide enough to discuss topics at length, meaning clear despite inappropriacies, generally paraphrases successfully. 5 manages familiar and unfamiliar topics with limited flexibility, attempts paraphrase with mixed success. 4 basic vocabulary, frequent inappropriacies.
 Grammatical Range and Accuracy. 9 full range used naturally and accurately. 8 wide range used flexibly, most sentences error free. 7 range of complex structures with some flexibility, frequent error-free sentences, some errors persist. 6 mix of simple and complex structures with limited flexibility, frequent errors in complex structures that rarely impede communication. 5 basic forms reasonably accurate, limited complex structures that usually contain errors. 4 basic sentence forms, frequent errors.
 Pronunciation. 9 full range of features, effortless to understand. 8 wide range of features used flexibly, easy to understand, L1 accent has minimal effect. 7 all positive features of band 6 and some of band 8. 6 range of features with mixed control, generally understood, some mispronunciation reduces clarity at times. 5 all features of band 4 and some of band 6. 4 limited range, frequent mispronunciations cause some difficulty.`;
 
-/* ---------- Utilità ---------- */
+const ANCHORS = `Calibration anchors, illustrative answers to the Part 1 question "Do you enjoy cooking?" (use them to place Fluency, Lexical Resource and Grammar)
+Around band 5: "Yes, I like cooking. I cook sometimes in the weekend. I cook pasta because is easy and I like it. My mother cook very good, she teach me."
+Around band 6: "Yes, I quite enjoy it, especially at the weekend when I have more time. I usually make pasta dishes because they're easy and my family taught me some recipes, so I feel more confident with them."
+Around band 7: "I do, actually. It's become a way for me to unwind after a long day. I tend to stick to the dishes I grew up with, but lately I've been experimenting with Asian recipes, which has been fun, even if the results are a bit hit and miss."
+Around band 8: "Very much so. For me it's less about the food itself and more about the ritual of it, chopping, tasting, adjusting as I go. I'd say I'm a fairly instinctive cook, I rarely follow a recipe to the letter, which occasionally backfires, but that's half the fun."`;
+
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
@@ -548,6 +615,9 @@ const shuffle = n => Array.from({ length: n }, (_, i) => i).sort(() => Math.rand
 const rnd = n => Math.floor(Math.random() * n);
 const roundBand = x => Math.round(x * 2) / 2;
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wide = () => matchMedia("(min-width: 1100px)").matches;
+const median = arr => { const a = arr.filter(v => v != null && isFinite(v)).sort((x, y) => x - y); if (!a.length) return null; const m = Math.floor(a.length / 2); return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
+const norm = w => String(w).toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9']/g, "");
 
 /* ---------- Impostazioni ---------- */
 function loadSettings() {
@@ -559,24 +629,26 @@ let settings = loadSettings();
 const normRegion = r => (r || "").toLowerCase().replace(/[\s_-]+/g, "").replace(/^northitaly$/, "italynorth");
 const configured = () => !!(settings.key && settings.region);
 const aiConfigured = () => !!(settings.aiEndpoint && settings.aiKey && settings.aiDeployment);
+const contextWords = () => (settings.context || "").split(/[,\n;]+/).map(s => s.trim()).filter(Boolean).slice(0, 60);
+
+function applyTheme() {
+  const t = settings.theme || "auto", root = document.documentElement;
+  if (t === "auto") delete root.dataset.theme; else root.dataset.theme = t;
+  requestAnimationFrame(() => $("themeColor").setAttribute("content", getComputedStyle(document.body).backgroundColor));
+}
+try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme); } catch {}
 
 function openSettings(first) {
   $("fKey").value = settings.key || ""; $("fRegion").value = settings.region || "";
   $("fLang").value = settings.lang || "en-GB"; $("fAuto").checked = !!settings.autoRead;
   $("fAiEndpoint").value = settings.aiEndpoint || ""; $("fAiKey").value = settings.aiKey || ""; $("fAiDep").value = settings.aiDeployment || "";
-  $("settingsLead").textContent = first
-    ? "Per iniziare collega la tua risorsa Azure Speech. Chiave e regione le trovi nel portale, alla voce Chiavi ed endpoint della risorsa."
-    : "I dati restano salvati solo in questo browser.";
+  $("fContext").value = settings.context || ""; $("fTheme").value = settings.theme || "auto";
+  $("settingsLead").textContent = first ? "Per iniziare collega la tua risorsa Azure Speech." : "I dati restano salvati solo in questo browser.";
   $("cancelSettings").classList.toggle("hidden", !!first && !configured());
   $("settings").showModal();
   if (!$("fKey").value) $("fKey").focus();
 }
 $("openSettings").onclick = () => openSettings(false);
-function openGuide() { $("guide").showModal(); }
-$("openGuide").onclick = openGuide;
-$("closeGuide").onclick = () => { $("guide").close(); if (!configured()) openSettings(true); };
-$("guideToSettings").onclick = () => { $("guide").close(); openSettings(!configured()); };
-$("guideFromSettings").onclick = () => { $("settings").close(); openGuide(); };
 $("cancelSettings").onclick = () => $("settings").close();
 document.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => {
   const f = $(b.dataset.toggle); const show = f.type === "password";
@@ -596,12 +668,18 @@ $("settingsForm").addEventListener("submit", e => {
   const ai = parseAi($("fAiEndpoint").value, $("fAiDep").value), aiKey = $("fAiKey").value.trim();
   const filled = [ai.endpoint, aiKey, ai.dep].filter(Boolean).length;
   if (filled > 0 && filled < 3) { e.preventDefault(); toast("Per la band automatica servono endpoint, chiave e nome del deployment"); return; }
-  settings = { key, region, lang: $("fLang").value, autoRead: $("fAuto").checked, aiEndpoint: ai.endpoint, aiKey, aiDeployment: ai.dep };
+  settings = { key, region, lang: $("fLang").value, autoRead: $("fAuto").checked, aiEndpoint: ai.endpoint, aiKey, aiDeployment: ai.dep, context: $("fContext").value.trim(), theme: $("fTheme").value };
   store.set("ist_settings", settings);
-  resetSynth(); hideAlert(); toast("Impostazioni salvate");
+  applyTheme(); resetSynth(); hideAlert(); toast("Impostazioni salvate");
   if (lastRun && !$("results").classList.contains("hidden")) renderAi();
 });
 $("settings").addEventListener("cancel", e => { if (!configured()) e.preventDefault(); });
+
+function openGuide() { $("guide").showModal(); }
+$("openGuide").onclick = openGuide;
+$("closeGuide").onclick = () => { $("guide").close(); if (!configured()) openSettings(true); };
+$("guideToSettings").onclick = () => { $("guide").close(); openSettings(!configured()); };
+$("guideFromSettings").onclick = () => { $("settings").close(); openGuide(); };
 
 function showSdk() {
   $("sdk").className = "sdk " + window.sdkState;
@@ -613,7 +691,6 @@ document.addEventListener("sdkchange", showSdk);
 /* ---------- Domande e modalità ---------- */
 let part = 1, mock = null;
 let p1Order = shuffle(P1.length), p2Order = shuffle(P2.length), p1i = 0, p2i = 0, qi = 0, p3Source = null;
-
 function current() {
   if (mock) { const s = mock.steps[mock.i]; return { ...s, idx: mock.i, total: mock.steps.length }; }
   if (part === 1) { const t = P1[p1Order[p1i % P1.length]]; return { part: 1, topic: t.topic, text: t.qs[qi], idx: qi, total: t.qs.length }; }
@@ -629,16 +706,12 @@ function showQuestion(autoRead = true) {
   $("topic").textContent = mock ? `Part ${q.part}, ${q.topic}` : q.topic;
   $("progress").textContent = mock ? `${q.idx + 1} di ${q.total}` : q.total > 1 ? `Domanda ${q.idx + 1} di ${q.total}` : "Cue card";
   const steps = $("steps");
-  if (mock) {
-    steps.innerHTML = mock.steps.map((_, i) => `<i class="${i < mock.i ? "done" : i === mock.i ? "now" : ""}"></i>`).join("");
-    steps.classList.remove("hidden");
-  } else steps.classList.add("hidden");
+  if (mock) { steps.innerHTML = mock.steps.map((_, i) => `<i class="${i < mock.i ? "done" : i === mock.i ? "now" : ""}"></i>`).join(""); steps.classList.remove("hidden"); }
+  else steps.classList.add("hidden");
   $("question").textContent = q.text;
   const ul = $("bullets");
-  if (q.card) {
-    ul.innerHTML = `<li class="closing">You should say</li>` + q.card.bullets.map(b => `<li>${esc(b)}</li>`).join("") + `<li class="closing">${esc(q.card.closing)}</li>`;
-    ul.classList.remove("hidden");
-  } else ul.classList.add("hidden");
+  if (q.card) { ul.innerHTML = `<li class="closing">You should say</li>` + q.card.bullets.map(b => `<li>${esc(b)}</li>`).join("") + `<li class="closing">${esc(q.card.closing)}</li>`; ul.classList.remove("hidden"); }
+  else ul.classList.add("hidden");
   const last = q.idx + 1 >= q.total;
   $("nextQLabel").textContent = part === 2 ? "Passa alla Part 3 su questo tema" : last ? "Nuovo argomento" : "Domanda successiva";
   ["nextQ", "newTopic"].forEach(id => $(id).classList.toggle("hidden", !!mock));
@@ -648,7 +721,6 @@ function showQuestion(autoRead = true) {
   if (state === "idle") setState("idle");
   if (autoRead && settings.autoRead && configured() && window.sdkState === "ok") speak(spoken(q));
 }
-
 function setPart(p, keepTopic) {
   if (busy()) return;
   if (p === "mock") return startMock();
@@ -658,22 +730,17 @@ function setPart(p, keepTopic) {
   hideResults(); clearLive(); showQuestion();
 }
 document.querySelectorAll(".parts button").forEach(b => b.onclick = () => setPart(b.dataset.part === "mock" ? "mock" : +b.dataset.part));
-
 function startMock() {
+  if (busy()) return;
   if (mock && mock.answers.length && !confirm("Vuoi ricominciare l'esame da capo?")) return;
   const t = P1[rnd(P1.length)], c = P2[rnd(P2.length)];
-  const steps = [
-    ...t.qs.map(q => ({ part: 1, topic: t.topic, text: q })),
-    { part: 2, topic: c.topic, text: c.prompt, card: c },
-    ...c.p3.map(q => ({ part: 3, topic: c.topic, text: q }))
-  ];
+  const steps = [...t.qs.map(q => ({ part: 1, topic: t.topic, text: q })), { part: 2, topic: c.topic, text: c.prompt, card: c }, ...c.p3.map(q => ({ part: 3, topic: c.topic, text: q }))];
   mock = { steps, i: 0, answers: [] };
   hideResults(); hideAlert(); clearLive();
   showQuestion();
   toast("Esame completo, 9 domande. Rispondi come il giorno dell'esame.");
 }
-$("exitMock").onclick = () => setPart(part === 2 ? 2 : part);
-
+$("exitMock").onclick = () => setPart(part);
 function nextQuestion() {
   if (busy() || mock) return;
   const q = current();
@@ -681,12 +748,7 @@ function nextQuestion() {
   if (q.idx + 1 < q.total) qi++; else bumpTopic();
   hideResults(); clearLive(); showQuestion();
 }
-function bumpTopic() {
-  qi = 0;
-  if (part === 1) p1i++;
-  else if (part === 2) p2i++;
-  else p3Source = ((p3Source ?? 0) + 1 + rnd(P2.length - 1)) % P2.length;
-}
+function bumpTopic() { qi = 0; if (part === 1) p1i++; else if (part === 2) p2i++; else p3Source = ((p3Source ?? 0) + 1 + rnd(P2.length - 1)) % P2.length; }
 $("nextQ").onclick = nextQuestion;
 $("newTopic").onclick = () => { if (busy() || mock) return; bumpTopic(); hideResults(); clearLive(); showQuestion(); };
 $("listen").onclick = () => speak(spoken(current()));
@@ -703,9 +765,7 @@ function speak(text) {
       c.speechSynthesisVoiceName = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
       synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput());
     }
-    synth.speakTextAsync(text, r => {
-      if (r.reason === SpeechSDK.ResultReason.Canceled) { resetSynth(); handleAzureError(SpeechSDK.CancellationDetails.fromResult(r).errorDetails); }
-    }, err => { resetSynth(); handleAzureError(String(err)); });
+    synth.speakTextAsync(text, r => { if (r.reason === SpeechSDK.ResultReason.Canceled) { resetSynth(); handleAzureError(SpeechSDK.CancellationDetails.fromResult(r).errorDetails); } }, err => { resetSynth(); handleAzureError(String(err)); });
   } catch (e) { handleAzureError(String(e)); }
 }
 
@@ -743,22 +803,60 @@ function updateClock(t) {
 }
 function clearLive() { $("live").textContent = ""; $("live").classList.remove("quiet"); }
 
-/* ---------- Registrazione ---------- */
-let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null;
-const busy = () => state !== "idle";
+/* ---------- Registrazione per riascoltarsi ---------- */
+let tape = null;
+async function startTape() {
+  try {
+    if (!window.MediaRecorder || !navigator.mediaDevices) return;
+    const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mr = new MediaRecorder(s), chunks = [];
+    mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    mr.start(1000);
+    tape = { mr, s, chunks };
+  } catch { tape = null; }
+}
+function stopTape() {
+  return new Promise(res => {
+    if (!tape) return res(null);
+    const { mr, s, chunks } = tape; tape = null;
+    mr.onstop = () => { s.getTracks().forEach(t => t.stop()); res(chunks.length ? URL.createObjectURL(new Blob(chunks, { type: mr.mimeType || "audio/webm" })) : null); };
+    try { mr.stop(); } catch { s.getTracks().forEach(t => t.stop()); res(null); }
+  });
+}
+
+/* ---------- Riconoscimento ---------- */
+function makeRecognizer(reference) {
+  const pa = new SpeechSDK.PronunciationAssessmentConfig(reference || "", SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark, SpeechSDK.PronunciationAssessmentGranularity.Phoneme, !!reference);
+  pa.enableProsodyAssessment = true;
+  if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
+  const r = new SpeechSDK.SpeechRecognizer(speechConfig(), SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+  pa.applyTo(r);
+  const words = contextWords();
+  if (words.length) { try { const pl = SpeechSDK.PhraseListGrammar.fromRecognizer(r); words.forEach(w => pl.addPhrase(w)); } catch (e) { console.warn(e); } }
+  return r;
+}
+function parseResult(e) {
+  const j = JSON.parse(e.result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult));
+  const nb = j.NBest && j.NBest[0];
+  if (!nb || !nb.Words || !nb.Words.length) return null;
+  return { text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words, conf: typeof nb.Confidence === "number" ? nb.Confidence : null };
+}
+
+let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false;
+const busy = () => state !== "idle" || !!shadowBusy;
 function setState(s) {
   state = s;
   const btn = $("rec");
   btn.classList.toggle("live", s === "listening");
   btn.classList.toggle("wait", s === "connecting" || s === "processing");
-  btn.disabled = s === "connecting" || s === "processing";
+  btn.disabled = s === "connecting" || s === "processing" || !!shadowBusy;
   $("recLabel").textContent = { idle: part === 2 ? "Inizia la preparazione" : "Inizia a parlare", prep: "Inizia subito a parlare", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
-  document.querySelectorAll(".parts button, #nextQ, #newTopic, #exitMock").forEach(b => b.disabled = s !== "idle");
+  document.querySelectorAll(".parts button, #nextQ, #newTopic, #exitMock").forEach(b => b.disabled = s !== "idle" || !!shadowBusy);
 }
 $("rec").onclick = () => {
   if (state === "listening") return stop();
   if (state === "prep") return start();
-  if (state !== "idle") return;
+  if (busy()) return;
   hideAlert();
   if (!ensureReady()) return;
   if (part === 2) return startPrep();
@@ -778,27 +876,18 @@ function start() {
   hideResults(); segments = []; clearLive();
   setTarget(); resetClock();
   setState("connecting");
-  try {
-    const pa = new SpeechSDK.PronunciationAssessmentConfig("", SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark, SpeechSDK.PronunciationAssessmentGranularity.Phoneme, false);
-    pa.enableProsodyAssessment = true;
-    if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
-    recognizer = new SpeechSDK.SpeechRecognizer(speechConfig(), SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
-    pa.applyTo(recognizer);
-  } catch (e) { setState("idle"); handleAzureError(String(e)); return; }
+  try { recognizer = makeRecognizer(); } catch (e) { setState("idle"); handleAzureError(String(e)); return; }
   const finalText = () => segments.map(s => s.text).join(" ");
   recognizer.recognizing = (s, e) => { $("live").textContent = (finalText() + " " + e.result.text).trim(); };
   recognizer.recognized = (s, e) => {
     if (e.result.reason !== SpeechSDK.ResultReason.RecognizedSpeech) return;
-    try {
-      const j = JSON.parse(e.result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult));
-      const nb = j.NBest && j.NBest[0];
-      if (nb && nb.Words && nb.Words.length) segments.push({ text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words });
-    } catch (err) { console.warn(err); }
+    try { const seg = parseResult(e); if (seg) segments.push(seg); } catch (err) { console.warn(err); }
     $("live").textContent = finalText();
   };
   recognizer.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { cleanup(); handleAzureError(e.errorDetails); } };
   recognizer.startContinuousRecognitionAsync(() => {
     setState("listening"); startAt = Date.now();
+    startTape();
     tick = setInterval(() => { const t = (Date.now() - startAt) / 1000; updateClock(t); if (part === 2 && t >= 120) stop(); }, 200);
   }, err => {
     cleanup();
@@ -809,6 +898,7 @@ function start() {
 }
 function cleanup() {
   clearInterval(tick); clearInterval(prepTimer); prepTimer = null;
+  stopTape();
   const r = recognizer; recognizer = null;
   if (r) { try { r.close(); } catch {} }
   setState("idle");
@@ -818,13 +908,13 @@ function stop() {
   clearInterval(tick);
   const seconds = (Date.now() - startAt) / 1000;
   setState("processing");
+  const tapeP = stopTape();
   const r = recognizer;
-  r.stopContinuousRecognitionAsync(() => { recognizer = null; try { r.close(); } catch {} setState("idle"); finished(seconds); }, () => cleanup());
+  r.stopContinuousRecognitionAsync(() => { recognizer = null; try { r.close(); } catch {} setState("idle"); finished(seconds, tapeP); }, () => cleanup());
 }
-
-function finished(seconds) {
-  if (!segments.length) { showAlert("Non ho ricevuto parole. Se hai parlato, controlla che il microfono giusto sia quello predefinito.", false); return; }
-  const item = { q: current(), segs: segments, seconds };
+function finished(seconds, tapeP) {
+  if (!segments.length) { showAlert("Non ho ricevuto parole. Se hai parlato, avvicinati al microfono e controlla che sia quello predefinito.", false); return; }
+  const item = { q: current(), segs: segments, seconds, tapeP: tapeP || Promise.resolve(null) };
   if (mock) {
     mock.answers.push(item);
     if (mock.i + 1 < mock.steps.length) {
@@ -832,11 +922,8 @@ function finished(seconds) {
       clearLive(); $("live").classList.add("quiet");
       showQuestion();
       toast(`Risposta salvata. Domanda ${mock.i + 1} di ${mock.steps.length}`);
-      window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
-    } else {
-      const answers = mock.answers; mock = null;
-      showRun(answers, true);
-    }
+      if (!wide()) window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
+    } else { const answers = mock.answers; mock = null; showRun(answers, true); }
     return;
   }
   showRun([item], false);
@@ -850,9 +937,7 @@ function analyze(items) {
   const avg = key => { let tot = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { tot += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(tot / w) : null; };
   const sc = { pron: avg("PronScore"), acc: avg("AccuracyScore"), flu: avg("FluencyScore"), pro: avg("ProsodyScore") };
   const seconds = items.reduce((a, it) => a + it.seconds, 0);
-
-  // pause tra le parole, risposta per risposta
-  let longPauses = 0, longest = 0, speaking = 0;
+  let longPauses = 0, longest = 0;
   items.forEach(it => {
     const ws = it.segs.flatMap(s => s.words).filter(w => typeof w.Offset === "number").sort((a, b) => a.Offset - b.Offset);
     for (let i = 0; i + 1 < ws.length; i++) {
@@ -860,8 +945,10 @@ function analyze(items) {
       if (gap > 1) longPauses++;
       if (gap > longest) longest = gap;
     }
-    if (ws.length) speaking += (ws[ws.length - 1].Offset + (ws[ws.length - 1].Duration || 0) - ws[0].Offset) / TICK;
   });
+  let cTot = 0, cW = 0;
+  segs.forEach(s => { if (s.conf != null) { cTot += s.conf * s.words.length; cW += s.words.length; } });
+  const conf = cW ? cTot / cW : null;
   const fillers = words.filter(w => /^(u+m+|u+h+|e+r+m*|a+h+|h+m+|m{2,})$/i.test(w.Word)).length;
   const text = items.map(it => it.segs.map(s => s.text).join(" ")).join(" ");
   const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(s => s.split(/\s+/).length > 1).length || 1;
@@ -869,26 +956,25 @@ function analyze(items) {
   const minutes = Math.max(seconds, 1) / 60;
   const seen = new Set();
   const weak = words
-    .map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
-      phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" ") }))
+    .map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100), phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" ") }))
     .filter(w => w.acc < 80).sort((a, b) => a.acc - b.acc)
     .filter(w => { const k = w.word.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
     .slice(0, 12);
   return {
-    sc, n, seconds, text, weak, fillers, longest,
-    wpm: Math.round(n / minutes),
-    longPauses, pausesPerMin: +(longPauses / minutes).toFixed(1),
-    avgSentence: Math.round(n / sentences),
-    variety: n ? Math.round(unique / n * 100) : 0,
-    tooShort: !items.length || (items.length === 1 ? (seconds < 12 || n < 25) : n < 150)
+    sc, n, seconds, text, weak, fillers, longest, conf,
+    wpm: Math.round(n / minutes), longPauses, pausesPerMin: +(longPauses / minutes).toFixed(1),
+    avgSentence: Math.round(n / sentences), variety: n ? Math.round(unique / n * 100) : 0,
+    tooShort: !items.length || (items.length === 1 ? (seconds < 12 || n < 25) : n < 150),
+    lowAudio: conf != null && conf < 0.6
   };
 }
 
 /* ---------- Testo per la valutazione ---------- */
 function report(run) {
-  const a = run.a;
-  const lines = [];
+  const a = run.a, lines = [];
   lines.push(run.mock ? "Mode: full IELTS Speaking mock test (Part 1, 2 and 3)." : `Mode: single answer, Part ${run.items[0].q.part}.`);
+  const ctx = contextWords();
+  if (ctx.length) lines.push(`Proper nouns and words the candidate may use (never treat them as errors): ${ctx.join(", ")}`);
   lines.push("");
   run.items.forEach((it, i) => {
     const one = analyze([it]);
@@ -903,11 +989,11 @@ function report(run) {
   lines.push(`Pauses longer than 1 second ${a.longPauses} (${a.pausesPerMin} per minute), longest ${a.longest.toFixed(1)} s`);
   lines.push(`Average sentence length ${a.avgSentence} words, lexical variety ${a.variety}% unique words`);
   lines.push(`Filler words detected ${a.fillers} (speech recognition often removes them, so this may be an undercount)`);
+  if (a.conf != null) lines.push(`Speech recognition confidence ${Math.round(a.conf * 100)}%${a.lowAudio ? ", low: the audio was quiet or unclear, so expect recognition errors in the transcript" : ""}`);
   lines.push(`Weakest words ${a.weak.length ? a.weak.map(w => `${w.word} ${w.acc}${w.phon ? ` /${w.phon}/` : ""}`).join(", ") : "none"}`);
   if (a.tooShort) lines.push("Warning: the sample is short, so any band estimate has low confidence.");
   return lines.join("\n");
 }
-
 function claudeText(run) {
   return `Sto preparando lo Speaking IELTS. Qui sotto trovi ${run.mock ? "una simulazione completa" : "una mia risposta"}, registrata e analizzata da Azure.
 
@@ -915,32 +1001,36 @@ ${report(run)}
 
 ${RUBRIC}
 
-Valutami da esaminatore IELTS sui quattro criteri, con una band per ciascuno e la band complessiva. Usa i descrittori qui sopra e cita frasi della trascrizione come prova. Tieni conto che la trascrizione automatica può contenere errori e togliere le esitazioni, e che i punteggi Azure sono solo un indizio per la pronuncia. Poi dammi le 3 cose più utili da migliorare${run.mock ? "" : " e una versione migliorata della mia risposta, mantenendo le mie idee"}. Rispondi in italiano.`;
+Valutami da esaminatore IELTS sui quattro criteri. Per ogni criterio cita prima le prove dalla trascrizione, poi dai la band, e alla fine la band complessiva. Tieni conto che la trascrizione automatica può contenere errori di riconoscimento e togliere le esitazioni, che i nomi propri strani sono probabilmente errori di riconoscimento e non miei, e che i punteggi Azure sono solo un indizio per la pronuncia. Poi dammi le 3 cose più utili da migliorare${run.mock ? "" : " e una versione migliorata della mia risposta, mantenendo le mie idee"}. Rispondi in italiano.`;
 }
 
-/* ---------- Valutazione automatica (Azure OpenAI) ---------- */
-const SYSTEM = `You are an experienced, strict but fair IELTS Speaking examiner. Rate the candidate using the band descriptors below. Base every judgement on evidence in the transcript and the measurements. The transcript comes from automatic speech recognition, so it may contain recognition errors and usually removes hesitations like "um": do not penalise obvious recognition errors, and use the pause data for fluency. Azure pronunciation scores are a useful signal but do not convert them mechanically into a band. Short samples give less reliable bands, so lower your confidence instead of guessing. Part 1 answers are naturally shorter than Part 3 answers.
+/* ---------- Valutazione automatica ---------- */
+const SYSTEM = `You are an experienced, strict but fair IELTS Speaking examiner. Rate the candidate with the band descriptors below.
+
+How to work
+1. For each criterion, first collect evidence: short exact quotes from the transcript and the relevant measurements. Only then decide the band.
+2. The transcript comes from automatic speech recognition. It may contain recognition errors and usually removes hesitations like "um". A strange word, an odd proper noun or a phrase that makes no sense in context is most likely a recognition error: do not count it against the candidate, do not "correct" it, and list it in possible_misrecognitions instead. Use the pause data for fluency.
+3. Pronunciation: you cannot hear the audio. Base it mainly on the Azure scores (accuracy for individual sounds, prosody for rhythm and intonation), the weakest words and the recognition confidence, read through the descriptors. Do not convert numbers mechanically.
+4. Short samples give less reliable bands: lower your confidence instead of guessing. Part 1 answers are naturally shorter than Part 3 answers.
+5. Avoid defaulting to 6 or 6.5: use the anchors to place the candidate.
 
 ${RUBRIC}
 
-Reply with JSON only, in exactly this shape:
-{"fluency": number, "lexical": number, "grammar": number, "pronunciation": number, "confidence": "alta" | "media" | "bassa", "summary": string, "improvements": [string, string, string], "corrections": [{"said": string, "better": string, "why": string}], "better_answer": string}
-Bands go from 0 to 9 in steps of 0.5. Write summary, improvements and why in Italian, simple and direct, two sentences at most each, with short English examples where useful. "said" must quote the transcript exactly, "better" is the corrected English. Give at most 4 corrections, the most useful ones. "better_answer" is an improved version of the candidate's answer in natural English, keeping their ideas, for a single answer only; for a full mock test use an empty string.`;
+${ANCHORS}
+
+Reply with JSON only, in exactly this shape and order:
+{"evidence": {"fluency": string, "lexical": string, "grammar": string, "pronunciation": string}, "fluency": number, "lexical": number, "grammar": number, "pronunciation": number, "confidence": "alta" | "media" | "bassa", "summary": string, "improvements": [string, string, string], "corrections": [{"said": string, "better": string, "why": string}], "possible_misrecognitions": [string], "better_answer": string}
+Bands go from 0 to 9 in steps of 0.5. Write evidence, summary, improvements and why in Italian, simple and direct, two sentences at most each, keeping quotes in English. "said" must quote the transcript exactly and must be a real language error, never a likely recognition error; "better" is the corrected English. Give at most 4 corrections, the most useful ones. "better_answer" is an improved version of the candidate's answer in natural English, keeping their ideas and roughly their length, for a single answer only; for a full mock test use an empty string.`;
 
 async function aiCall(messages) {
   const base = settings.aiEndpoint.replace(/\/+$/, "");
   const headers = { "Content-Type": "application/json", "api-key": settings.aiKey };
-  const payload = { messages, response_format: { type: "json_object" }, max_completion_tokens: 6000 };
+  const payload = { messages, response_format: { type: "json_object" }, max_completion_tokens: 8000 };
   let r = await fetch(`${base}/openai/v1/chat/completions`, { method: "POST", headers, body: JSON.stringify({ model: settings.aiDeployment, ...payload }) });
-  if (r.status === 404) {
-    r = await fetch(`${base}/openai/deployments/${encodeURIComponent(settings.aiDeployment)}/chat/completions?api-version=2025-04-01-preview`, { method: "POST", headers, body: JSON.stringify(payload) });
-  }
+  if (r.status === 404) r = await fetch(`${base}/openai/deployments/${encodeURIComponent(settings.aiDeployment)}/chat/completions?api-version=2025-04-01-preview`, { method: "POST", headers, body: JSON.stringify(payload) });
   if (r.status === 400) {
     const t = await r.clone().text();
-    if (/max_completion_tokens|response_format/i.test(t)) {
-      const alt = { messages, max_tokens: 2500 };
-      r = await fetch(`${base}/openai/v1/chat/completions`, { method: "POST", headers, body: JSON.stringify({ model: settings.aiDeployment, ...alt }) });
-    }
+    if (/max_completion_tokens|response_format/i.test(t)) r = await fetch(`${base}/openai/v1/chat/completions`, { method: "POST", headers, body: JSON.stringify({ model: settings.aiDeployment, messages, max_tokens: 3000 }) });
   }
   if (!r.ok) { const t = await r.text(); const e = new Error(t.slice(0, 300)); e.status = r.status; throw e; }
   const j = await r.json();
@@ -948,6 +1038,22 @@ async function aiCall(messages) {
   const m = content.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("Risposta del modello non leggibile");
   return JSON.parse(m[0]);
+}
+const CRIT = ["fluency", "lexical", "grammar", "pronunciation"];
+const clampBand = v => { const x = Number(v); return v != null && isFinite(x) ? Math.max(0, Math.min(9, roundBand(x))) : null; };
+const overallOf = r => { const v = CRIT.map(k => clampBand(r[k])).filter(x => x != null); return v.length ? roundBand(v.reduce((a, x) => a + x, 0) / v.length) : null; };
+async function evaluate(run) {
+  const msgs = [{ role: "system", content: SYSTEM }, { role: "user", content: report(run) }];
+  const tries = run.mock ? 3 : 1;
+  const settled = await Promise.allSettled(Array.from({ length: tries }, () => aiCall(msgs)));
+  const ok = settled.filter(s => s.status === "fulfilled").map(s => s.value);
+  if (!ok.length) throw settled[0].reason;
+  if (ok.length === 1) return { ...ok[0], _runs: 1 };
+  const merged = {};
+  CRIT.forEach(k => merged[k] = roundBand(median(ok.map(r => clampBand(r[k])))));
+  const target = overallOf(merged);
+  const rep = ok.slice().sort((a, b) => Math.abs(overallOf(a) - target) - Math.abs(overallOf(b) - target))[0];
+  return { ...rep, ...merged, _runs: ok.length };
 }
 
 let lastRun = null;
@@ -960,12 +1066,13 @@ async function renderAi() {
     return;
   }
   if (run.ai) return drawAi(run.ai);
-  box.innerHTML = `<div class="ai-loading"><i></i>Sto stimando la band IELTS</div>`;
+  box.innerHTML = `<div class="ai-loading"><i></i>${run.mock ? "Sto stimando la band con tre valutazioni indipendenti" : "Sto stimando la band IELTS"}</div>`;
   const token = run.token = Math.random();
   try {
-    const res = await aiCall([{ role: "system", content: SYSTEM }, { role: "user", content: report(run) }]);
+    const res = await evaluate(run);
     if (lastRun !== run || run.token !== token) return;
-    run.ai = res; drawAi(res); saveHistoryBand(run);
+    run.ai = res; drawAi(res); saveHistoryBand(run); noteFixes(res);
+    if (!run.mock && res.better_answer && !shadowBusy) setShadowRef(res.better_answer, "la versione migliorata della tua risposta");
   } catch (e) {
     if (lastRun !== run) return;
     let msg = "Non sono riuscito a ottenere la band.";
@@ -973,20 +1080,21 @@ async function renderAi() {
     else if (e.status === 404) msg = "Non trovo il deployment. Controlla che il nome sia identico a quello nel portale.";
     else if (e.status === 429) msg = "Troppe richieste in poco tempo. Aspetta qualche secondo e riprova.";
     else if (e instanceof TypeError) msg = "Non riesco a raggiungere Azure OpenAI. Controlla l'endpoint e la connessione.";
-    else msg += " " + e.message;
+    else msg += " " + (e.message || "");
     box.innerHTML = `<div class="ai-promo"><span>${esc(msg)}</span><button class="secondary" type="button" id="aiRetry">Riprova</button></div>`;
     $("aiRetry").onclick = renderAi;
   }
 }
 function drawAi(r) {
-  const c = k => { const v = Number(r[k]); return isFinite(v) ? Math.max(0, Math.min(9, roundBand(v))) : null; };
-  const crit = { fluency: c("fluency"), lexical: c("lexical"), grammar: c("grammar"), pronunciation: c("pronunciation") };
-  const vals = Object.values(crit).filter(v => v != null);
-  const overall = vals.length ? roundBand(vals.reduce((a, v) => a + v, 0) / vals.length) : null;
+  const crit = Object.fromEntries(CRIT.map(k => [k, clampBand(r[k])]));
+  const overall = overallOf(crit);
   r._overall = overall;
   const f = v => v == null ? "–" : v.toFixed(1);
   const imp = (r.improvements || []).filter(Boolean);
   const fixes = (r.corrections || []).filter(x => x && x.said && x.better);
+  const mis = (r.possible_misrecognitions || []).filter(Boolean);
+  const ev = r.evidence || {};
+  const evRows = [["fluency", "Fluency e coerenza"], ["lexical", "Lessico"], ["grammar", "Grammatica"], ["pronunciation", "Pronuncia"]].filter(([k]) => ev[k]);
   $("ai").innerHTML = `
     <div class="ai-head">
       <div class="band-big">${f(overall)}<small>Band stimata${r.confidence ? `, affidabilità ${esc(r.confidence)}` : ""}</small></div>
@@ -1001,37 +1109,124 @@ function drawAi(r) {
       ${r.summary ? `<p>${esc(r.summary)}</p>` : ""}
       ${imp.length ? `<h3>Cosa migliorare</h3><ol>${imp.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}
       ${fixes.length ? `<h3>Correzioni</h3>${fixes.map(x => `<div class="fix"><s>${esc(x.said)}</s><ins>${esc(x.better)}</ins>${x.why ? `<small>${esc(x.why)}</small>` : ""}</div>`).join("")}` : ""}
-      ${r.better_answer ? `<details class="better"><summary>Versione migliorata della risposta</summary><p>${esc(r.better_answer)}</p></details>` : ""}
-      <p class="conf">Stima indicativa fatta da un modello AI, utile per allenarti ma non equivalente al voto di un esaminatore.</p>
+      ${mis.length ? `<p class="note">Probabili errori di riconoscimento, non contati come errori tuoi: ${mis.map(esc).join(", ")}.</p>` : ""}
+      ${evRows.length ? `<details><summary>Perché questi voti</summary><dl>${evRows.map(([k, l]) => `<div><dt>${l}</dt><dd>${esc(ev[k])}</dd></div>`).join("")}</dl></details>` : ""}
+      ${r.better_answer ? `<details><summary>Versione migliorata della risposta</summary><p>${esc(r.better_answer)}</p></details>` : ""}
+      <p class="note">Stima indicativa fatta da un modello AI${r._runs > 1 ? `, mediana di ${r._runs} valutazioni indipendenti` : ""}. Utile per allenarti, ma non equivalente al voto di un esaminatore.</p>
     </div>`;
+}
+
+/* ---------- Esercizio di lettura ---------- */
+let shadowRef = "", shadowRec = null, shadowSegs = [];
+function setShadowRef(text, label) {
+  shadowRef = String(text || "").trim();
+  $("shadowRef").textContent = shadowRef;
+  $("shadowNote").textContent = label ? `Testo da leggere, ${label}` : "";
+  $("shadowOut").innerHTML = "";
+  $("shadow").classList.toggle("hidden", !shadowRef);
+}
+function shadowUi(s) {
+  const b = $("shadowBtn");
+  b.classList.toggle("live", s === "listening"); b.classList.toggle("wait", s === "connecting" || s === "processing");
+  b.disabled = s === "connecting" || s === "processing";
+  $("shadowLabel").textContent = { idle: "Inizia a leggere", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
+  setState(state);
+}
+$("shadowBtn").onclick = () => {
+  if (shadowRec && shadowBusy === "listening") return stopShadow();
+  if (busy() || !shadowRef) return;
+  if (!ensureReady()) return;
+  shadowSegs = []; shadowBusy = "connecting"; shadowUi("connecting"); $("shadowOut").innerHTML = "";
+  try { shadowRec = makeRecognizer(shadowRef); } catch (e) { shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
+  shadowRec.recognized = (s, e) => { if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { const seg = parseResult(e); if (seg) shadowSegs.push(seg); } catch {} } };
+  shadowRec.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { const r = shadowRec; shadowRec = null; try { r && r.close(); } catch {} shadowBusy = false; shadowUi("idle"); handleAzureError(e.errorDetails); } };
+  shadowRec.startContinuousRecognitionAsync(() => { shadowBusy = "listening"; shadowUi("listening"); }, err => { shadowRec = null; shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
+};
+function stopShadow() {
+  const r = shadowRec; shadowBusy = "processing"; shadowUi("processing");
+  r.stopContinuousRecognitionAsync(() => { shadowRec = null; try { r.close(); } catch {} shadowBusy = false; shadowUi("idle"); renderShadow(shadowRef, shadowSegs); }, () => { shadowRec = null; shadowBusy = false; shadowUi("idle"); });
+}
+function renderShadow(ref, segs) {
+  const said = segs.flatMap(s => s.words).filter(w => { const t = w.PronunciationAssessment?.ErrorType; return t !== "Omission" && t !== "Insertion"; });
+  const tokens = ref.split(/\s+/).filter(Boolean);
+  let p = 0, matched = 0, accSum = 0;
+  const html = tokens.map(tok => {
+    const k = norm(tok);
+    if (!k) return esc(tok);
+    let hit = -1;
+    for (let j = p; j < Math.min(said.length, p + 4); j++) if (norm(said[j].Word) === k) { hit = j; break; }
+    if (hit < 0) return `<span class="w miss" title="Saltata">${esc(tok)}</span>`;
+    const a = said[hit].PronunciationAssessment?.AccuracyScore ?? 100;
+    p = hit + 1; matched++; accSum += a;
+    return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""}" title="Suono ${Math.round(a)} su 100">${esc(tok)}</span>`;
+  }).join(" ");
+  const countable = tokens.filter(t => norm(t)).length || 1;
+  const avg = key => { let t = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { t += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(t / w) : null; };
+  const acc = matched ? Math.round(accSum / matched) : null;
+  const comp = Math.round(matched / countable * 100);
+  const sc = [["Suoni", acc], ["Completezza", comp], ["Scorrevolezza", avg("FluencyScore")], ["Ritmo e intonazione", avg("ProsodyScore")]];
+  $("shadowOut").innerHTML = segs.length ? `
+    <div class="scores">${sc.map(([l, v]) => `<div><b style="color:${color(v)}">${v ?? "–"}</b><span>${l}</span></div>`).join("")}</div>
+    <p class="ref" style="margin-bottom:6px">${html}</p>
+    <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span><span class="l-miss">saltata</span></div>`
+    : `<p class="hint">Non ho ricevuto parole. Avvicinati al microfono e riprova.</p>`;
+  noteWords(said.map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100) })).filter(w => w.acc < 80));
+}
+
+/* ---------- Quaderno degli errori ---------- */
+function noteWords(list) {
+  if (!list.length) return;
+  const nb = store.get("ist_notebook", { words: {}, fixes: [] });
+  const seen = new Set();
+  list.forEach(w => { const k = norm(w.word); if (!k || k.length < 2 || seen.has(k)) return; seen.add(k);
+    const e = nb.words[k] || { word: w.word, count: 0, worst: 100 }; e.count++; e.worst = Math.min(e.worst, w.acc); e.last = Date.now(); nb.words[k] = e; });
+  store.set("ist_notebook", nb);
+}
+function noteFixes(r) {
+  const fixes = (r.corrections || []).filter(x => x && x.said && x.better);
+  if (!fixes.length) return;
+  const nb = store.get("ist_notebook", { words: {}, fixes: [] });
+  nb.fixes = [...fixes.map(x => ({ said: x.said, better: x.better, why: x.why || "", at: Date.now() })), ...nb.fixes].slice(0, 150);
+  store.set("ist_notebook", nb);
+}
+function renderNotebook() {
+  const nb = store.get("ist_notebook", { words: {}, fixes: [] });
+  const words = Object.values(nb.words).filter(w => w.count >= 2).sort((a, b) => b.count - a.count || a.worst - b.worst).slice(0, 18);
+  const fixes = nb.fixes.slice(0, 10);
+  $("panelNotebook").innerHTML = `
+    <h4 style="margin-top:4px">Parole che ti tornano più spesso</h4>
+    ${words.length ? `<div class="chips">${words.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <small>${w.count} volte</small></button>`).join("")}</div><p class="hint">Tocca una parola per sentirla pronunciata.</p>`
+      : `<p class="empty">Qui compaiono le parole pronunciate male in almeno due sessioni.</p>`}
+    <h4>Correzioni recenti</h4>
+    ${fixes.length ? fixes.map(x => `<div class="nb-fix"><s>${esc(x.said)}</s><ins>${esc(x.better)}</ins>${x.why ? `<small style="color:var(--slate)">${esc(x.why)}</small>` : ""}</div>`).join("")
+      : `<p class="empty">Le correzioni della band automatica si raccolgono qui, così vedi i tuoi errori ricorrenti.</p>`}`;
+  $("panelNotebook").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
 }
 
 /* ---------- Risultati ---------- */
 const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
-const color = v => v == null ? "var(--hair)" : `var(--${band(v)})`;
+const color = v => v == null ? "var(--slate)" : `var(--${band(v)})`;
 const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo" : v >= 70 ? "Chiara, con qualche suono da sistemare" : v >= 55 ? "Comprensibile, ma alcuni errori si notano" : "Da lavorare, alcune parole rischiano di non essere capite";
-function hideResults() { $("results").classList.add("hidden"); }
+function hideResults() { $("results").classList.add("hidden"); $("sideEmpty").classList.remove("hidden"); renderSideStats(); }
 const wordsHtml = segs => segs.flatMap(s => s.words).map(w => {
   const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
   return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""}" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
 }).join(" ");
+function attachTape(item, el) { (item.tapeP || Promise.resolve(null)).then(url => { if (url && el && el.isConnected) { el.innerHTML = `<audio controls preload="metadata" src="${url}"></audio>`; $("tapeBlock").classList.remove("hidden"); } }); }
 
 function showRun(items, isMock) {
   const a = analyze(items);
   const run = lastRun = { items, mock: isMock, a };
-
-  const warn = $("warn");
-  if (a.tooShort) {
-    warn.textContent = isMock ? "Le risposte sono state brevi, quindi la valutazione è poco affidabile. All'esame prova a sviluppare di più ogni risposta."
-      : "Risposta troppo corta per un giudizio affidabile. Punta ad almeno 20 secondi, aggiungendo un motivo o un esempio.";
-    warn.classList.remove("hidden");
-  } else warn.classList.add("hidden");
+  const warns = [];
+  if (a.lowAudio) warns.push("Azure ti ha sentito poco chiaramente, quindi alcune parole potrebbero essere state trascritte male. Parla un po' più forte o più vicino al microfono.");
+  if (a.tooShort) warns.push(isMock ? "Le risposte sono state brevi, quindi la valutazione è poco affidabile. All'esame prova a sviluppare di più ogni risposta." : "Risposta troppo corta per un giudizio affidabile. Punta ad almeno 20 secondi, aggiungendo un motivo o un esempio.");
+  $("warn").innerHTML = warns.map(w => `<p>${esc(w)}</p>`).join("");
+  $("warn").classList.toggle("hidden", !warns.length);
 
   $("rPron").innerHTML = `${a.sc.pron ?? "–"}<small>/100</small>`;
   $("rPron").style.color = a.sc.pron == null ? "" : color(a.sc.pron);
   $("rTitle").textContent = a.sc.pron == null ? "Punteggio non disponibile" : verdict(a.sc.pron);
   [["Acc", a.sc.acc], ["Flu", a.sc.flu], ["Pro", a.sc.pro]].forEach(([k, v]) => { $("r" + k).textContent = v ?? "–"; $("b" + k).style.width = (v ?? 0) + "%"; $("b" + k).style.background = color(v); });
-
   const paceNote = a.wpm < 100 ? "lento" : a.wpm > 170 ? "molto veloce" : "naturale";
   $("stats").innerHTML = `
     <div><dt>Durata</dt><dd>${fmt(a.seconds)}<small>${a.n} parole${isMock ? `, ${items.length} risposte` : ""}</small></dd></div>
@@ -1039,22 +1234,29 @@ function showRun(items, isMock) {
     <div><dt>Pause lunghe</dt><dd>${a.longPauses}<small>oltre 1 s, la più lunga ${a.longest.toFixed(1).replace(".", ",")} s</small></dd></div>
     <div><dt>Varietà lessicale</dt><dd>${a.variety}%<small>parole diverse, frasi di ${a.avgSentence} parole</small></dd></div>`;
 
-  $("transcript").innerHTML = isMock
-    ? items.map(it => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs)}</p>`).join("")
-    : `<p class="transcript">${wordsHtml(items[0].segs)}</p>`;
+  $("tapeBlock").classList.add("hidden");
+  $("tape").innerHTML = "";
+  if (isMock) {
+    $("transcript").innerHTML = items.map((it, i) => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs)}</p><div data-tape="${i}"></div>`).join("");
+    items.forEach((it, i) => attachTape(it, $("transcript").querySelector(`[data-tape="${i}"]`)));
+  } else {
+    $("transcript").innerHTML = `<p class="transcript">${wordsHtml(items[0].segs)}</p>`;
+    attachTape(items[0], $("tape"));
+  }
 
   $("weakBlock").classList.toggle("hidden", !a.weak.length);
-  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>
-      ${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
+  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
   $("chips").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
+  noteWords(a.weak);
+
+  if (isMock) setShadowRef("", ""); else setShadowRef(a.text, aiConfigured() ? "per ora la tua risposta, poi la versione migliorata" : "la tua risposta");
 
   $("nextRow").innerHTML = isMock
     ? `<button class="primary" id="copy" type="button">Copia per Claude</button><button class="secondary" id="again" type="button">Nuovo esame completo</button><button class="secondary" id="back" type="button">Torna all'allenamento</button>`
     : `<button class="primary" id="copy" type="button">Copia per Claude</button><button class="secondary" id="retry" type="button">Riprova questa domanda</button><button class="secondary" id="resultNext" type="button">${esc($("nextQLabel").textContent)}</button>`;
   $("copy").onclick = () => copyRun(run);
   if (isMock) { $("again").onclick = () => startMock(); $("back").onclick = () => setPart(1); }
-  else { $("retry").onclick = () => { hideResults(); resetClock(); clearLive(); window.scrollTo({ top: 0 }); }; $("resultNext").onclick = nextQuestion; }
+  else { $("retry").onclick = () => { hideResults(); resetClock(); clearLive(); if (!wide()) window.scrollTo({ top: 0 }); }; $("resultNext").onclick = nextQuestion; }
 
   const q = items[0].q;
   run.histIndex = Date.now();
@@ -1064,9 +1266,11 @@ function showRun(items, isMock) {
 
   if (isMock) showQuestion(false);
   clearLive(); $("live").classList.add("quiet");
+  $("sideEmpty").classList.add("hidden");
   $("results").classList.remove("hidden");
   renderAi();
-  $("results").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  if (!wide()) $("results").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  else window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
 }
 function saveHistoryBand(run) {
   const h = store.get("ist_history", []);
@@ -1078,6 +1282,13 @@ async function copyRun(run) {
   try { await navigator.clipboard.writeText(txt); }
   catch { const t = document.createElement("textarea"); t.value = txt; document.body.append(t); t.select(); document.execCommand("copy"); t.remove(); }
   toast("Copiato, ora incollalo nella chat con Claude");
+}
+function renderSideStats() {
+  const all = store.get("ist_history", []), h = all.slice(0, 10);
+  const bands = h.filter(x => x.band != null), prons = h.filter(x => x.pron != null);
+  const box = $("sideStats");
+  if (!all.length) { box.innerHTML = ""; return; }
+  box.innerHTML = `${bands.length ? `<div><b>${roundBand(bands.reduce((a, x) => a + x.band, 0) / bands.length).toFixed(1)}</b><span>Band media recente</span></div>` : ""}${prons.length ? `<div><b>${Math.round(prons.reduce((a, x) => a + x.pron, 0) / prons.length)}</b><span>Pronuncia media recente</span></div>` : ""}<div><b>${all.length}</b><span>Sessioni registrate</span></div>`;
 }
 
 /* ---------- Progressi ---------- */
@@ -1094,20 +1305,28 @@ function openHistory() {
     list.innerHTML = h.map(x => {
       const d = new Date(x.at || Date.now());
       const main = x.band != null ? `${Number(x.band).toFixed(1)}<small>band</small>` : `${x.pron ?? "–"}<small>pronuncia</small>`;
-      return `<li><span class="q">${esc(x.q)}</span><span class="s" style="${x.band != null ? "color:var(--cobalt)" : `color:${color(x.pron)}`}">${main}</span><span class="when">${x.part === "Esame" ? "Esame completo" : `Part ${x.part}`}, ${d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })} alle ${d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span></li>`;
+      return `<li><span class="q">${esc(x.q)}</span><span class="s" style="color:${x.band != null ? "var(--cobalt)" : color(x.pron)}">${main}</span><span class="when">${x.part === "Esame" ? "Esame completo" : `Part ${x.part}`}, ${d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })} alle ${d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span></li>`;
     }).join("");
   }
+  renderNotebook();
+  showTab("sessions");
   $("history").showModal();
 }
+function showTab(t) {
+  $("tabSessions").setAttribute("aria-selected", String(t === "sessions")); $("tabNotebook").setAttribute("aria-selected", String(t === "notebook"));
+  $("panelSessions").classList.toggle("hidden", t !== "sessions"); $("panelNotebook").classList.toggle("hidden", t !== "notebook");
+}
+$("tabSessions").onclick = () => showTab("sessions");
+$("tabNotebook").onclick = () => showTab("notebook");
 $("openHistory").onclick = openHistory;
 $("closeHistory").onclick = () => $("history").close();
-$("clearHistory").onclick = () => { if (confirm("Vuoi cancellare tutto lo storico?")) { store.set("ist_history", []); openHistory(); } };
+$("clearHistory").onclick = () => { if (confirm("Vuoi cancellare storico e quaderno degli errori?")) { store.set("ist_history", []); store.set("ist_notebook", { words: {}, fixes: [] }); openHistory(); renderSideStats(); } };
 
 /* ---------- Tastiera ---------- */
 document.addEventListener("keydown", e => {
   if (e.code !== "Space" || e.repeat || document.querySelector("dialog[open]")) return;
   const t = e.target;
-  if (t.closest && t.closest("input, textarea, select, button, summary")) return;
+  if (t.closest && t.closest("input, textarea, select, button, summary, audio")) return;
   e.preventDefault(); $("rec").click();
 });
 
@@ -1126,13 +1345,14 @@ if ("serviceWorker" in navigator && location.protocol === "https:") navigator.se
 if (matchMedia("(pointer: coarse)").matches) $("live").dataset.empty = "Tocca il pulsante e rispondi come all'esame.";
 
 /* ---------- Avvio ---------- */
+applyTheme();
 setState("idle");
 showQuestion(false);
+renderSideStats();
 showSdk();
 if (!configured()) openGuide();
 
-// accesso per i test
-window.__t = { showRun, analyze, report, claudeText, drawAi, get lastRun() { return lastRun; }, setMock(m) { mock = m; }, startMock, finished, setSegments(s) { segments = s; } };
+window.__t = { showRun, analyze, report, claudeText, drawAi, renderShadow, setShadowRef, evaluate, get lastRun() { return lastRun; }, finished, setSegments(s) { segments = s; } };
 }
 </script>
 </body>

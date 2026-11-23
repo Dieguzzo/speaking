@@ -26,6 +26,14 @@ Con una risorsa **Azure OpenAI** l'app stima da sola la band IELTS sui quattro c
 
 La modalità Esame completo simula lo Speaking vero, con 4 domande di Part 1, una cue card di Part 2 con un minuto di preparazione e 4 domande di Part 3 sullo stesso tema. La valutazione arriva alla fine, sull'insieme delle risposte, come all'esame.
 
+## Altre funzioni
+
+- **Esercizio di lettura.** Dopo la valutazione leggi ad alta voce la versione migliorata della risposta. Azure sa cosa dovresti dire e controlla ogni parola, comprese quelle saltate.
+- **Riascoltati.** Ogni risposta resta registrata nella sessione, così puoi riascoltarti.
+- **Quaderno degli errori.** In Progressi trovi le parole che pronunci male più spesso e le correzioni ricorrenti.
+- **Su di te.** Facoltativo. Nomi propri e parole che usi spesso, che Azure riconosce meglio e che la valutazione non scambia per errori.
+- **Tema scuro**, automatico o scelto nelle impostazioni, e layout a due colonne su desktop.
+
 ## Sul telefono
 
 Apri la pagina in Chrome e tocca **Installa** in alto, oppure dal menu scegli "Installa app" o "Aggiungi a schermata Home". Al primo uso consenti l'accesso al microfono.
