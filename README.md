@@ -33,6 +33,9 @@ La modalità Esame completo simula lo Speaking vero, con 4 domande di Part 1, un
 - **Shadowing frase per frase.** La voce madrelingua dice una frase, tu la ripeti subito e Azure la valuta parola per parola.
 - **Coppie minime.** Esercizi di ascolto e pronuncia su coppie come ship e sheep, full e fool, cat e cut, più le coppie nate dai tuoi errori.
 - **Come muovere la bocca.** Toccando una parola trovi un'indicazione sul suono più debole e il link a YouGlish per vedere madrelingua veri pronunciarla.
+- **Shadowing sui video.** Video di YouTube incorporati che si fermano ogni pochi secondi per farti ripetere, oppure a fine frase se incolli la trascrizione.
+- **Melodia della frase.** Nello shadowing un grafico confronta l'intonazione della tua voce con quella del madrelingua.
+- **Ritmo e intonazione spiegati.** Il voto indica le pause a metà frase e i tratti piatti. Azure valuta la prosodia solo con l'accento americano.
 - **Riascoltati.** Ogni risposta resta registrata nella sessione, così puoi riascoltarti.
 - **Confronto parola per parola.** Tocca una parola sottolineata per sentire la tua pronuncia, quella corretta, o le due una dopo l'altra.
 - **Quaderno degli errori.** In Progressi trovi le parole che pronunci male più spesso e le correzioni ricorrenti.

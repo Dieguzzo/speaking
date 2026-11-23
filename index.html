@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Speaking, allenamento IELTS</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#E6E9EE" id="themeColor">
@@ -335,6 +335,78 @@
   .pair-side .yg { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   .pair-side .yg a { text-decoration: none; color: var(--ink); font-size: 15px; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .brk { display: inline-block; width: 2px; height: 1.05em; vertical-align: -0.15em; background: var(--mid); margin: 0 2px 0 -1px; border-radius: 1px; }
+  .brk.need { background: transparent; border-left: 2px dashed var(--cobalt); }
+  .w.flat { border-top: 2px dotted var(--slate); }
+  .legend .l-brk::before { width: 2px !important; height: 12px !important; background: var(--mid); }
+  .legend .l-flat::before { height: 0 !important; border-top: 2px dotted var(--slate); }
+  .vid-frame { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden; }
+  .vid-frame > div, .vid-frame iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+  .vid-url { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--hair); border-radius: var(--r-ctl); background: var(--field); font-size: 16px; }
+  .vid-line { font-size: 19px; line-height: 1.5; margin: 14px 0 0; }
+  .vid-tr { margin-top: 12px; border-top: 1px solid var(--hair); padding-top: 10px; }
+  .vid-tr summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  .vid-controls { padding: 20px 2px 0; }
+  .vid-opts { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; font-size: 15px; color: var(--slate); }
+  .vid-opt { display: inline-flex; align-items: center; gap: 8px; }
+  .vid-opt select { padding: 6px 8px; border: 1px solid var(--hair); border-radius: 8px; background: var(--field); }
+  .vid-opt input { width: 18px; height: 18px; accent-color: var(--btn); }
+  #vidOut .shadow { margin-top: 20px; }
+  .parts { grid-template-columns: repeat(4, 1fr) !important; }
+  .modes { display: flex; gap: 4px; padding: 4px; background: var(--seg); border-radius: 999px; }
+  .modes button { display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 15px; color: var(--slate); cursor: pointer; }
+  .modes button[aria-current="page"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+  .modes svg { width: 18px; height: 18px; flex: none; }
+  .rec-btn.live .dot { animation: none; box-shadow: 0 0 0 calc(var(--lvl, 0) * 14px) rgba(229,72,77,.38); transition: box-shadow .08s linear; }
+  .melody { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hair); }
+  .melody-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; font-size: 15px; }
+  .melody-head span { color: var(--slate); font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+  .melody-head i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; margin-left: 8px; }
+  .lg-model { background: var(--cobalt); } .lg-you { background: var(--mid); }
+  .melody svg { width: 100%; height: 120px; display: block; margin-top: 8px; }
+  .melody .mid-line { stroke: var(--hair); stroke-width: 1; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+  .melody path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .melody .m-model { stroke: var(--cobalt); } .melody .m-you { stroke: var(--mid); }
+  @media (max-width: 760px) {
+    header { margin-bottom: 22px; }
+    .modes { position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; border-radius: 0; background: var(--paper); border-top: 1px solid var(--hair); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); justify-content: space-around; box-shadow: 0 -6px 20px -12px rgba(0,0,0,.25); }
+    .modes button { flex: 1; flex-direction: column; gap: 3px; font-size: 12px; padding: 7px 4px; border-radius: 10px; }
+    .modes button[aria-current="page"] { background: transparent; box-shadow: none; color: var(--cobalt); }
+    .modes svg { width: 22px; height: 22px; }
+    .wrap { padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important; }
+    .toast { bottom: calc(86px + env(safe-area-inset-bottom)); }
+    .pop { bottom: calc(74px + env(safe-area-inset-bottom)) !important; max-height: 70vh; overflow: auto; }
+  }
+  @media (max-width: 600px) {
+    .parts button { text-align: center; padding: 10px 4px; }
+    .parts button small { display: none; }
+    .shadow-row .secondary { flex: 1 1 auto; }
+    .shadow-row .rec-btn { flex: 1 1 100%; }
+    .vid-controls .shadow-row .secondary { flex: 1 1 0; padding: 11px 8px; }
+  }
+  .ghost .lbl-s { display: none; }
+  .dlg h3:focus { outline: none; }
+  .dlg-actions { position: sticky; bottom: 0; margin: 20px -26px -22px; padding: 12px 26px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--hair); background: var(--paper); z-index: 2; }
+  @media (max-width: 1099px) { .pair-side { margin-top: 40px; } }
+  @media (max-width: 600px) {
+    dialog { width: 100vw; max-width: 100vw; margin: auto 0 0; border-radius: 18px 18px 0 0; max-height: 92dvh; }
+    dialog[open] { animation: sheet .22s ease-out; }
+    @keyframes sheet { from { transform: translateY(28px); opacity: .6; } }
+    .dlg { padding: 24px 20px 22px; }
+    .dlg-actions { margin: 20px -20px -22px; padding-left: 20px; padding-right: 20px; }
+    .dlg-actions button { flex: 1; }
+    .dlg-actions .secondary { flex: 0 0 auto; }
+    dialog.guide { width: 100vw; }
+    .card-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 18px -8px 0; }
+    #pairsView .card-actions { grid-template-columns: 1fr 1fr; }
+    .card-actions .ghost { flex-direction: column; gap: 5px; padding: 10px 4px; font-size: 13px; text-align: center; line-height: 1.25; }
+    .card-actions .ghost svg { width: 20px; height: 20px; }
+    .ghost .lbl-l { display: none; }
+    .ghost .lbl-s { display: inline; }
+    .next-row button { flex: 1 1 100%; }
+    .avg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .question { font-size: 27px; }
+  }
   .hidden { display: none !important; }
 
   @media (min-width: 1100px) {
@@ -368,6 +440,11 @@
 <div class="wrap">
   <header>
     <div class="mark">Speaking<span>Allenamento IELTS</span></div>
+    <nav class="modes" id="modes" aria-label="Sezioni">
+      <button type="button" data-mode="main" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Esame</span></button>
+      <button type="button" data-mode="pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg><span>Suoni</span></button>
+      <button type="button" data-mode="video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg><span>Video</span></button>
+    </nav>
     <div class="tools">
       <button class="ghost hidden" id="install" type="button" aria-label="Installa l'app">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Installa</span>
@@ -386,12 +463,11 @@
 
   <div class="layout">
     <div class="stage">
-      <div class="parts" role="group" aria-label="Modalità">
+      <div class="parts" id="partsBar" role="group" aria-label="Parte dell'esame">
         <button type="button" data-part="1" aria-pressed="true"><b>Part 1</b><small>Domande brevi</small></button>
         <button type="button" data-part="2" aria-pressed="false"><b>Part 2</b><small>Cue card</small></button>
         <button type="button" data-part="3" aria-pressed="false"><b>Part 3</b><small>Discussione</small></button>
-        <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Esame completo</b><small>Circa 12 minuti</small></button>
-        <button type="button" data-part="pairs" aria-pressed="false"><b>Suoni</b><small>Coppie minime</small></button>
+        <button type="button" data-part="mock" class="mockbtn" aria-pressed="false"><b>Completo</b><small>Tutto l'esame</small></button>
       </div>
 
       <article class="card" id="qCard" aria-live="polite">
@@ -401,16 +477,16 @@
         <ul class="bullets hidden" id="bullets"></ul>
         <div class="card-actions">
           <button class="ghost" id="listen" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>Ascolta la domanda
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg><span class="lbl-l">Ascolta la domanda</span><span class="lbl-s">Ascolta</span>
           </button>
           <button class="ghost" id="nextQ" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg><span id="nextQLabel">Domanda successiva</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg><span class="lbl-l" id="nextQLabel">Domanda successiva</span><span class="lbl-s" id="nextQShort">Successiva</span>
           </button>
           <button class="ghost" id="newTopic" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>Cambia argomento
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg><span class="lbl-l">Cambia argomento</span><span class="lbl-s">Altro tema</span>
           </button>
           <button class="ghost hidden" id="exitMock" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Esci dall'esame
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="lbl-l">Esci dall'esame</span><span class="lbl-s">Esci</span>
           </button>
         </div>
       </article>
@@ -434,8 +510,8 @@
           <div class="field" style="margin-bottom:14px"><label for="pairCat" class="sr">Suono</label><select id="pairCat"></select></div>
           <div class="pair" id="pairWords"></div>
           <div class="card-actions">
-            <button class="ghost" id="pairHearBoth" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg>Ascolta entrambe</button>
-            <button class="ghost" id="pairNext" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>Coppia successiva</button>
+            <button class="ghost" id="pairHearBoth" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/></svg><span class="lbl-l">Ascolta entrambe</span><span class="lbl-s">Ascolta</span></button>
+            <button class="ghost" id="pairNext" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg><span class="lbl-l">Coppia successiva</span><span class="lbl-s">Successiva</span></button>
           </div>
         </div>
         <div class="tabs" id="pairModes" role="tablist" style="margin-top:18px">
@@ -444,10 +520,48 @@
         </div>
         <div id="pairTask"></div>
       </section>
+
+      <section class="video-view hidden" id="videoView">
+        <div class="card">
+          <div class="card-top"><span class="topic">Shadowing sui video</span><span id="vidProg"></span></div>
+          <div class="field" style="margin-bottom:10px"><label for="vidSel" class="sr">Video</label><select id="vidSel"></select></div>
+          <div class="keyrow" style="margin-bottom:14px"><input type="text" id="vidUrl" class="vid-url" placeholder="Oppure incolla un link di YouTube" autocomplete="off" spellcheck="false"><button class="secondary" id="vidLoad" type="button">Carica</button></div>
+          <div class="vid-frame"><div id="ytPlayer"></div></div>
+          <p class="vid-line hidden" id="vidLine"></p>
+          <p class="hint" id="vidNote"></p>
+          <details class="vid-tr"><summary>Trascrizione con i tempi, facoltativa</summary>
+            <p class="hint">Su YouTube apri la descrizione del video, tocca "Mostra trascrizione", copia tutto e incollalo qui. Con il testo il video si ferma alla fine di ogni frase e Azure sa cosa dovevi dire. Resta salvata solo su questo dispositivo.</p>
+            <div class="field" style="margin:10px 0 8px"><textarea id="vidTr" spellcheck="false" placeholder="0:00 Hello and welcome..."></textarea></div>
+            <button class="secondary" id="vidTrSave" type="button">Usa questa trascrizione</button>
+          </details>
+        </div>
+        <div class="vid-controls">
+          <div class="vid-opts">
+            <label class="vid-opt">Spezzoni da <select id="vidLen"><option value="4">4 s</option><option value="6" selected>6 s</option><option value="8">8 s</option></select></label>
+            <label class="vid-opt"><input type="checkbox" id="vidAutoChk" checked> Continua da solo</label>
+          </div>
+          <div class="shadow-row">
+            <button class="rec-btn" id="vidGo" type="button"><i class="dot"></i><span id="vidGoLabel">Guarda e ripeti</span></button>
+            <button class="secondary" id="vidReplay" type="button">Riguarda</button>
+            <button class="secondary" id="vidBack" type="button">Indietro</button>
+            <button class="secondary" id="vidSkip" type="button">Avanti</button>
+          </div>
+        </div>
+        <div id="vidOut"></div>
+      </section>
     </div>
 
     <div class="side">
       <section class="pair-side hidden" id="pairSide"></section>
+      <section class="pair-side hidden" id="videoSide">
+        <h2>Come fare shadowing</h2>
+        <ul class="tips">
+          <li><b>Guarda la bocca</b>Mentre ascolti osserva labbra e mascella del madrelingua, è il consiglio centrale per imitare i suoni.</li>
+          <li><b>Ripeti subito</b>Appena il video si ferma ripeti, imitando suono, ritmo e melodia, anche esagerando all'inizio.</li>
+          <li><b>Lascialo andare</b>Con "Continua da solo" il video avanza da solo spezzone dopo spezzone, finché non premi Fermati.</li>
+          <li><b>Con la trascrizione è più preciso</b>Il video si ferma a fine frase e Azure ti dice anche le parole saltate.</li>
+        </ul>
+      </section>
       <section class="side-empty" id="sideEmpty">
         <h2>Qui compariranno i risultati</h2>
         <p>Rispondi a voce alla domanda a sinistra. Quando premi Ho finito, la valutazione appare in questa colonna.</p>
@@ -472,7 +586,7 @@
         <div class="metrics">
           <div class="metric"><div class="metric-head"><b>Suoni</b><span id="rAcc">–</span></div><div class="bar"><i id="bAcc"></i></div><p>Quanto ogni suono si avvicina a quello di un madrelingua.</p></div>
           <div class="metric"><div class="metric-head"><b>Scorrevolezza</b><span id="rFlu">–</span></div><div class="bar"><i id="bFlu"></i></div><p>Pause, esitazioni e continuità del discorso.</p></div>
-          <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p>Accenti delle parole, melodia della frase, enfasi.</p></div>
+          <div class="metric"><div class="metric-head"><b>Ritmo e intonazione</b><span id="rPro">–</span></div><div class="bar"><i id="bPro"></i></div><p id="pPro">Accenti delle parole, melodia della frase, enfasi.</p></div>
         </div>
         <dl class="stats" id="stats"></dl>
 
@@ -484,7 +598,7 @@
         <div class="block">
           <h2>Cosa ha capito Azure</h2>
           <div id="transcript"></div>
-          <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
+          <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span><span class="l-brk">pausa a metà frase</span><span class="l-flat">tono piatto</span></div>
           <p class="hint">Tocca una parola per sentire la tua pronuncia e quella corretta, o per correggerla se Azure ha capito male. Le parole con la sottolineatura tratteggiata all'inizio erano state capite male.</p>
         </div>
 
@@ -516,7 +630,7 @@
 
 <dialog id="settings">
   <form class="dlg" method="dialog" id="settingsForm">
-    <h3>Impostazioni</h3>
+    <h3 tabindex="-1" autofocus>Impostazioni</h3>
     <p class="lead"><span id="settingsLead">I dati restano salvati solo in questo browser.</span> <button type="button" class="linkbtn" id="guideFromSettings">Non hai le chiavi? Leggi la guida</button></p>
 
     <fieldset>
@@ -528,7 +642,7 @@
       </div>
       <div class="two">
         <div class="field"><label for="fRegion">Regione</label><input id="fRegion" type="text" autocomplete="off" spellcheck="false" placeholder="italynorth"><div class="help">Come in Posizione/Area</div></div>
-        <div class="field"><label for="fLang">Accento</label><select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select><div class="help">Voce e pronuncia di riferimento</div></div>
+        <div class="field"><label for="fLang">Accento</label><select id="fLang"><option value="en-GB">Britannico</option><option value="en-US">Americano</option></select><div class="help">L'americano valuta anche ritmo e intonazione</div></div>
       </div>
       <label class="switch"><div><b>Leggi le domande ad alta voce</b><span>Come l'esaminatore, a ogni nuova domanda</span></div><input type="checkbox" id="fAuto"></label>
       <div class="sdk" id="sdk"><i></i><span id="sdkText"></span></div>
@@ -568,7 +682,7 @@
 
 <dialog id="guide" class="guide">
   <div class="dlg">
-    <h3>Come iniziare</h3>
+    <h3 tabindex="-1" autofocus>Come iniziare</h3>
     <p class="lead">L'app usa Azure, il cloud di Microsoft, per ascoltarti e valutare la pronuncia. Ti serve una chiave tua, gratuita per gli studenti universitari. Ci vogliono circa 10 minuti, e lo fai una volta sola.</p>
     <h4>Voce e pronuncia, obbligatorio</h4>
     <ol>
@@ -598,10 +712,10 @@
 
 <dialog id="history">
   <div class="dlg">
-    <h3>Progressi</h3>
+    <h3 tabindex="-1" autofocus>Progressi</h3>
     <div class="tabs" role="tablist">
       <button type="button" role="tab" id="tabSessions" aria-selected="true">Sessioni</button>
-      <button type="button" role="tab" id="tabNotebook" aria-selected="false">Quaderno degli errori</button>
+      <button type="button" role="tab" id="tabNotebook" aria-selected="false">Quaderno</button>
     </div>
     <div id="panelSessions">
       <div class="avg hidden" id="avg"></div>
@@ -798,6 +912,7 @@ function showQuestion(autoRead = true) {
   else ul.classList.add("hidden");
   const last = q.idx + 1 >= q.total;
   $("nextQLabel").textContent = part === 2 ? "Passa alla Part 3 su questo tema" : last ? "Nuovo argomento" : "Domanda successiva";
+  $("nextQShort").textContent = part === 2 ? "Vai a Part 3" : last ? "Nuovo tema" : "Successiva";
   ["nextQ", "newTopic"].forEach(id => $(id).classList.toggle("hidden", !!mock));
   $("exitMock").classList.toggle("hidden", !mock);
   document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(mock ? b.dataset.part === "mock" : b.dataset.part === String(part))));
@@ -808,6 +923,7 @@ function showQuestion(autoRead = true) {
 function setPart(p, keepTopic) {
   if (busy()) return;
   if (p === "pairs") return openPairs();
+  if (p === "video") return openVideo();
   if (p === "mock") { closePairs(); return startMock(); }
   closePairs();
   if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
@@ -985,8 +1101,8 @@ async function secondPass(run, list) {
   }
 }
 
-let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false, curDelta = 0;
-const busy = () => state !== "idle" || !!shadowBusy || pairBusy;
+let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false, curDelta = 0, curMeter = null;
+const busy = () => state !== "idle" || !!shadowBusy || pairBusy || !!vidBusy;
 function setState(s) {
   state = s;
   const btn = $("rec");
@@ -1033,6 +1149,7 @@ async function start() {
   recognizer.startContinuousRecognitionAsync(() => {
     setState("listening"); startAt = Date.now();
     curDelta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
+    curMeter = tp ? startMeter(tp.s, levelTo($("rec"))) : null;
     tick = setInterval(() => { const t = (Date.now() - startAt) / 1000; updateClock(t); if (part === 2 && t >= 120) stop(); }, 200);
   }, err => {
     cleanup();
@@ -1043,6 +1160,7 @@ async function start() {
 }
 function cleanup() {
   clearInterval(tick); clearInterval(prepTimer); prepTimer = null;
+  if (curMeter) { curMeter.stop(); curMeter = null; }
   stopTape();
   const r = recognizer; recognizer = null;
   if (r) { try { r.close(); } catch {} }
@@ -1053,6 +1171,7 @@ function stop() {
   clearInterval(tick);
   const seconds = (Date.now() - startAt) / 1000;
   setState("processing");
+  if (curMeter) { curMeter.stop(); curMeter = null; }
   const r = recognizer, delta = curDelta;
   r.stopContinuousRecognitionAsync(() => {
     recognizer = null;
@@ -1140,6 +1259,9 @@ function report(run) {
   lines.push(`Filler words detected ${a.fillers} (speech recognition often removes them, so this may be an undercount)`);
   if (a.conf != null) lines.push(`Speech recognition confidence ${Math.round(a.conf * 100)}%${a.lowAudio ? ", low: the audio was quiet or unclear, so expect recognition errors in the transcript" : ""}`);
   lines.push(`Weakest words ${a.weak.length ? a.weak.map(w => `${w.word} ${w.acc}${w.phon ? ` /${w.phon}/` : ""}`).join(", ") : "none"}`);
+  const prs = prosodyOf(run.items.map(it => ({ words: segsOf(it).flatMap(s => s.words), scripted: !!it.segs2 })));
+  if (!prosodyReliable()) lines.push("The prosody score is not reliable with the en-GB locale: ignore it and judge rhythm only from pauses and fluency.");
+  else if (prs.any) lines.push(`Prosody details: ${prs.unexpected} unexpected pauses inside phrases, ${prs.runs} monotone stretches${prs.missing ? `, ${prs.missing} missing pauses at punctuation` : ""}`);
   if (a.tooShort) lines.push("Warning: the sample is short, so any band estimate has low confidence.");
   return lines.join("\n");
 }
@@ -1270,6 +1392,124 @@ function drawAi(r) {
     </div>`;
 }
 
+/* ---------- Ascolto breve con fine automatica ---------- */
+// Si ferma da solo dopo una pausa, oppure quando premi Ho finito. Mostra il livello del microfono.
+let activeListen = null;
+function startMeter(stream, onLevel) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+    const src = actx.createMediaStreamSource(stream), an = actx.createAnalyser();
+    an.fftSize = 1024; src.connect(an);
+    const data = new Float32Array(an.fftSize); let raf = 0, on = true;
+    const loop = () => { if (!on) return; an.getFloatTimeDomainData(data); let e = 0; for (let i = 0; i < data.length; i++) e += data[i] * data[i]; onLevel(Math.min(1, Math.sqrt(e / data.length) * 8)); raf = requestAnimationFrame(loop); };
+    loop();
+    return { stop() { on = false; cancelAnimationFrame(raf); try { src.disconnect(); } catch {} onLevel(0); } };
+  } catch { return null; }
+}
+function mergeSegs(segs) {
+  if (!segs.length) return null;
+  const words = segs.flatMap(s => s.words), pa = {};
+  ["PronScore", "AccuracyScore", "FluencyScore", "ProsodyScore", "CompletenessScore"].forEach(k => {
+    let t = 0, w = 0; segs.forEach(s => { if (typeof s.pa[k] === "number") { t += s.pa[k] * s.words.length; w += s.words.length; } });
+    if (w) pa[k] = t / w;
+  });
+  return { text: segs.map(s => s.text).join(" "), words, pa, conf: segs[0].conf };
+}
+function listenOnce(reference, opts = {}) {
+  return new Promise(async resolve => {
+    const tp = await startTape();
+    let rec;
+    try { rec = makeRecognizer(reference, tp && tp.s, { phrases: opts.phrases }); }
+    catch (e) { stopTape(); handleAzureError(String(e)); return resolve({ seg: null, tapeP: Promise.resolve(null) }); }
+    const segs = []; let heard = false, done = false, started = 0, last = 0;
+    const callAt = performance.now();
+    const meter = tp && opts.onLevel ? startMeter(tp.s, opts.onLevel) : null;
+    const finish = () => {
+      if (done) return; done = true; clearInterval(timer); meter && meter.stop(); activeListen = null;
+      const delta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
+      rec.stopContinuousRecognitionAsync(() => {
+        const tapeP = stopTape().then(t => t && { ...t, delta });
+        try { rec.close(); } catch {}
+        resolve({ seg: mergeSegs(segs), tapeP });
+      }, () => { const tapeP = stopTape().then(t => t && { ...t, delta }); try { rec.close(); } catch {} resolve({ seg: mergeSegs(segs), tapeP }); });
+    };
+    rec.recognizing = () => { heard = true; last = performance.now(); };
+    rec.recognized = (s, e) => { if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { const g = parseRes(e.result); if (g) segs.push(g); } catch {} heard = true; last = performance.now(); } };
+    rec.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { handleAzureError(e.errorDetails); finish(); } };
+    const timer = setInterval(() => {
+      if (!started) return;
+      const now = performance.now();
+      if (heard && now - last > (opts.silence || 1500)) finish();
+      else if (!heard && now - started > (opts.initial || 9000)) finish();
+      else if (now - started > (opts.max || 45000)) finish();
+    }, 120);
+    activeListen = { stop: finish };
+    rec.startContinuousRecognitionAsync(() => { started = performance.now(); opts.onStart && opts.onStart(); }, err => { handleAzureError(String(err)); started = performance.now(); finish(); });
+  });
+}
+const levelTo = el => l => el && el.style.setProperty("--lvl", l.toFixed(3));
+
+/* ---------- Melodia della voce ---------- */
+async function to16k(buf, from = 0, to = null) {
+  to = to == null ? buf.duration : Math.min(to, buf.duration);
+  const dur = Math.max(0.05, to - from), len = Math.ceil(dur * 16000);
+  const off = new OfflineAudioContext(1, len, 16000);
+  const src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start(0, Math.max(0, from), dur);
+  return (await off.startRendering()).getChannelData(0);
+}
+function pitchTrack(d) {
+  const sr = 16000, frame = 640, hop = 160, minLag = 40, maxLag = 228, out = [];
+  for (let i = 0; i + frame + maxLag < d.length; i += hop) {
+    let e = 0; for (let j = 0; j < frame; j++) e += d[i + j] * d[i + j];
+    if (Math.sqrt(e / frame) < 0.012) { out.push(null); continue; }
+    let best = 0, bestLag = 0;
+    for (let lag = minLag; lag <= maxLag; lag++) {
+      let c = 0, n1 = 0, n2 = 0;
+      for (let j = 0; j < frame; j += 2) { const a = d[i + j], b = d[i + j + lag]; c += a * b; n1 += a * a; n2 += b * b; }
+      const r = c / Math.sqrt(n1 * n2 + 1e-9);
+      if (r > best) { best = r; bestLag = lag; }
+    }
+    out.push(best > 0.55 ? sr / bestLag : null);
+  }
+  return out;
+}
+function contour(freqs) {
+  const v = freqs.map((f, i) => { if (f == null) return null; const w = freqs.slice(Math.max(0, i - 2), i + 3).filter(x => x != null).sort((a, b) => a - b); return w[Math.floor(w.length / 2)]; });
+  let a = v.findIndex(x => x != null), b = v.length - 1 - [...v].reverse().findIndex(x => x != null);
+  if (a < 0) return null;
+  const s = v.slice(a, b + 1), voiced = s.filter(x => x != null).sort((x, y) => x - y);
+  if (voiced.length < 8) return null;
+  const med = voiced[Math.floor(voiced.length / 2)];
+  const st = s.map(x => x == null ? null : 12 * Math.log2(x / med));
+  const sorted = st.filter(x => x != null).sort((x, y) => x - y);
+  const range = sorted[Math.floor(sorted.length * 0.9)] - sorted[Math.floor(sorted.length * 0.1)];
+  return { st, range };
+}
+async function drawMelody(box, tapeP, modelAudio) {
+  if (!box) return;
+  try {
+    const t = await tapeP;
+    const mine = await getBuf(t);
+    if (!mine || !modelAudio) return;
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const model = await actx.decodeAudioData(modelAudio.slice(0));
+    const [a, b] = [contour(pitchTrack(await to16k(model))), contour(pitchTrack(await to16k(mine, t.delta || 0)))];
+    if (!a || !b) return;
+    const W = 600, H = 120, lim = 8;
+    const path = st => { let d = "", pen = false; st.forEach((v, i) => { if (v == null) { pen = false; return; } const x = (i / (st.length - 1)) * W, y = H / 2 - Math.max(-lim, Math.min(lim, v)) / lim * (H / 2 - 8); d += (pen ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1) + " "; pen = true; }); return d; };
+    const flat = b.range < a.range * 0.6, wide = b.range > a.range * 1.6;
+    box.innerHTML = `<div class="melody">
+      <div class="melody-head"><b>Melodia della frase</b><span><i class="lg-model"></i>Madrelingua <i class="lg-you"></i>Tu</span></div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Confronto tra la tua intonazione e quella del madrelingua">
+        <line x1="0" y1="${H / 2}" x2="${W}" y2="${H / 2}" class="mid-line"/>
+        <path d="${path(a.st)}" class="m-model"/><path d="${path(b.st)}" class="m-you"/>
+      </svg>
+      <p class="hint">${flat ? "La tua voce sale e scende meno di quella del madrelingua. Prova ad alzare il tono sulle parole importanti e a scendere alla fine della frase." : wide ? "La tua voce sale e scende molto più del modello. Prova a tenerla più regolare." : "La tua melodia segue abbastanza quella del madrelingua. Guarda dove le due linee si separano."}</p>
+    </div>`;
+  } catch (e) { console.warn(e); }
+}
+
 /* ---------- Shadowing frase per frase ---------- */
 let shadow = { sents: [], i: 0, results: [] }, regS = [];
 function splitLong(s) {
@@ -1311,40 +1551,30 @@ $("sents").addEventListener("click", ev => {
 function shadowUi(s) {
   const b = $("shadowBtn");
   b.classList.toggle("live", s === "listening"); b.classList.toggle("wait", s === "connecting" || s === "model");
-  b.disabled = s !== "idle";
+  b.disabled = s === "model" || s === "connecting";
   $("shadowListen").disabled = s !== "idle"; $("shadowNext").disabled = s !== "idle" || shadow.i >= shadow.sents.length - 1;
-  $("shadowLabel").textContent = { idle: shadow.results[shadow.i] ? "Riprova questa frase" : "Ascolta e ripeti", model: "Ascolta il madrelingua", connecting: "Mi collego", listening: "Ripeti ora" }[s];
+  $("shadowLabel").textContent = { idle: shadow.results[shadow.i] ? "Riprova questa frase" : "Ascolta e ripeti", model: "Ascolta il madrelingua", connecting: "Mi collego", listening: "Ho finito" }[s];
   setState(state);
 }
 $("shadowListen").onclick = () => { if (!shadowBusy) speakWait(shadow.sents[shadow.i], false); };
 $("shadowNext").onclick = () => { if (shadowBusy || shadow.i >= shadow.sents.length - 1) return; shadow.i++; renderSents(); shadowUi("idle"); $("shadowOut").innerHTML = ""; };
 $("shadowBtn").onclick = async () => {
+  if (shadowBusy === "listening" && activeListen) return activeListen.stop();
   if (busy() || !shadow.sents.length) return;
   if (!ensureReady()) return;
   hidePop();
   const i = shadow.i, sent = shadow.sents[i];
   shadowBusy = "model"; shadowUi("model");
   await speakWait(sent, false);
-  await new Promise(r => setTimeout(r, 200));
+  const modelAudio = lastTtsAudio;
+  await new Promise(r => setTimeout(r, 250));
   shadowBusy = "connecting"; shadowUi("connecting");
-  const tp = await startTape();
-  let rec;
-  try { rec = makeRecognizer(sent, tp && tp.s); } catch (e) { stopTape(); shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
-  const callAt = performance.now();
-  shadowBusy = "listening"; shadowUi("listening");
-  rec.recognizeOnceAsync(result => {
-    const delta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
-    const tapeP = stopTape().then(t => t && { ...t, delta });
-    try { rec.close(); } catch {}
-    let seg = null;
-    if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { seg = parseRes(result); } catch {} }
-    else if (result.reason === SpeechSDK.ResultReason.Canceled) { const d = SpeechSDK.CancellationDetails.fromResult(result); if (d.reason === SpeechSDK.CancellationReason.Error) handleAzureError(d.errorDetails); }
-    shadowBusy = false;
-    finishSentence(i, seg, tapeP);
-    shadowUi("idle");
-  }, err => { stopTape(); try { rec.close(); } catch {} shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
+  const { seg, tapeP } = await listenOnce(sent, { onStart: () => { shadowBusy = "listening"; shadowUi("listening"); }, onLevel: levelTo($("shadowBtn")) });
+  shadowBusy = false;
+  finishSentence(i, seg, tapeP, modelAudio);
+  shadowUi("idle");
 };
-function finishSentence(i, seg, tapeP) {
+function finishSentence(i, seg, tapeP, modelAudio) {
   if (!seg) { $("shadowOut").innerHTML = `<p class="hint">Non ho sentito niente. Parla subito dopo il madrelingua, un po' più vicino al microfono.</p>`; return; }
   const html = seg.words.map(w => {
     const t = w.PronunciationAssessment?.ErrorType;
@@ -1358,9 +1588,11 @@ function finishSentence(i, seg, tapeP) {
   const pa = seg.pa, score = typeof pa.PronScore === "number" ? Math.round(pa.PronScore) : null;
   shadow.results[i] = { html, score };
   renderSents();
-  const sc = [["Suoni", pa.AccuracyScore], ["Completezza", pa.CompletenessScore], ["Scorrevolezza", pa.FluencyScore], ["Ritmo e intonazione", pa.ProsodyScore]].map(([l, v]) => [l, typeof v === "number" ? Math.round(v) : null]);
+  const pros = prosodyText(prosodyOf([{ words: seg.words, scripted: true }]), false, 6);
+  const sc = [["Suoni", pa.AccuracyScore], ["Completezza", pa.CompletenessScore], ["Scorrevolezza", pa.FluencyScore], ...(pros.score ? [["Ritmo e intonazione", pa.ProsodyScore]] : [])].map(([l, v]) => [l, typeof v === "number" ? Math.round(v) : null]);
   $("shadowOut").innerHTML = `<div class="scores">${sc.map(([l, v]) => `<div><b style="color:${color(v)}">${v ?? "–"}</b><span>${l}</span></div>`).join("")}</div>
-    <p class="hint">Tocca una parola per confrontare la tua versione con quella corretta.${score != null && score >= 80 && i < shadow.sents.length - 1 ? " Ottima, puoi passare alla frase successiva." : ""}</p>`;
+    <p class="hint">${esc(pros.text)} Tocca una parola per confrontare la tua versione con quella corretta.${score != null && score >= 80 && i < shadow.sents.length - 1 ? " Ottima, puoi passare alla frase successiva." : ""}</p><div id="melodyBox"></div>`;
+  drawMelody($("melodyBox"), tapeP, modelAudio);
   noteWords(seg.words.filter(w => !["Omission", "Insertion"].includes(w.PronunciationAssessment?.ErrorType)).map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100) })).filter(w => w.acc < 80));
 }
 
@@ -1387,20 +1619,13 @@ function curPair() { const c = pairCats()[pairCat] || PAIRS[0]; return { cat: c,
 function openPairs(custom) {
   if (busy()) return;
   if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
-  mock = null; pairsMode = true;
+  mock = null;
   if (custom) { pairCustom = custom; pairCat = 0; pairIdx = 0; }
-  $("qCard").classList.add("hidden"); $("recorder").classList.add("hidden");
-  $("pairsView").classList.remove("hidden");
-  hideResults(); $("sideEmpty").classList.add("hidden"); $("pairSide").classList.remove("hidden");
-  document.querySelectorAll(".parts button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.part === "pairs")));
+  setView("pairs");
   renderPairs();
   if (!wide()) window.scrollTo({ top: 0 });
 }
-function closePairs() {
-  pairsMode = false;
-  $("qCard").classList.remove("hidden"); $("recorder").classList.remove("hidden");
-  $("pairsView").classList.add("hidden"); $("pairSide").classList.add("hidden");
-}
+function closePairs() { setView("main"); }
 function renderPairs() {
   const cats = pairCats();
   if (pairCat >= cats.length) pairCat = 0;
@@ -1424,7 +1649,7 @@ function renderPairs() {
 function renderPairTask() {
   const t = $("pairTask");
   if (pairMode === "listen") {
-    t.innerHTML = `<p class="hint" style="margin-top:0">Senti una delle due parole e tocca quella che hai sentito.</p>
+    t.innerHTML = `<p class="hint" style="margin:0 0 14px">Senti una delle due parole e tocca quella che hai sentito.</p>
       <button class="rec-btn" type="button" id="pairPlay"><i class="dot"></i><span>Fammi sentire una parola</span></button>
       <p class="pair-msg" id="pairMsg"></p>`;
     $("pairPlay").onclick = async () => {
@@ -1464,50 +1689,261 @@ $("pairWords").addEventListener("click", async ev => {
   pairBusy = true; await speakWait(w, true); pairBusy = false;
 });
 async function pairSpeak() {
+  if (pairBusy === "listening" && activeListen) return activeListen.stop();
   if (pairBusy || busy()) return;
   if (!ensureReady()) return;
   const { pair } = curPair(), target = pairTarget, other = pair.find(w => w !== target);
-  pairBusy = true; $("pairRec").classList.add("wait"); $("pairRecLabel").textContent = "Mi collego"; setState(state);
-  const tp = await startTape();
-  let rec;
-  try { rec = makeRecognizer(null, tp && tp.s, { phrases: pair }); } catch (e) { stopTape(); pairBusy = false; renderPairTask(); handleAzureError(String(e)); return; }
-  const callAt = performance.now();
-  $("pairRec").classList.remove("wait"); $("pairRec").classList.add("live"); $("pairRecLabel").textContent = "Parla ora";
-  rec.recognizeOnceAsync(result => {
-    const delta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
-    const tapeP = stopTape().then(t => t && { ...t, delta });
-    try { rec.close(); } catch {}
-    pairBusy = false; setState(state);
-    $("pairRec").classList.remove("live"); $("pairRecLabel").textContent = "Riprova";
-    let seg = null;
-    if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { seg = parseRes(result); } catch {} }
-    const msg = $("pairMsg");
-    if (!seg) { msg.textContent = "Non ho sentito niente. Avvicinati al microfono e riprova."; msg.style.color = ""; return; }
-    const heardWords = seg.words.map(w => norm(w.Word));
-    const w0 = seg.words.find(w => [norm(target), norm(other)].includes(norm(w.Word))) || seg.words[0];
-    const heard = norm(w0.Word), acc = Math.round(w0.PronunciationAssessment?.AccuracyScore ?? 0);
-    pairLast = makeEntry(w0, null, -1, false, tapeP);
-    pairStats.tot++;
-    if (heard === norm(target)) {
-      pairStats.ok++;
-      msg.innerHTML = `Giusto, Azure ha sentito «${esc(target)}». Suono ${acc} su 100${acc < 70 ? ", si capisce ma il suono si può ancora migliorare" : ""}.`;
-      msg.style.color = "var(--good)";
-    } else if (heard === norm(other)) {
-      msg.innerHTML = `Azure ha sentito «${esc(other)}». Confronta la tua versione con quella corretta e guarda come muovere la bocca.`;
-      msg.style.color = "var(--weak)";
-      notePair(target, other);
-    } else {
-      msg.innerHTML = `Azure ha capito «${esc(seg.text || heardWords.join(" "))}». Riprova scandendo bene.`;
-      msg.style.color = "var(--mid)";
-    }
-    $("pairAfter").classList.remove("hidden");
-    $("pairScore").textContent = `${pairStats.ok} giuste su ${pairStats.tot}`;
-  }, err => { stopTape(); try { rec.close(); } catch {} pairBusy = false; renderPairTask(); handleAzureError(String(err)); });
+  const btn = $("pairRec");
+  pairBusy = "connecting"; btn.classList.add("wait"); $("pairRecLabel").textContent = "Mi collego"; setState(state);
+  const { seg, tapeP } = await listenOnce(null, { phrases: pair, silence: 900, initial: 7000, max: 8000,
+    onStart: () => { pairBusy = "listening"; btn.classList.remove("wait"); btn.classList.add("live"); $("pairRecLabel").textContent = "Parla ora"; }, onLevel: levelTo(btn) });
+  pairBusy = false; setState(state);
+  btn.classList.remove("live", "wait"); $("pairRecLabel").textContent = "Riprova";
+  const msg = $("pairMsg");
+  if (!seg) { msg.textContent = "Non ho sentito niente. Avvicinati al microfono e riprova."; msg.style.color = ""; return; }
+  const w0 = seg.words.find(w => [norm(target), norm(other)].includes(norm(w.Word))) || seg.words[0];
+  const heard = norm(w0.Word), acc = Math.round(w0.PronunciationAssessment?.AccuracyScore ?? 0);
+  pairLast = makeEntry(w0, null, -1, false, tapeP);
+  pairStats.tot++;
+  if (heard === norm(target)) {
+    pairStats.ok++;
+    msg.innerHTML = `Giusto, Azure ha sentito «${esc(target)}». Suono ${acc} su 100${acc < 70 ? ", si capisce ma il suono si può ancora migliorare" : ""}.`;
+    msg.style.color = "var(--good)";
+  } else if (heard === norm(other)) {
+    msg.innerHTML = `Azure ha sentito «${esc(other)}». Confronta la tua versione con quella corretta e guarda come muovere la bocca.`;
+    msg.style.color = "var(--weak)";
+    notePair(target, other);
+  } else {
+    msg.innerHTML = `Azure ha capito «${esc(seg.text)}». Riprova scandendo bene.`;
+    msg.style.color = "var(--mid)";
+  }
+  $("pairAfter").classList.remove("hidden");
+  $("pairScore").textContent = `${pairStats.ok} giuste su ${pairStats.tot}`;
 }
 $("pairCat").onchange = () => { pairCat = +$("pairCat").value; pairIdx = 0; pairTarget = null; renderPairs(); };
 $("pairNext").onclick = () => { if (pairBusy) return; pairIdx++; pairTarget = null; renderPairs(); };
 $("pairHearBoth").onclick = async () => { if (pairBusy) return; const { pair } = curPair(); pairBusy = true; await speakWait(pair[0], true); await new Promise(r => setTimeout(r, 350)); await speakWait(pair[1], true); pairBusy = false; };
 document.querySelectorAll("#pairModes button").forEach(b => b.onclick = () => { if (pairBusy) return; pairMode = b.dataset.pm; renderPairs(); });
+
+/* ---------- Ritmo e intonazione spiegati ---------- */
+const pfb = w => w.PronunciationAssessment?.Feedback?.Prosody;
+function prosodyOf(groups) {
+  // groups: [{ words, scripted }]
+  let unexpected = 0, missing = 0, runs = 0, n = 0, any = false;
+  groups.forEach(g => {
+    let inRun = false;
+    g.words.filter(w => !isMiscue(w)).forEach(w => {
+      n++;
+      const p = pfb(w); if (!p) { inRun = false; return; }
+      any = true;
+      const be = p.Break?.ErrorTypes || [];
+      if (be.includes("UnexpectedBreak")) unexpected++;
+      if (g.scripted && be.includes("MissingBreak")) missing++;
+      const mono = (p.Intonation?.ErrorTypes || []).includes("Monotone");
+      if (mono && !inRun) runs++;
+      inRun = mono;
+    });
+  });
+  return { unexpected, missing, runs, n, any };
+}
+const prosodyReliable = () => settings.lang !== "en-GB";
+function prosodyText(p, scripted, minWords = 20) {
+  if (!prosodyReliable()) return { score: false, text: "Con l'accento britannico Azure non valuta in modo affidabile ritmo e intonazione. Per averli scegli l'accento americano nelle impostazioni." };
+  if (p.n < minWords) return { score: false, text: "Troppo breve per giudicarli, servono almeno una ventina di parole." };
+  const bits = [];
+  if (p.unexpected) bits.push(`${p.unexpected} ${p.unexpected === 1 ? "pausa" : "pause"} a metà frase`);
+  if (p.missing) bits.push(`${p.missing} ${p.missing === 1 ? "pausa mancante" : "pause mancanti"} dove andava una virgola o un punto`);
+  if (p.runs) bits.push(`intonazione piatta in ${p.runs} ${p.runs === 1 ? "tratto" : "tratti"}`);
+  const base = bits.length ? bits.join(", ").replace(/^./, c => c.toUpperCase()) + "." : (p.any ? "Nessun problema segnalato da Azure." : "Accenti, melodia della frase ed enfasi.");
+  return { score: true, text: base + (scripted ? " Calcolato sul testo che volevi dire, più affidabile." : "") };
+}
+
+/* ---------- Shadowing sui video ---------- */
+const VIDEOS = [
+  { id: "WVkeEFs1hUo", title: "IELTS ufficiale, Band 9, Part 3 (Anuradha)" },
+  { id: "zyuQFXwTQr4", title: "English At The Ready, Improve your pronunciation in 9 minutes" },
+  { id: "Wsv6P7bHXAc", title: "Bob the Canadian, 7 Ways To Improve Your English Pronunciation" }
+];
+let ytReady = null, yt = null, vidBusy = false, vidAuto = false, regV = [];
+let vid = { id: null, pos: 0, segLen: 6, segs: null, i: 0, embedOk: true };
+const allVideos = () => [...VIDEOS, ...store.get("ist_videos", []).filter(v => !VIDEOS.some(x => x.id === v.id))];
+const ytId = u => { const m = String(u).match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{11})/) || String(u).trim().match(/^([A-Za-z0-9_-]{11})$/); return m ? m[1] : null; };
+function loadYt() {
+  if (ytReady) return ytReady;
+  ytReady = new Promise(res => {
+    if (window.YT && window.YT.Player) return res();
+    window.onYouTubeIframeAPIReady = () => res();
+    const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; s.onerror = () => res(); document.head.appendChild(s);
+  });
+  return ytReady;
+}
+function setView(v) {
+  $("qCard").classList.toggle("hidden", v !== "main"); $("recorder").classList.toggle("hidden", v !== "main");
+  $("pairsView").classList.toggle("hidden", v !== "pairs"); $("pairSide").classList.toggle("hidden", v !== "pairs");
+  $("videoView").classList.toggle("hidden", v !== "video"); $("videoSide").classList.toggle("hidden", v !== "video");
+  pairsMode = v === "pairs";
+  if (v !== "video") { vidAuto = false; try { yt && yt.pauseVideo && yt.pauseVideo(); } catch {} }
+  if (v !== "main") { hideResults(); $("sideEmpty").classList.add("hidden"); }
+  $("partsBar").classList.toggle("hidden", v !== "main");
+  document.querySelectorAll("#modes button").forEach(b => { if (b.dataset.mode === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+}
+async function openVideo() {
+  if (busy()) return;
+  if (mock && mock.answers.length && !confirm("Vuoi uscire dall'esame completo? Le risposte date finora non verranno valutate.")) return;
+  mock = null;
+  setView("video");
+  renderVidList();
+  if (!wide()) window.scrollTo({ top: 0 });
+  await loadYt();
+  if (!window.YT || !window.YT.Player) { $("vidNote").textContent = "Non riesco a caricare il lettore di YouTube. Controlla la connessione e riprova."; return; }
+  selectVideo(vid.id || allVideos()[0].id);
+}
+function renderVidList() {
+  $("vidSel").innerHTML = allVideos().map(v => `<option value="${v.id}"${v.id === vid.id ? " selected" : ""}>${esc(v.title)}</option>`).join("");
+}
+function selectVideo(id) {
+  vid = { id, pos: 0, segLen: +$("vidLen").value || 6, segs: null, i: 0, embedOk: true };
+  const tr = store.get("ist_vtr_" + id, null);
+  if (tr) vid.segs = tr;
+  $("vidTr").value = "";
+  $("vidOut").innerHTML = "";
+  $("vidNote").textContent = vid.segs ? `Trascrizione caricata, ${vid.segs.length} frasi. Azure sa cosa dire in ogni spezzone.` : "Senza trascrizione il video si ferma a tempo, a volte a metà frase. Azure valuta la tua chiarezza ma non sa esattamente cosa diceva il video.";
+  renderVidProg();
+  if (yt && yt.cueVideoById) { yt.cueVideoById(id); return; }
+  yt = new YT.Player("ytPlayer", {
+    videoId: id, width: "100%", height: "100%",
+    playerVars: { playsinline: 1, rel: 0, modestbranding: 1 },
+    events: { onError: e => { if ([100, 101, 150].includes(e.data)) { vid.embedOk = false; $("vidNote").innerHTML = `L'autore non permette di usare questo video fuori da YouTube. <a class="linkbtn" href="https://www.youtube.com/watch?v=${vid.id}" target="_blank" rel="noopener">Aprilo su YouTube</a> o scegline un altro.`; } } }
+  });
+}
+function curSeg() {
+  if (vid.segs && vid.segs.length) { const s = vid.segs[Math.min(vid.i, vid.segs.length - 1)]; return { start: s.start, end: s.end, text: s.text }; }
+  return { start: vid.pos, end: vid.pos + vid.segLen, text: null };
+}
+function renderVidProg() {
+  const s = curSeg();
+  $("vidProg").textContent = vid.segs ? `Frase ${vid.i + 1} di ${vid.segs.length}` : `Da ${fmt(s.start)} a ${fmt(s.end)}`;
+  $("vidLine").textContent = s.text || "";
+  $("vidLine").classList.toggle("hidden", !s.text);
+}
+function playSegment(start, end) {
+  return new Promise(res => {
+    if (!yt || !yt.seekTo) return res(false);
+    let done = false; const fin = ok => { if (done) return; done = true; clearInterval(t); try { yt.pauseVideo(); } catch {} res(ok); };
+    try { yt.seekTo(start, true); yt.playVideo(); } catch { return res(false); }
+    const limit = Date.now() + (end - start) * 1000 + 6000;
+    const t = setInterval(() => {
+      let cur = 0; try { cur = yt.getCurrentTime(); } catch {}
+      if (cur >= end - 0.05) fin(true);
+      else if (Date.now() > limit) fin(true);
+    }, 80);
+  });
+}
+function vidUi(s) {
+  const b = $("vidGo");
+  b.classList.toggle("live", s === "listening"); b.classList.toggle("wait", s === "model" || s === "connecting");
+  $("vidGoLabel").textContent = { idle: vidAuto ? "Fermati" : "Guarda e ripeti", model: vidAuto ? "Fermati dopo questo" : "Guarda e ascolta", connecting: "Mi collego", listening: "Ho finito" }[s];
+  ["vidReplay", "vidBack", "vidSkip", "vidSel", "vidLoad"].forEach(id => $(id).disabled = s !== "idle");
+  setState(state);
+}
+async function vidStep() {
+  if (!ensureReady()) { vidAuto = false; return; }
+  if (!vid.embedOk) { vidAuto = false; return; }
+  hidePop();
+  const s = curSeg();
+  vidBusy = "model"; vidUi("model");
+  await playSegment(s.start, s.end);
+  await new Promise(r => setTimeout(r, 200));
+  vidBusy = "connecting"; vidUi("connecting");
+  const { seg, tapeP } = await listenOnce(s.text || null, { onStart: () => { vidBusy = "listening"; vidUi("listening"); }, onLevel: levelTo($("vidGo")) });
+  vidResult(seg, tapeP, !!s.text);
+  vidBusy = false; vidUi("idle");
+  if (vidAuto && seg) { vidNext(); await new Promise(r => setTimeout(r, 1400)); if (vidAuto && !$("videoView").classList.contains("hidden")) vidStep(); }
+  else if (!seg) vidAuto = false, vidUi("idle");
+}
+function vidResult(seg, tapeP, scripted) {
+  regV = [];
+  if (!seg) { $("vidOut").innerHTML = `<p class="hint">Non ho sentito niente. Ripeti subito dopo lo spezzone, un po' più vicino al microfono.</p>`; return; }
+  const html = seg.words.map(w => {
+    const t = w.PronunciationAssessment?.ErrorType;
+    if (t === "Insertion") return "";
+    if (t === "Omission") return `<span class="w miss" title="Saltata">${esc(w.Word)}</span>`;
+    const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
+    regV.push(makeEntry(w, null, -1, false, tapeP));
+    return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""} tap" data-w="v${regV.length - 1}" tabindex="0" role="button">${esc(w.Word)}</span>`;
+  }).filter(Boolean).join(" ");
+  const pa = seg.pa, r = v => typeof v === "number" ? Math.round(v) : null;
+  const pros = prosodyText(prosodyOf([{ words: seg.words, scripted }]), scripted, 8);
+  const sc = [["Pronuncia", r(pa.PronScore)], ["Suoni", r(pa.AccuracyScore)], ["Scorrevolezza", r(pa.FluencyScore)]];
+  if (scripted) sc.push(["Completezza", r(pa.CompletenessScore)]);
+  if (pros.score) sc.push(["Ritmo e intonazione", r(pa.ProsodyScore)]);
+  $("vidOut").innerHTML = `<div class="shadow"><h2>${scripted ? "Come hai ripetuto la frase" : "Cosa hai detto"}</h2>
+    <p class="ref">${html}</p>
+    <div class="scores">${sc.map(([l, v]) => `<div><b style="color:${color(v)}">${v ?? "–"}</b><span>${l}</span></div>`).join("")}</div>
+    <p class="hint">${esc(pros.text)} Tocca una parola per confrontarla con quella corretta.</p></div>`;
+  noteWords(seg.words.filter(w => !isMiscue(w)).map(w => ({ word: w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100) })).filter(w => w.acc < 80));
+}
+function vidNext() { if (vid.segs) vid.i = Math.min(vid.segs.length - 1, vid.i + 1); else vid.pos += vid.segLen; renderVidProg(); }
+function vidPrev() { if (vid.segs) vid.i = Math.max(0, vid.i - 1); else vid.pos = Math.max(0, vid.pos - vid.segLen); renderVidProg(); }
+function parseTranscript(txt) {
+  const lines = String(txt).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const ts = /^(?:\d{1,2}:)?\d{1,2}:\d{2}$/, inl = /^((?:\d{1,2}:)?\d{1,2}:\d{2})\s+(.+)$/;
+  const toSec = t => t.split(":").map(Number).reduce((a, v) => a * 60 + v, 0);
+  const raw = [];
+  for (let i = 0; i < lines.length; i++) {
+    let m;
+    if (ts.test(lines[i])) {
+      const start = toSec(lines[i]); let text = "";
+      while (i + 1 < lines.length && !ts.test(lines[i + 1]) && !inl.test(lines[i + 1])) text += " " + lines[++i];
+      if (text.trim()) raw.push({ start, text });
+    } else if ((m = lines[i].match(inl))) raw.push({ start: toSec(m[1]), text: m[2] });
+  }
+  raw.forEach(o => o.text = o.text.replace(/\[[^\]]*\]|\([^)]*\)/g, " ").replace(/\b\d+\s+(seconds?|minutes?|secondi|minuti)\b(,?\s*\d+\s+(seconds?|secondi)\b)?/gi, " ").replace(/\s+/g, " ").trim());
+  const clean = raw.filter(o => o.text);
+  const out = [];
+  clean.forEach(o => {
+    const cur = out[out.length - 1];
+    if (cur && (cur.text.split(/\s+/).length < 6 || (!/[.!?]$/.test(cur.text) && o.start - cur.start < 7)) && cur.text.split(/\s+/).length < 26) cur.text += " " + o.text;
+    else out.push({ start: o.start, text: o.text });
+  });
+  out.forEach((o, i) => o.end = i + 1 < out.length ? out[i + 1].start : o.start + 6);
+  return out;
+}
+$("vidSel").onchange = () => { if (!vidBusy) selectVideo($("vidSel").value); };
+$("vidLoad").onclick = () => {
+  const id = ytId($("vidUrl").value);
+  if (!id) { toast("Non riconosco il link di YouTube"); return; }
+  const list = store.get("ist_videos", []);
+  if (!allVideos().some(v => v.id === id)) { list.unshift({ id, title: "Il tuo video, " + id }); store.set("ist_videos", list.slice(0, 30)); }
+  $("vidUrl").value = ""; vid.id = id; renderVidList(); selectVideo(id);
+};
+$("vidTrSave").onclick = () => {
+  const segs = parseTranscript($("vidTr").value);
+  if (!segs.length) { toast("Non trovo i tempi nella trascrizione. Copiala da Mostra trascrizione su YouTube."); return; }
+  store.set("ist_vtr_" + vid.id, segs); vid.segs = segs; vid.i = 0;
+  $("vidNote").textContent = `Trascrizione caricata, ${segs.length} frasi. Azure sa cosa dire in ogni spezzone.`;
+  renderVidProg(); toast("Trascrizione salvata su questo dispositivo");
+};
+$("vidLen").onchange = () => { vid.segLen = +$("vidLen").value; renderVidProg(); };
+$("vidGo").onclick = () => {
+  if (vidBusy === "listening" && activeListen) return activeListen.stop();
+  if (vidAuto) { vidAuto = false; vidUi(vidBusy || "idle"); return; }
+  if (busy()) return;
+  vidAuto = $("vidAutoChk").checked;
+  vidStep();
+};
+$("vidReplay").onclick = async () => { if (busy()) return; const s = curSeg(); vidBusy = "model"; vidUi("model"); await playSegment(s.start, s.end); vidBusy = false; vidUi("idle"); };
+$("vidBack").onclick = () => { if (!busy()) vidPrev(); };
+$("vidSkip").onclick = () => { if (!busy()) vidNext(); };
+
+/* ---------- Navigazione ---------- */
+document.querySelectorAll("#modes button").forEach(b => b.onclick = () => {
+  if (busy()) return;
+  const m = b.dataset.mode;
+  if (m === "pairs") return openPairs();
+  if (m === "video") return openVideo();
+  if (pairsMode || !$("videoView").classList.contains("hidden")) { setView("main"); showQuestion(false); if (!wide()) window.scrollTo({ top: 0 }); }
+});
 
 /* ---------- Quaderno degli errori ---------- */
 function noteWords(list) {
@@ -1571,7 +2007,11 @@ const wordsHtml = (segs, item) => {
     const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
     const h = heard[norm(w.Word)] ? " heard" : "";
     reg.push(makeEntry(w, item, wi, !!(item && item.segs2), item ? item.tapeP : null));
-    return `<span class="w${cls}${h} tap" data-w="b${reg.length - 1}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+    const pr = prosodyReliable() ? pfb(w) : null, be = (pr && pr.Break?.ErrorTypes) || [];
+    const brk = be.includes("UnexpectedBreak") ? `<i class="brk" title="Pausa a metà frase"></i>` : "";
+    const need = item && item.segs2 && be.includes("MissingBreak") ? `<i class="brk need" title="Qui andava una pausa"></i>` : "";
+    const flat = pr && (pr.Intonation?.ErrorTypes || []).includes("Monotone") ? " flat" : "";
+    return `${brk}<span class="w${cls}${h}${flat} tap" data-w="b${reg.length - 1}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>${need}`;
   }).filter(Boolean).join(" ");
 };
 function attachTape(item, el) { (item.tapeP || Promise.resolve(null)).then(t => { if (t && t.url && el && el.isConnected) { el.innerHTML = `<audio controls preload="metadata" src="${t.url}"></audio>`; $("tapeBlock").classList.remove("hidden"); } }); }
@@ -1645,6 +2085,7 @@ async function playMine(e) {
   node.buffer = buf; node.connect(actx.destination);
   return new Promise(res => { node.onended = () => res(true); node.start(0, from, len); });
 }
+let lastTtsAudio = null;
 const voiceName = () => settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
 function getSynth() {
   if (!synth) { const c = speechConfig(); c.speechSynthesisVoiceName = voiceName(); synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput()); }
@@ -1663,6 +2104,7 @@ function speakWait(text, slow) {
       const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${settings.lang}"><voice name="${voiceName()}"><prosody rate="${slow ? "-20%" : "-5%"}">${esc(text)}</prosody></voice></speak>`;
       s.speakSsmlAsync(ssml, r => {
         try { s.close(); } catch {}
+        lastTtsAudio = r.audioData || null;
         if (r.reason === SpeechSDK.ResultReason.Canceled) { const d = SpeechSDK.CancellationDetails.fromResult(r); handleAzureError(d.errorDetails); return fin(); }
         setTimeout(fin, (r.audioDuration || 0) / 1e4 + 1500);
       }, err => { try { s.close(); } catch {} handleAzureError(String(err)); fin(); });
@@ -1671,7 +2113,7 @@ function speakWait(text, slow) {
 }
 const speakSlow = w => speakWait(w, true);
 function openPop(key, anchor) {
-  const e = key[0] === "s" ? regS[+key.slice(1)] : reg[+key.slice(1)];
+  const e = key[0] === "s" ? regS[+key.slice(1)] : key[0] === "v" ? regV[+key.slice(1)] : reg[+key.slice(1)];
   if (!e) return;
   popItem = e;
   if (popAnchor) popAnchor.classList.remove("on");
@@ -1741,6 +2183,9 @@ function renderBody(run) {
   $("rPron").style.color = a.sc.pron == null ? "" : color(a.sc.pron);
   $("rTitle").textContent = a.sc.pron == null ? "Punteggio non disponibile" : verdict(a.sc.pron);
   [["Acc", a.sc.acc], ["Flu", a.sc.flu], ["Pro", a.sc.pro]].forEach(([k, v]) => { $("r" + k).textContent = v ?? "–"; $("b" + k).style.width = (v ?? 0) + "%"; $("b" + k).style.background = color(v); });
+  const pros = prosodyText(prosodyOf(items.map(it => ({ words: segsOf(it).flatMap(s => s.words), scripted: !!it.segs2 }))), items.some(it => it.segs2));
+  $("pPro").textContent = pros.text;
+  if (!pros.score) { $("rPro").textContent = "–"; $("bPro").style.width = "0"; }
   const paceNote = a.wpm < 100 ? "lento" : a.wpm > 170 ? "molto veloce" : "naturale";
   $("stats").innerHTML = `
     <div><dt>Durata</dt><dd>${fmt(a.seconds)}<small>${a.n} parole${isMock ? `, ${items.length} risposte` : ""}</small></dd></div>
