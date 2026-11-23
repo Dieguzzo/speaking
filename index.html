@@ -189,6 +189,16 @@
   .w { text-decoration-line: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: transparent; }
   .w.mid { text-decoration-color: color-mix(in srgb, var(--mid) 80%, transparent); }
   .w.low { text-decoration-color: var(--weak); color: var(--weak); }
+  .w.tap { cursor: pointer; border-radius: 3px; }
+  .w.tap:hover, .w.tap:focus-visible, .w.tap.on { background: var(--hover); outline: none; }
+  .pop { position: absolute; z-index: 20; width: 320px; background: var(--paper); border: 1px solid var(--hair); border-radius: 12px; box-shadow: 0 18px 40px -12px rgba(0,0,0,.35); padding: 14px 16px 16px; }
+  .pop-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .pop-head b { font-size: 24px; letter-spacing: -0.01em; }
+  .pop-head span { font-weight: 600; font-size: 15px; }
+  .pop .hint { margin-top: 4px; }
+  .pop-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .pop-btns button { display: inline-flex; align-items: center; gap: 6px; padding: 9px 12px; font-size: 15px; }
+  .pop-btns svg { width: 14px; height: 14px; flex: none; }
   .w.miss { color: var(--slate); text-decoration-line: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--slate); opacity: .75; }
   .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--slate); margin-top: 10px; }
   .legend span::before { content: ""; display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
@@ -320,6 +330,7 @@
     .shadow .rec-btn { width: auto; }
     .fix { grid-template-columns: 1fr; }
     .ai, .shadow { padding: 20px 18px; }
+    .pop { position: fixed; left: 8px !important; right: 8px; bottom: 8px; top: auto !important; width: auto; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
@@ -425,13 +436,13 @@
           <h2>Cosa ha capito Azure</h2>
           <div id="transcript"></div>
           <div class="legend"><span class="l-mid">poco chiara</span><span class="l-low">pronuncia debole</span></div>
-          <p class="hint">Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
+          <p class="hint">Tocca una parola sottolineata per sentire la tua pronuncia e quella corretta. Se una parola trascritta non è quella che volevi dire, di solito è lì che la pronuncia va sistemata.</p>
         </div>
 
         <div class="block" id="weakBlock">
           <h2>Parole da ripassare</h2>
           <div class="chips" id="chips"></div>
-          <p class="hint">Tocca una parola per sentirla pronunciata.</p>
+          <p class="hint">Tocca una parola per confrontare la tua pronuncia con quella corretta.</p>
         </div>
 
         <section class="shadow hidden" id="shadow">
@@ -551,6 +562,17 @@
     </div>
   </div>
 </dialog>
+
+<div class="pop hidden" id="pop" role="dialog" aria-label="Confronta la pronuncia">
+  <div class="pop-head"><b id="popWord"></b><span id="popScore"></span></div>
+  <p class="hint" id="popPh"></p>
+  <div class="pop-btns">
+    <button type="button" class="secondary" id="popMine"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>La tua</button>
+    <button type="button" class="secondary" id="popGood"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>Corretta</button>
+    <button type="button" class="primary" id="popBoth">Una dopo l'altra</button>
+  </div>
+  <p class="hint" id="popNote"></p>
+</div>
 
 <div class="toast" id="toast" role="status"></div>
 
@@ -760,12 +782,7 @@ function speechConfig() { const c = SpeechSDK.SpeechConfig.fromSubscription(sett
 function speak(text) {
   if (!ensureReady()) return;
   try {
-    if (!synth) {
-      const c = speechConfig();
-      c.speechSynthesisVoiceName = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
-      synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput());
-    }
-    synth.speakTextAsync(text, r => { if (r.reason === SpeechSDK.ResultReason.Canceled) { resetSynth(); handleAzureError(SpeechSDK.CancellationDetails.fromResult(r).errorDetails); } }, err => { resetSynth(); handleAzureError(String(err)); });
+    getSynth().speakTextAsync(text, r => { if (r.reason === SpeechSDK.ResultReason.Canceled) { resetSynth(); handleAzureError(SpeechSDK.CancellationDetails.fromResult(r).errorDetails); } }, err => { resetSynth(); handleAzureError(String(err)); });
   } catch (e) { handleAzureError(String(e)); }
 }
 
@@ -805,31 +822,45 @@ function clearLive() { $("live").textContent = ""; $("live").classList.remove("q
 
 /* ---------- Registrazione per riascoltarsi ---------- */
 let tape = null;
+// Il microfono si apre una volta sola: lo stesso flusso va alla registrazione e ad Azure, così i tempi delle parole coincidono
 async function startTape() {
+  tape = null;
   try {
-    if (!window.MediaRecorder || !navigator.mediaDevices) return;
+    if (!window.MediaRecorder || !navigator.mediaDevices) return null;
     const s = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mr = new MediaRecorder(s), chunks = [];
     mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    const started = new Promise(r => { mr.onstart = () => r(performance.now()); setTimeout(() => r(performance.now()), 600); });
     mr.start(1000);
-    tape = { mr, s, chunks };
-  } catch { tape = null; }
+    tape = { mr, s, chunks, t0: await started };
+    return tape;
+  } catch { tape = null; return null; }
 }
 function stopTape() {
   return new Promise(res => {
     if (!tape) return res(null);
     const { mr, s, chunks } = tape; tape = null;
-    mr.onstop = () => { s.getTracks().forEach(t => t.stop()); res(chunks.length ? URL.createObjectURL(new Blob(chunks, { type: mr.mimeType || "audio/webm" })) : null); };
-    try { mr.stop(); } catch { s.getTracks().forEach(t => t.stop()); res(null); }
+    const done = () => {
+      s.getTracks().forEach(t => t.stop());
+      if (!chunks.length) return res(null);
+      const blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
+      res({ blob, url: URL.createObjectURL(blob) });
+    };
+    if (mr.state === "inactive") return done();
+    mr.onstop = done;
+    try { mr.stop(); } catch { done(); }
   });
 }
 
 /* ---------- Riconoscimento ---------- */
-function makeRecognizer(reference) {
+function makeRecognizer(reference, stream) {
   const pa = new SpeechSDK.PronunciationAssessmentConfig(reference || "", SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark, SpeechSDK.PronunciationAssessmentGranularity.Phoneme, !!reference);
   pa.enableProsodyAssessment = true;
   if (settings.lang === "en-US") pa.phonemeAlphabet = "IPA";
-  const r = new SpeechSDK.SpeechRecognizer(speechConfig(), SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+  let audio = null;
+  if (stream) { try { audio = SpeechSDK.AudioConfig.fromStreamInput(stream); } catch (e) { audio = null; } }
+  if (!audio) audio = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+  const r = new SpeechSDK.SpeechRecognizer(speechConfig(), audio);
   pa.applyTo(r);
   const words = contextWords();
   if (words.length) { try { const pl = SpeechSDK.PhraseListGrammar.fromRecognizer(r); words.forEach(w => pl.addPhrase(w)); } catch (e) { console.warn(e); } }
@@ -842,7 +873,7 @@ function parseResult(e) {
   return { text: j.DisplayText, pa: nb.PronunciationAssessment || {}, words: nb.Words, conf: typeof nb.Confidence === "number" ? nb.Confidence : null };
 }
 
-let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false;
+let state = "idle", recognizer = null, segments = [], startAt = 0, tick = null, prepTimer = null, shadowBusy = false, curDelta = 0;
 const busy = () => state !== "idle" || !!shadowBusy;
 function setState(s) {
   state = s;
@@ -871,12 +902,13 @@ function startPrep() {
   $("fill").style.width = "0";
   prepTimer = setInterval(() => { left--; $("clock").textContent = fmt(left); if (left <= 0) start(); }, 1000);
 }
-function start() {
+async function start() {
   clearInterval(prepTimer); prepTimer = null;
-  hideResults(); segments = []; clearLive();
+  hideResults(); segments = []; clearLive(); hidePop();
   setTarget(); resetClock();
   setState("connecting");
-  try { recognizer = makeRecognizer(); } catch (e) { setState("idle"); handleAzureError(String(e)); return; }
+  const tp = await startTape();
+  try { recognizer = makeRecognizer(null, tp && tp.s); } catch (e) { stopTape(); setState("idle"); handleAzureError(String(e)); return; }
   const finalText = () => segments.map(s => s.text).join(" ");
   recognizer.recognizing = (s, e) => { $("live").textContent = (finalText() + " " + e.result.text).trim(); };
   recognizer.recognized = (s, e) => {
@@ -885,9 +917,10 @@ function start() {
     $("live").textContent = finalText();
   };
   recognizer.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { cleanup(); handleAzureError(e.errorDetails); } };
+  const callAt = performance.now();
   recognizer.startContinuousRecognitionAsync(() => {
     setState("listening"); startAt = Date.now();
-    startTape();
+    curDelta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0;
     tick = setInterval(() => { const t = (Date.now() - startAt) / 1000; updateClock(t); if (part === 2 && t >= 120) stop(); }, 200);
   }, err => {
     cleanup();
@@ -908,9 +941,13 @@ function stop() {
   clearInterval(tick);
   const seconds = (Date.now() - startAt) / 1000;
   setState("processing");
-  const tapeP = stopTape();
-  const r = recognizer;
-  r.stopContinuousRecognitionAsync(() => { recognizer = null; try { r.close(); } catch {} setState("idle"); finished(seconds, tapeP); }, () => cleanup());
+  const r = recognizer, delta = curDelta;
+  r.stopContinuousRecognitionAsync(() => {
+    recognizer = null;
+    const tapeP = stopTape().then(t => t && { ...t, delta });
+    try { r.close(); } catch {}
+    setState("idle"); finished(seconds, tapeP);
+  }, () => cleanup());
 }
 function finished(seconds, tapeP) {
   if (!segments.length) { showAlert("Non ho ricevuto parole. Se hai parlato, avvicinati al microfono e controlla che sia quello predefinito.", false); return; }
@@ -1117,7 +1154,7 @@ function drawAi(r) {
 }
 
 /* ---------- Esercizio di lettura ---------- */
-let shadowRef = "", shadowRec = null, shadowSegs = [];
+let shadowRef = "", shadowRec = null, shadowSegs = [], shadowDelta = 0;
 function setShadowRef(text, label) {
   shadowRef = String(text || "").trim();
   $("shadowRef").textContent = shadowRef;
@@ -1132,21 +1169,29 @@ function shadowUi(s) {
   $("shadowLabel").textContent = { idle: "Inizia a leggere", connecting: "Mi collego", listening: "Ho finito", processing: "Sto valutando" }[s];
   setState(state);
 }
-$("shadowBtn").onclick = () => {
+$("shadowBtn").onclick = async () => {
   if (shadowRec && shadowBusy === "listening") return stopShadow();
   if (busy() || !shadowRef) return;
   if (!ensureReady()) return;
-  shadowSegs = []; shadowBusy = "connecting"; shadowUi("connecting"); $("shadowOut").innerHTML = "";
-  try { shadowRec = makeRecognizer(shadowRef); } catch (e) { shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
+  shadowSegs = []; shadowBusy = "connecting"; shadowUi("connecting"); $("shadowOut").innerHTML = ""; hidePop();
+  const tp = await startTape();
+  try { shadowRec = makeRecognizer(shadowRef, tp && tp.s); } catch (e) { stopTape(); shadowBusy = false; shadowUi("idle"); handleAzureError(String(e)); return; }
+  const callAt = performance.now();
   shadowRec.recognized = (s, e) => { if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) { try { const seg = parseResult(e); if (seg) shadowSegs.push(seg); } catch {} } };
   shadowRec.canceled = (s, e) => { if (e.reason === SpeechSDK.CancellationReason.Error) { const r = shadowRec; shadowRec = null; try { r && r.close(); } catch {} shadowBusy = false; shadowUi("idle"); handleAzureError(e.errorDetails); } };
-  shadowRec.startContinuousRecognitionAsync(() => { shadowBusy = "listening"; shadowUi("listening"); }, err => { shadowRec = null; shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
+  shadowRec.startContinuousRecognitionAsync(() => { shadowDelta = tp ? Math.max(0, (callAt - tp.t0) / 1000) : 0; shadowBusy = "listening"; shadowUi("listening"); }, err => { stopTape(); shadowRec = null; shadowBusy = false; shadowUi("idle"); handleAzureError(String(err)); });
 };
 function stopShadow() {
   const r = shadowRec; shadowBusy = "processing"; shadowUi("processing");
-  r.stopContinuousRecognitionAsync(() => { shadowRec = null; try { r.close(); } catch {} shadowBusy = false; shadowUi("idle"); renderShadow(shadowRef, shadowSegs); }, () => { shadowRec = null; shadowBusy = false; shadowUi("idle"); });
+  const delta = shadowDelta;
+  r.stopContinuousRecognitionAsync(() => {
+    shadowRec = null;
+    const tapeP = stopTape().then(t => t && { ...t, delta });
+    try { r.close(); } catch {}
+    shadowBusy = false; shadowUi("idle"); renderShadow(shadowRef, shadowSegs, tapeP);
+  }, () => { stopTape(); shadowRec = null; shadowBusy = false; shadowUi("idle"); });
 }
-function renderShadow(ref, segs) {
+function renderShadow(ref, segs, tapeP) {
   const said = segs.flatMap(s => s.words).filter(w => { const t = w.PronunciationAssessment?.ErrorType; return t !== "Omission" && t !== "Insertion"; });
   const tokens = ref.split(/\s+/).filter(Boolean);
   let p = 0, matched = 0, accSum = 0;
@@ -1158,7 +1203,9 @@ function renderShadow(ref, segs) {
     if (hit < 0) return `<span class="w miss" title="Saltata">${esc(tok)}</span>`;
     const a = said[hit].PronunciationAssessment?.AccuracyScore ?? 100;
     p = hit + 1; matched++; accSum += a;
-    return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""}" title="Suono ${Math.round(a)} su 100">${esc(tok)}</span>`;
+    const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
+    const idx = cls ? regWord(said[hit], tapeP) : -1;
+    return `<span class="w${cls}${cls ? " tap" : ""}"${cls ? ` data-w="${idx}" tabindex="0" role="button"` : ""} title="Suono ${Math.round(a)} su 100">${esc(tok)}</span>`;
   }).join(" ");
   const countable = tokens.filter(t => norm(t)).length || 1;
   const avg = key => { let t = 0, w = 0; segs.forEach(s => { if (typeof s.pa[key] === "number") { t += s.pa[key] * s.words.length; w += s.words.length; } }); return w ? Math.round(t / w) : null; };
@@ -1208,15 +1255,97 @@ const band = v => v >= 85 ? "good" : v >= 70 ? "mid" : "weak";
 const color = v => v == null ? "var(--slate)" : `var(--${band(v)})`;
 const verdict = v => v >= 85 ? "Molto chiara, si capisce senza sforzo" : v >= 70 ? "Chiara, con qualche suono da sistemare" : v >= 55 ? "Comprensibile, ma alcuni errori si notano" : "Da lavorare, alcune parole rischiano di non essere capite";
 function hideResults() { $("results").classList.add("hidden"); $("sideEmpty").classList.remove("hidden"); renderSideStats(); }
-const wordsHtml = segs => segs.flatMap(s => s.words).map(w => {
+const wordsHtml = (segs, item) => segs.flatMap(s => s.words).map(w => {
   const a = w.PronunciationAssessment?.AccuracyScore ?? 100;
-  return `<span class="w${a < 60 ? " low" : a < 80 ? " mid" : ""}" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+  const cls = a < 60 ? " low" : a < 80 ? " mid" : "";
+  if (!cls) return `<span class="w" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
+  const idx = regWord(w, item ? item.tapeP : null);
+  return `<span class="w${cls} tap" data-w="${idx}" tabindex="0" role="button" title="Suono ${Math.round(a)} su 100">${esc(w.Word)}</span>`;
 }).join(" ");
-function attachTape(item, el) { (item.tapeP || Promise.resolve(null)).then(url => { if (url && el && el.isConnected) { el.innerHTML = `<audio controls preload="metadata" src="${url}"></audio>`; $("tapeBlock").classList.remove("hidden"); } }); }
+function attachTape(item, el) { (item.tapeP || Promise.resolve(null)).then(t => { if (t && t.url && el && el.isConnected) { el.innerHTML = `<audio controls preload="metadata" src="${t.url}"></audio>`; $("tapeBlock").classList.remove("hidden"); } }); }
+
+/* ---------- Confronto parola per parola ---------- */
+let reg = [], actx = null, popItem = null, popAnchor = null;
+const bufCache = new WeakMap();
+function regWord(w, tapeP) {
+  reg.push({ word: String(w.Word).replace(/[^A-Za-z'’-]/g, "") || w.Word, acc: Math.round(w.PronunciationAssessment?.AccuracyScore ?? 100),
+    phon: (w.Phonemes || []).filter(p => (p.PronunciationAssessment?.AccuracyScore ?? 100) < 60).map(p => p.Phoneme).join(" "),
+    off: typeof w.Offset === "number" ? w.Offset / TICK : null, dur: (w.Duration || 0) / TICK, tapeP: tapeP || Promise.resolve(null) });
+  return reg.length - 1;
+}
+async function getBuf(t) {
+  if (!t || !t.blob) return null;
+  if (bufCache.has(t)) return bufCache.get(t);
+  actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+  const p = t.blob.arrayBuffer().then(ab => actx.decodeAudioData(ab)).catch(() => null);
+  bufCache.set(t, p);
+  return p;
+}
+async function playMine(e) {
+  const t = await e.tapeP;
+  const buf = await getBuf(t);
+  if (!buf || e.off == null) { $("popNote").textContent = "La tua registrazione non è disponibile per questa parola."; return false; }
+  if (actx.state === "suspended") await actx.resume();
+  const from = Math.max(0, e.off + (t.delta || 0) - 0.15);
+  const len = Math.max(0.2, Math.min(buf.duration - from, e.dur + 0.35));
+  const node = actx.createBufferSource();
+  node.buffer = buf; node.connect(actx.destination);
+  return new Promise(res => { node.onended = () => res(true); node.start(0, from, len); });
+}
+function getSynth() {
+  if (!synth) {
+    const c = speechConfig();
+    c.speechSynthesisVoiceName = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
+    synth = new SpeechSDK.SpeechSynthesizer(c, SpeechSDK.AudioConfig.fromDefaultSpeakerOutput());
+  }
+  return synth;
+}
+function speakSlow(word) {
+  return new Promise(res => {
+    if (!ensureReady()) return res();
+    try {
+      const voice = settings.lang === "en-GB" ? "en-GB-SoniaNeural" : "en-US-JennyNeural";
+      const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${settings.lang}"><voice name="${voice}"><prosody rate="-20%">${esc(word)}</prosody></voice></speak>`;
+      getSynth().speakSsmlAsync(ssml, () => res(), err => { resetSynth(); handleAzureError(String(err)); res(); });
+    } catch (e) { handleAzureError(String(e)); res(); }
+  });
+}
+function openPop(idx, anchor) {
+  const e = reg[idx]; if (!e) return;
+  popItem = e;
+  if (popAnchor) popAnchor.classList.remove("on");
+  popAnchor = anchor; anchor.classList.add("on");
+  $("popWord").textContent = e.word;
+  $("popScore").textContent = `Suono ${e.acc} su 100`;
+  $("popScore").style.color = color(e.acc);
+  $("popPh").textContent = e.phon ? `Suoni più deboli /${e.phon}/` : "Ascolta la differenza tra le due versioni.";
+  $("popNote").textContent = "";
+  const pop = $("pop");
+  pop.classList.remove("hidden");
+  if (!matchMedia("(max-width: 600px)").matches) {
+    const r = anchor.getBoundingClientRect(), w = pop.offsetWidth;
+    pop.style.left = Math.max(8, Math.min(r.left + scrollX, scrollX + innerWidth - w - 8)) + "px";
+    pop.style.top = (r.bottom + scrollY + 8) + "px";
+  }
+}
+function hidePop() { $("pop").classList.add("hidden"); if (popAnchor) popAnchor.classList.remove("on"); popAnchor = null; popItem = null; }
+document.addEventListener("click", ev => {
+  const w = ev.target.closest && ev.target.closest("[data-w]");
+  if (w) { ev.preventDefault(); return openPop(+w.dataset.w, w); }
+  if (!ev.target.closest || !ev.target.closest("#pop")) hidePop();
+});
+document.addEventListener("keydown", ev => {
+  if (ev.key === "Escape") hidePop();
+  if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches("[data-w]")) { ev.preventDefault(); openPop(+ev.target.dataset.w, ev.target); }
+});
+$("popMine").onclick = () => popItem && playMine(popItem);
+$("popGood").onclick = () => popItem && speakSlow(popItem.word);
+$("popBoth").onclick = async () => { const e = popItem; if (!e) return; const ok = await playMine(e); if (ok) await new Promise(r => setTimeout(r, 450)); speakSlow(e.word); };
 
 function showRun(items, isMock) {
   const a = analyze(items);
   const run = lastRun = { items, mock: isMock, a };
+  reg = []; hidePop();
   const warns = [];
   if (a.lowAudio) warns.push("Azure ti ha sentito poco chiaramente, quindi alcune parole potrebbero essere state trascritte male. Parla un po' più forte o più vicino al microfono.");
   if (a.tooShort) warns.push(isMock ? "Le risposte sono state brevi, quindi la valutazione è poco affidabile. All'esame prova a sviluppare di più ogni risposta." : "Risposta troppo corta per un giudizio affidabile. Punta ad almeno 20 secondi, aggiungendo un motivo o un esempio.");
@@ -1237,16 +1366,17 @@ function showRun(items, isMock) {
   $("tapeBlock").classList.add("hidden");
   $("tape").innerHTML = "";
   if (isMock) {
-    $("transcript").innerHTML = items.map((it, i) => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs)}</p><div data-tape="${i}"></div>`).join("");
+    $("transcript").innerHTML = items.map((it, i) => `<p class="tq">Part ${it.q.part}. ${esc(it.q.text)}</p><p class="ta">${wordsHtml(it.segs, it)}</p><div data-tape="${i}"></div>`).join("");
     items.forEach((it, i) => attachTape(it, $("transcript").querySelector(`[data-tape="${i}"]`)));
   } else {
-    $("transcript").innerHTML = `<p class="transcript">${wordsHtml(items[0].segs)}</p>`;
+    $("transcript").innerHTML = `<p class="transcript">${wordsHtml(items[0].segs, items[0])}</p>`;
     attachTape(items[0], $("tape"));
   }
 
   $("weakBlock").classList.toggle("hidden", !a.weak.length);
-  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
-  $("chips").querySelectorAll(".chip").forEach(c => c.onclick = () => speak(c.dataset.word));
+  const firstIdx = word => reg.findIndex(e => norm(e.word) === norm(word));
+  $("chips").innerHTML = a.weak.map(w => `<button type="button" class="chip" data-word="${esc(w.word)}"${firstIdx(w.word) >= 0 ? ` data-w="${firstIdx(w.word)}"` : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>${esc(w.word)} <em style="color:${color(w.acc)}">${w.acc}</em>${w.phon ? ` <small>/${esc(w.phon)}/</small>` : ""}</button>`).join("");
+  $("chips").querySelectorAll(".chip:not([data-w])").forEach(c => c.onclick = () => speak(c.dataset.word));
   noteWords(a.weak);
 
   if (isMock) setShadowRef("", ""); else setShadowRef(a.text, aiConfigured() ? "per ora la tua risposta, poi la versione migliorata" : "la tua risposta");

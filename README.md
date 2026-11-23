@@ -30,6 +30,7 @@ La modalità Esame completo simula lo Speaking vero, con 4 domande di Part 1, un
 
 - **Esercizio di lettura.** Dopo la valutazione leggi ad alta voce la versione migliorata della risposta. Azure sa cosa dovresti dire e controlla ogni parola, comprese quelle saltate.
 - **Riascoltati.** Ogni risposta resta registrata nella sessione, così puoi riascoltarti.
+- **Confronto parola per parola.** Tocca una parola sottolineata per sentire la tua pronuncia, quella corretta, o le due una dopo l'altra.
 - **Quaderno degli errori.** In Progressi trovi le parole che pronunci male più spesso e le correzioni ricorrenti.
 - **Su di te.** Facoltativo. Nomi propri e parole che usi spesso, che Azure riconosce meglio e che la valutazione non scambia per errori.
 - **Tema scuro**, automatico o scelto nelle impostazioni, e layout a due colonne su desktop.
